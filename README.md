@@ -17,3 +17,5 @@
 9.- Compila los formularios y asignaselos donde consideres conveniente, también puedes compilarlos y ver los argumentos de los botones "Ligar XML" y "Terminar de Ligar" para crear tus propios formularios, y asignarselos a tus tipos de diarios.
 
 10.- En el menú inicial de sunplus del contador principal del campo, agrega un acceso directo al archivo S:/_PROGRAMAS_FISCAL/AdministradorXML.exe
+
+11.- Ejecuta el programa AdministradorXML y en el menú "Administrar" debes de llenar "Mis datos", luego debes de llenar "Permisos cuentas" y así sucesivamente para que funcione bien el programa a la hora de ligar el diario con los CFDI.
