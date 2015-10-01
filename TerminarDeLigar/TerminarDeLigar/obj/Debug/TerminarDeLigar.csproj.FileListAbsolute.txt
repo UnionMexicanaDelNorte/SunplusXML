@@ -1,0 +1,9 @@
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\bin\Debug\TerminarDeLigar.exe.config
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\bin\Debug\TerminarDeLigar.exe
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\bin\Debug\TerminarDeLigar.pdb
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\obj\Debug\TerminarDeLigar.Config_Fiscal.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\obj\Debug\TerminarDeLigar.Form1.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\obj\Debug\TerminarDeLigar.Properties.Resources.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\obj\Debug\TerminarDeLigar.csproj.GenerateResource.Cache
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\obj\Debug\TerminarDeLigar.exe
+\\psf\home\Documents\Visual Studio 2013\Projects\TerminarDeLigar\TerminarDeLigar\obj\Debug\TerminarDeLigar.pdb

@@ -1,0 +1,10 @@
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\bin\Debug\Liga.exe.config
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\bin\Debug\Liga.exe
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\bin\Debug\Liga.pdb
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.cantidadALigarXML.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.config.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.Form1.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.Properties.Resources.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.csproj.GenerateResource.Cache
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.exe
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.pdb

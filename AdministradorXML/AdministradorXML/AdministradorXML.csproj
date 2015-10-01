@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4A942FFD-9639-4E56-B397-99E20FDCF6AF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdministradorXML</RootNamespace>
+    <AssemblyName>AdministradorXML</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.Designer.cs">
+      <DependentUpon>Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Canceladas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Canceladas.Designer.cs">
+      <DependentUpon>Canceladas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="codigoAgrupador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="codigoAgrupador.Designer.cs">
+      <DependentUpon>codigoAgrupador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="config.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="config.Designer.cs">
+      <DependentUpon>config.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CuentasBancariasDeProveedores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CuentasBancariasDeProveedores.Designer.cs">
+      <DependentUpon>CuentasBancariasDeProveedores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Detalle1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Detalle1.Designer.cs">
+      <DependentUpon>Detalle1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Detalle2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Detalle2.Designer.cs">
+      <DependentUpon>Detalle2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="eligeBanco.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="eligeBanco.Designer.cs">
+      <DependentUpon>eligeBanco.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ligar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ligar.Designer.cs">
+      <DependentUpon>Ligar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ligar2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ligar2.Designer.cs">
+      <DependentUpon>Ligar2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="misDatos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="misDatos.Designer.cs">
+      <DependentUpon>misDatos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PermisosDeCuentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PermisosDeCuentas.Designer.cs">
+      <DependentUpon>PermisosDeCuentas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VerImpuestos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VerImpuestos.Designer.cs">
+      <DependentUpon>VerImpuestos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="XMLBalanza.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XMLBalanza.Designer.cs">
+      <DependentUpon>XMLBalanza.cs</DependentUpon>
+    </Compile>
+    <Compile Include="XMLCuentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XMLCuentas.Designer.cs">
+      <DependentUpon>XMLCuentas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="XMLPolizasDelMes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XMLPolizasDelMes.Designer.cs">
+      <DependentUpon>XMLPolizasDelMes.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.resx">
+      <DependentUpon>Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Canceladas.resx">
+      <DependentUpon>Canceladas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="codigoAgrupador.resx">
+      <DependentUpon>codigoAgrupador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="config.resx">
+      <DependentUpon>config.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CuentasBancariasDeProveedores.resx">
+      <DependentUpon>CuentasBancariasDeProveedores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Detalle1.resx">
+      <DependentUpon>Detalle1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Detalle2.resx">
+      <DependentUpon>Detalle2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="eligeBanco.resx">
+      <DependentUpon>eligeBanco.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ligar.resx">
+      <DependentUpon>Ligar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ligar2.resx">
+      <DependentUpon>Ligar2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="misDatos.resx">
+      <DependentUpon>misDatos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PermisosDeCuentas.resx">
+      <DependentUpon>PermisosDeCuentas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="VerImpuestos.resx">
+      <DependentUpon>VerImpuestos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XMLBalanza.resx">
+      <DependentUpon>XMLBalanza.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XMLCuentas.resx">
+      <DependentUpon>XMLCuentas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XMLPolizasDelMes.resx">
+      <DependentUpon>XMLPolizasDelMes.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
