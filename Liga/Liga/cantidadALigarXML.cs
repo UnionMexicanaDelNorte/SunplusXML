@@ -7,24 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Data.SqlClient;
 namespace Liga
 {
     public partial class cantidadALigarXML : Form
     {
         private double cantidadDisponible { get; set; }
         public double cantidadLigada { get; set; }
-      
+        public String folioFiscalGlobal { get; set; }
+    
         public cantidadALigarXML()
         {
             InitializeComponent();
             cantidadDisponible = 0;
         }
 
-        public cantidadALigarXML(double x)
+        public cantidadALigarXML(double x, String folio)
         {
             InitializeComponent();
             cantidadDisponible = x;
+            folioFiscalGlobal = folio;
         }
         private void cantidadALigarXML_Load(object sender, EventArgs e)
         {
@@ -51,12 +53,30 @@ namespace Liga
                 else
                 {
                     this.cantidadLigada = cantidadLigada;
+                    if(descartarCheck.Checked)
+                    {
+                           String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.sunDatasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+                           try
+                           {
+                               using (SqlConnection connection = new SqlConnection(connString))
+                               {
+                                   connection.Open();
+                                   String query = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set ocultaEnLigar = 1 WHERE folioFiscal= '"+folioFiscalGlobal+"'";
+                                   SqlCommand cmd = new SqlCommand(query, connection);
+                                   cmd.ExecuteNonQuery();
+                               }
+                           }
+                           catch(Exception ex)
+                           {
+                               System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                           }
+                    }
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             }
         }

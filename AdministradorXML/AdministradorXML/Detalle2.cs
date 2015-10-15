@@ -278,7 +278,9 @@ namespace AdministradorXML
                                     arr[1] = Convert.ToString(dic["BUNIT"]);
                                     arr[2] = Convert.ToString(dic["JRNAL_NO"]);
                                     arr[3] = Convert.ToString(dic["JRNAL_LINE"]);
-                                    arr[4] = Convert.ToString(dic["amount"]);
+                                    //arr[4] = Convert.ToString(dic["amount"]);
+                                    arr[4] = String.Format("{0:n}", Convert.ToDouble(dic["amount"]));
+                                
                                     arr[5] = Convert.ToString(dic["consecutivo"]);
                                     arr[6] = Convert.ToString(dic["rfcDelMomento"]);
                                     arr[7] = Convert.ToString(dic["nombreArchivoPDF2"]);
@@ -310,7 +312,9 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["JRNAL_NO1"]);
                                     arr[1] = Convert.ToString(dic["JRNAL_LINE1"]);
-                                    arr[2] = Convert.ToString(dic["total"]);
+                                   // arr[2] = Convert.ToString(dic["total"]);
+                                    arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["total"]));
+                                
                                     arr[3] = Convert.ToString(dic["DESCRIPTN1"]);
                                     arr[4] = Convert.ToString(dic["TRANS_DATETIME"]);
                                     itm = new ListViewItem(arr);

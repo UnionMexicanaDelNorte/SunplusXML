@@ -58,6 +58,15 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
+            AdministradorXML.Login.sourceGlobal = "CHE";
+            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
+        }
+
+        public Form1(String s, String bunit)
+        {
+            InitializeComponent();
+            AdministradorXML.Login.sourceGlobal = s;
+            AdministradorXML.Login.unidadDeNegocioGlobal = bunit;
         }
 
         private void variablesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,6 +107,20 @@ namespace AdministradorXML
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            if(AdministradorXML.Login.sourceGlobal.Equals("ERROR"))
+            {
+                System.Windows.Forms.MessageBox.Show("Sunplusito® se abre desde el formulario de Sunplus. No se detecto el operador.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                if (System.Windows.Forms.Application.MessageLoop)
+                {
+                    System.Windows.Forms.Application.Exit();
+                }
+                else
+                {
+                    System.Environment.Exit(1);
+                }
+            }
+            logueadoComoToolStripMenuItem.Text = "Logueado como: " + AdministradorXML.Login.sourceGlobal;
             siguiente = true;
             try
             {   // Open the text file using a stream reader.
@@ -142,7 +165,7 @@ namespace AdministradorXML
             gastosSunplusList.Location = new Point((width / 2) + (posX / 2), posY + (height / 2) - (posY * 2) + posY);
             gastosSunplusList.Size = new Size((width / 2) - (posX * 2), (height / 2) - (posY * 2));
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML]";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -155,14 +178,14 @@ namespace AdministradorXML
                     {
                         while (reader.Read())
                         {
-                            var periodo = reader.GetString(0);
+                            String periodo = reader.GetString(0);
                             periodosCombo.Items.Add(new Item(periodo, empiezo));
                             empiezo++;
                         }
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("No existen Periodos, primero descarga xml del buzon tributario.", "SunPlusXML", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        System.Windows.Forms.MessageBox.Show("No existen Periodos, primero descarga xml del buzon tributario.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
             }
@@ -257,10 +280,10 @@ namespace AdministradorXML
                             ingresosSATList.View = View.Details;
                             ingresosSATList.GridLines = true;
                             ingresosSATList.FullRowSelect = true;
-                            ingresosSATList.Columns.Add("Razon Social", 180);
-                            ingresosSATList.Columns.Add("RFC", 100);
-                            ingresosSATList.Columns.Add("En el SAT", 100);
-                            ingresosSATList.Columns.Add("Contabilizado", 100);
+                            ingresosSATList.Columns.Add("Razon Social", 200);
+                            ingresosSATList.Columns.Add("RFC", 150);
+                            ingresosSATList.Columns.Add("En el SAT", 150);
+                            ingresosSATList.Columns.Add("Contabilizado", 150);
                             foreach (Dictionary<string, object> dic in listaFinal)
                             {
                                 if (dic.ContainsKey("rfc"))
@@ -270,8 +293,10 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["razonSocial"]);
                                     arr[1] = Convert.ToString(dic["rfc"]);
-                                    arr[2] = Convert.ToString(dic["maximo"]);
-                                    arr[3] = Convert.ToString(dic["enlazado"]);
+                                    arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["maximo"]));
+                                    arr[3] = String.Format("{0:n}", Convert.ToDouble(dic["enlazado"]));
+                                    
+
                                     totalIngresoSAT += Convert.ToDouble(dic["maximo"]);
                                     totalContabilizadoIngresoSAT += Convert.ToDouble(dic["enlazado"]);
                                     itm2 = new ListViewItem(arr);
@@ -357,10 +382,10 @@ namespace AdministradorXML
                             gastosSATList.View = View.Details;
                             gastosSATList.GridLines = true;
                             gastosSATList.FullRowSelect = true;
-                            gastosSATList.Columns.Add("Razon Social", 180);
-                            gastosSATList.Columns.Add("RFC", 100);
-                            gastosSATList.Columns.Add("En el SAT", 100);
-                            gastosSATList.Columns.Add("Contabilizado", 100);
+                            gastosSATList.Columns.Add("Razon Social", 250);
+                            gastosSATList.Columns.Add("RFC", 150);
+                            gastosSATList.Columns.Add("En el SAT", 150);
+                            gastosSATList.Columns.Add("Contabilizado", 150);
                             foreach (Dictionary<string, object> dic in listaFinalEgresosSAT)
                             {
                                 if (dic.ContainsKey("rfc"))
@@ -370,8 +395,9 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["razonSocial"]);
                                     arr[1] = Convert.ToString(dic["rfc"]);
-                                    arr[2] = Convert.ToString(dic["maximo"]);
-                                    arr[3] = Convert.ToString(dic["enlazado"]);
+                                    arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["maximo"]));
+                                    arr[3] = String.Format("{0:n}", Convert.ToDouble(dic["enlazado"]));
+                                    
                                     totalEgresoSAT += Convert.ToDouble(dic["maximo"]);
                                     totalContabilizadoEgresoSAT += Convert.ToDouble(dic["enlazado"]);
                                     itm2 = new ListViewItem(arr);
@@ -628,8 +654,8 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["ACCNT_CODE"]);
                                     arr[1] = Convert.ToString(dic["DESCR"]);
-                                    arr[2] = Convert.ToString(dic["total"]);
-                                    arr[3] = Convert.ToString(dic["enlazado"]);
+                                
+                                    arr[3] = String.Format("{0:n}", Convert.ToDouble(dic["enlazado"]));
                                     totalIngresoSunplus += Convert.ToDouble(dic["total"]);
                                     totalContabilizadoIngresoSunplus += Convert.ToDouble(dic["enlazado"]);
                                     itm2 = new ListViewItem(arr);
@@ -764,9 +790,10 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["ACCNT_CODE"]);
                                     arr[1] = Convert.ToString(dic["DESCR"]);
-                                    arr[2] = Convert.ToString(dic["total"]);
-                                    arr[3] = Convert.ToString(dic["enlazado"]);
 
+                                    arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["total"]));
+                                    arr[3] = String.Format("{0:n}", Convert.ToDouble(dic["enlazado"]));
+                                    
                                     totalEgresoSunplus += Convert.ToDouble(dic["total"]);
                                     totalContabilizadoEgresoSunplus += Convert.ToDouble(dic["enlazado"]);
                                     itm2 = new ListViewItem(arr);
@@ -926,6 +953,66 @@ namespace AdministradorXML
         private void xMLDeBalanzaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.MessageBox.Show("Hola, para generar el XML de balanza, se esta tomando en cuenta todos los diarios, inclusive aquellos cuyo ALLOCATION = C", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
+
+        private void configurarConceptosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            configurarConceptos form = new configurarConceptos();
+            form.ShowDialog();
+        }
+
+        private void asignarPermisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            asignarComceptosaWHO form = new asignarComceptosaWHO();
+            form.ShowDialog();
+        }
+
+        private void asignarFNCTAWHOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            asignarFNCTaWHO form = new asignarFNCTaWHO();
+            form.ShowDialog();
+        }
+
+        private void polizasDeDepartamentalesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            polizasDeDepartamentales form = new polizasDeDepartamentales();
+            form.ShowDialog();
+        }
+
+        private void presupuestoDeDepartamentalesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            presupuestoDeDepartamentales form = new presupuestoDeDepartamentales();
+            form.ShowDialog();
+        }
+
+        private void asignarPROJAWHOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            asignarPROJaWHO form = new asignarPROJaWHO();
+            form.ShowDialog();
+        }
+
+        private void mandarMensajeCustomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mandarPush mandar = new mandarPush();
+            mandar.ShowDialog();
+        }
+
+        private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (System.Windows.Forms.Application.MessageLoop)
+            {
+                System.Windows.Forms.Application.Exit();
+            }
+            else
+            {
+                System.Environment.Exit(1);
+            }
+        }
+
+        private void facturasNoEnlazadasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FacturasNoEnlazadas form = new FacturasNoEnlazadas();
+            form.ShowDialog();
         }
     }
 }

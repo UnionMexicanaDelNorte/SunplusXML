@@ -20,6 +20,7 @@ using System.CodeDom.Compiler;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Data.Linq;
 using System.Windows.Input;
 using System.Windows.Markup;
 using PdfFileWriter;
@@ -66,6 +67,8 @@ namespace SunPlusXML
         public StringBuilder mensajeParaElCorreo { get; set; }
       
         public int diaActual { get; set; }
+        public int mesActual { get; set; }
+      
         public bool estoyEnCancelados { get; set; }
         public bool estoyEnElMesAnterior { get; set; }
         public bool primeroElMesAnterior { get; set; }
@@ -74,7 +77,7 @@ namespace SunPlusXML
         public bool soloUnaVezNoveno { get; set; }
         public bool Cancelar { get; set; }
         public bool entraUnaSolaVezAlAux { get; set; }
-        public bool modoUnDia { get; set; }
+       // public bool modoUnDia { get; set; }
         public int columna { get; set; }
         public int totalDeDescargados { get; set; }
         public int totalDeCancelados { get; set; }
@@ -87,12 +90,13 @@ namespace SunPlusXML
        // public List<LogErrores> log { get; set; }
         public int start { get; set; }
         public String connString { get; set; }
-     
-        public Form1(bool modo)
+        public int modoGlobal { get; set; }
+      
+        public Form1(int modo)
         {
+            modoGlobal = modo;
             InitializeComponent();
-            modoUnDia = modo;
-            this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='"+Properties.Settings.Default.Password+"';connect timeout = 60";
+             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='"+Properties.Settings.Default.Password+"';connect timeout = 60";
 
            
            
@@ -103,92 +107,203 @@ namespace SunPlusXML
         }
         private void PruebaDescarga(ref string RFC)
         {
-            this.columna = -1;
-            this.proceso.Text = "Preparando informacion...";
-         //   this.log = new List<LogErrores>();
-            string html = this.webView3.GetHtml();
-            HtmlAgilityPack.HtmlDocument htmlDocument = new HtmlAgilityPack.HtmlDocument();
-            htmlDocument.LoadHtml(html);
-            IEnumerable<HtmlNode> enumerable1 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("span"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_LblRfcAutenticado")));
-            try
+      /*       this.columna = -1;
+      this.proceso.Text = "Preparando informacion...";
+         string html = this.webView3.GetHtml();
+         
+      HtmlAgilityPack.HtmlDocument htmlDocument = new HtmlAgilityPack.HtmlDocument();
+      htmlDocument.LoadHtml(html);
+      IEnumerable<HtmlNode> enumerable1 = (IEnumerable<HtmlNode>) Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("span"), (Func<HtmlNode, bool>) (n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_LblRfcAutenticado")));
+      try
+      {
+        RFC = ((HtmlNode[]) enumerable1)[0].InnerText.Replace("RFC Autenticado: ", "");
+      }
+      catch (Exception ex)
+      {
+      //  Logs.Escribir(ex.ToString());
+        return;
+      }
+   // if (!string.IsNullOrEmpty(RFC) && RFC.Replace("&amp;", "&") != Sesion.RFC.Replace("&amp;", "&"))
+     //   return;
+      int num1 = html.IndexOf("Consultar Facturas Recibidas");
+      html.IndexOf("Consultar Facturas Emitidas");
+      html.IndexOf("La consulta realizada solo muestra los primeros 500 registros");
+      HtmlNode[] htmlNodeArray = Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("img"), (Func<HtmlNode, bool>) (n => n.Attributes["name"] != null && n.Attributes["name"].Value == "BtnDescarga")));
+      IEnumerable<HtmlNode> enumerable2 = (IEnumerable<HtmlNode>) Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>) (n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFecha_DdlMes")));
+      IEnumerable<HtmlNode> enumerable3 = (IEnumerable<HtmlNode>) Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>) (n => n.Attributes["id"] != null && n.Attributes["id"].Value == "DdlAnio")));
+      IEnumerable<HtmlNode> enumerable4 = (IEnumerable<HtmlNode>) Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("input"), (Func<HtmlNode, bool>) (n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFechaInicial2_Calendario_text")));
+      IEnumerable<HtmlNode> enumerable5 = (IEnumerable<HtmlNode>) Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("input"), (Func<HtmlNode, bool>) (n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFechaFinal2_Calendario_text")));
+      IEnumerable<HtmlNode> enumerable6 = (IEnumerable<HtmlNode>) Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>) (n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_BtnBusqueda")));
+     // this.listadoSAT = new List<TablaImportadaSAT>();
+      this.ligas = new List<string>();
+      //TablaImportadaSAT tablaImportadaSat = new TablaImportadaSAT();
+      if (num1 > -1)
+      {
+        foreach (HtmlNode htmlNode1 in enumerable2)
+        {
+          foreach (HtmlNode htmlNode2 in (IEnumerable<HtmlNode>) htmlNode1.ChildNodes)
+          {
+            if (htmlNode2.HasAttributes && htmlNode2.GetAttributeValue("selected", "") != "" && htmlNode2.Attributes["selected"].Value == "selected")
             {
-                RFC = ((HtmlNode[])enumerable1)[0].InnerText.Replace("RFC Autenticado: ", "");
+              this.MesSel = Convert.ToInt32(htmlNode2.GetAttributeValue("Value", "")).ToString("00") + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(htmlNode2.GetAttributeValue("Value", ""))).Substring(0, 3).ToUpper();          
+              //this.MesSel = Convert.ToInt32(htmlNode2.GetAttributeValue("Value", "")).ToString("00") + " " + FuncionesGenerales.NombreMes(Convert.ToInt32(htmlNode2.GetAttributeValue("Value", "")), true).ToUpper();
+              break;
             }
-            catch (Exception ex)
+          }
+        }
+        foreach (HtmlNode htmlNode1 in enumerable3)
+        {
+          foreach (HtmlNode htmlNode2 in (IEnumerable<HtmlNode>) htmlNode1.ChildNodes)
+          {
+            if (htmlNode2.HasAttributes && htmlNode2.GetAttributeValue("selected", "") != "" && htmlNode2.Attributes["selected"].Value == "selected")
             {
-                ex.ToString();
-          //      Logs.Escribir(ex.ToString());
-                return;
+              this.AnoSel = htmlNode2.GetAttributeValue("Value", "");
+              break;
             }
-      //      if (!string.IsNullOrEmpty(RFC) && RFC.Replace("&amp;", "&") != Sesion.RFC.Replace("&amp;", "&"))
-        //        return;
-            int num1 = html.IndexOf("Consultar Facturas Recibidas");
-            html.IndexOf("Consultar Facturas Emitidas");
-            HtmlNode[] htmlNodeArray = Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("img"), (Func<HtmlNode, bool>)(n => n.Attributes["name"] != null && n.Attributes["name"].Value == "BtnDescarga")));
-            IEnumerable<HtmlNode> enumerable2 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFecha_DdlMes")));
-            IEnumerable<HtmlNode> enumerable3 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "DdlAnio")));
-            IEnumerable<HtmlNode> enumerable4 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("input"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFechaInicial2_Calendario_text")));
-            IEnumerable<HtmlNode> enumerable5 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("input"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFechaFinal2_Calendario_text")));
-            IEnumerable<HtmlNode> enumerable6 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_BtnBusqueda")));
-            this.ligas = new List<string>();
-            if (num1 > -1)
-            {
-                foreach (HtmlNode htmlNode1 in enumerable2)
-                {
-                    foreach (HtmlNode htmlNode2 in (IEnumerable<HtmlNode>)htmlNode1.ChildNodes)
-                    {
-                        if (htmlNode2.HasAttributes && htmlNode2.GetAttributeValue("selected", "") != "" && htmlNode2.Attributes["selected"].Value == "selected")
-                        {
-                            this.MesSel = Convert.ToInt32(htmlNode2.GetAttributeValue("Value", "")).ToString("00") + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(htmlNode2.GetAttributeValue("Value", ""))).Substring(0, 3).ToUpper();
-                            break;
-                        }
-                    }
-                }
-                foreach (HtmlNode htmlNode1 in enumerable3)
-                {
-                    foreach (HtmlNode htmlNode2 in (IEnumerable<HtmlNode>)htmlNode1.ChildNodes)
-                    {
-                        if (htmlNode2.HasAttributes && htmlNode2.GetAttributeValue("selected", "") != "" && htmlNode2.Attributes["selected"].Value == "selected")
-                        {
-                            this.AnoSel = htmlNode2.GetAttributeValue("Value", "");
-                            break;
-                        }
-                    }
-                }
-                this.AnoSel = "Recibidos" + (object)Path.DirectorySeparatorChar + this.AnoSel;
-            }
-            else
-            {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Today;
-                foreach (HtmlNode htmlNode in enumerable4)
-                {
-                    if (htmlNode.HasAttributes && htmlNode.GetAttributeValue("value", "") != "" && htmlNode.Attributes["value"].Value != "")
-                    {
-                        startDate = Convert.ToDateTime(htmlNode.GetAttributeValue("value", ""));
-                        break;
-                    }
-                }
-                foreach (HtmlNode htmlNode in enumerable5)
-                {
-                    if (htmlNode.HasAttributes && htmlNode.GetAttributeValue("value", "") != "" && htmlNode.Attributes["value"].Value != "")
-                    {
-                        endDate = Convert.ToDateTime(htmlNode.GetAttributeValue("value", ""));
-                        break;
-                    }
-                }
-                int num2 = DateTime.DaysInMonth(startDate.Year, startDate.Month);
-                this.MesSel = startDate.Month.ToString("00") + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(startDate.Month).Substring(0, 3).ToUpper();
-                this.AnoSel = "Emitidos" + Convert.ToString(Path.DirectorySeparatorChar) + Convert.ToString( startDate.Year);
-            }
-            foreach (HtmlNode htmlNode in htmlNodeArray)
-            {
-                string str = htmlNode.Attributes[6].Value;
-                int num2 = str.IndexOf("AccionCfdi('");
-                int num3 = str.IndexOf("','Recuperacion'");
-                this.ligas.Add("https://portalcfdi.facturaelectronica.sat.gob.mx/RecuperaCfdi.aspx?" + str.Substring(num2 + 12, num3 - num2 - 12).Replace("RecuperaCfdi.aspx?", ""));
-            }
-            this.Descargados = new List<DownloadItem>();
+          }
+        }
+        this.AnoSel = "Recibidos" + (object) Path.DirectorySeparatorChar + this.AnoSel;
+      }
+      else
+      {
+        DateTime startDate = DateTime.Today;
+        DateTime endDate = DateTime.Today;
+        foreach (HtmlNode htmlNode in enumerable4)
+        {
+          if (htmlNode.HasAttributes && htmlNode.GetAttributeValue("value", "") != "" && htmlNode.Attributes["value"].Value != "")
+          {
+            startDate = Convert.ToDateTime(htmlNode.GetAttributeValue("value", ""));
+            break;
+          }
+        }
+        foreach (HtmlNode htmlNode in enumerable5)
+        {
+          if (htmlNode.HasAttributes && htmlNode.GetAttributeValue("value", "") != "" && htmlNode.Attributes["value"].Value != "")
+          {
+            endDate = Convert.ToDateTime(htmlNode.GetAttributeValue("value", ""));
+            break;
+          }
+        }
+        
+        int num2 = DateTime.DaysInMonth(startDate.Year, startDate.Month);
+        if (System.Data.Linq.SqlClient.SqlMethods.DateDiffDay(startDate, endDate) + 1 > num2)
+        {
+          //Mensajes.MostrarMensaje(Constantes.TipoMensaje.Aviso, "Descarga Masiva", "La consulta de conprobantes emitidos no puede ser mayor de un mes");
+          this.Cursor = System.Windows.Forms.Cursors.Arrow;
+          this.proceso.Text = "";
+          this.Cancelar = true;
+         // this.btnCancelar.Visibility = Visibility.Hidden;
+          return;
+        }
+        if (startDate.Month != endDate.Month)
+        {
+        //  Mensajes.MostrarMensaje(Constantes.TipoMensaje.Aviso, "Descarga Masiva", "La fecha inicial y la fecha final deben ser del mismo mes" + Environment.NewLine + "Mes Inicial:" + FuncionesGenerales.NombreMes(startDate.Month, false) + " Mes Final:" + FuncionesGenerales.NombreMes(endDate.Month, false));
+          this.Cursor = System.Windows.Forms.Cursors.Arrow;
+          this.proceso.Text = "";
+          this.Cancelar = true;
+        //  this.btnCancelar.Visibility = Visibility.Hidden;
+          return;
+        }
+        this.MesSel = startDate.Month.ToString("00") + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(startDate.Month).Substring(0, 3).ToUpper();
+        //this.MesSel = startDate.Month.ToString("00") + FuncionesGenerales.NombreMes(startDate.Month, true).ToUpper();
+        this.AnoSel = "Emitidos" + (object) Path.DirectorySeparatorChar + (string) (object) startDate.Year;
+      }
+      foreach (HtmlNode htmlNode in htmlNodeArray)
+      {
+          string str = htmlNode.Attributes[6].Value;
+          int num2 = str.IndexOf("AccionCfdi('");
+          int num3 = str.IndexOf("','Recuperacion'");
+          this.ligas.Add("https://portalcfdi.facturaelectronica.sat.gob.mx/RecuperaCfdi.aspx?" + str.Substring(num2 + 12, num3 - num2 - 12).Replace("RecuperaCfdi.aspx?", ""));
+      }
+      this.Descargados = new List<DownloadItem>();
+            */
+            ///////////////////
+             this.columna = -1;
+              this.proceso.Text = "Preparando informacion...";
+              string html = this.webView3.GetHtml();
+              HtmlAgilityPack.HtmlDocument htmlDocument = new HtmlAgilityPack.HtmlDocument();
+              htmlDocument.LoadHtml(html);
+              IEnumerable<HtmlNode> enumerable1 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("span"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_LblRfcAutenticado")));
+              try
+              {
+                  RFC = ((HtmlNode[])enumerable1)[0].InnerText.Replace("RFC Autenticado: ", "");
+              }
+              catch (Exception ex)
+              {
+                  ex.ToString();
+            //      Logs.Escribir(ex.ToString());
+                  return;
+              }
+        //      if (!string.IsNullOrEmpty(RFC) && RFC.Replace("&amp;", "&") != Sesion.RFC.Replace("&amp;", "&"))
+          //        return;
+              int num1 = html.IndexOf("Consultar Facturas Recibidas");
+              html.IndexOf("Consultar Facturas Emitidas");
+              HtmlNode[] htmlNodeArray = Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("img"), (Func<HtmlNode, bool>)(n => n.Attributes["name"] != null && n.Attributes["name"].Value == "BtnDescarga")));
+              IEnumerable<HtmlNode> enumerable2 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFecha_DdlMes")));
+              IEnumerable<HtmlNode> enumerable3 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "DdlAnio")));
+              IEnumerable<HtmlNode> enumerable4 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("input"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFechaInicial2_Calendario_text")));
+              IEnumerable<HtmlNode> enumerable5 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("input"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_CldFechaFinal2_Calendario_text")));
+              IEnumerable<HtmlNode> enumerable6 = (IEnumerable<HtmlNode>)Enumerable.ToArray<HtmlNode>(Enumerable.Where<HtmlNode>(htmlDocument.DocumentNode.Descendants("select"), (Func<HtmlNode, bool>)(n => n.Attributes["id"] != null && n.Attributes["id"].Value == "ctl00_MainContent_BtnBusqueda")));
+              this.ligas = new List<string>();
+              if (num1 > -1)
+              {
+                  foreach (HtmlNode htmlNode1 in enumerable2)
+                  {
+                      foreach (HtmlNode htmlNode2 in (IEnumerable<HtmlNode>)htmlNode1.ChildNodes)
+                      {
+                          if (htmlNode2.HasAttributes && htmlNode2.GetAttributeValue("selected", "") != "" && htmlNode2.Attributes["selected"].Value == "selected")
+                          {
+                              this.MesSel = Convert.ToInt32(htmlNode2.GetAttributeValue("Value", "")).ToString("00") + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(htmlNode2.GetAttributeValue("Value", ""))).Substring(0, 3).ToUpper();
+                              break;
+                          }
+                      }
+                  }
+                  foreach (HtmlNode htmlNode1 in enumerable3)
+                  {
+                      foreach (HtmlNode htmlNode2 in (IEnumerable<HtmlNode>)htmlNode1.ChildNodes)
+                      {
+                          if (htmlNode2.HasAttributes && htmlNode2.GetAttributeValue("selected", "") != "" && htmlNode2.Attributes["selected"].Value == "selected")
+                          {
+                              this.AnoSel = htmlNode2.GetAttributeValue("Value", "");
+                              break;
+                          }
+                      }
+                  }
+                  this.AnoSel = "Recibidos" + (object)Path.DirectorySeparatorChar + this.AnoSel;
+              }
+              else
+              {
+                  DateTime startDate = DateTime.Today;
+                  DateTime endDate = DateTime.Today;
+                  foreach (HtmlNode htmlNode in enumerable4)
+                  {
+                      if (htmlNode.HasAttributes && htmlNode.GetAttributeValue("value", "") != "" && htmlNode.Attributes["value"].Value != "")
+                      {
+                          startDate = Convert.ToDateTime(htmlNode.GetAttributeValue("value", ""));
+                          break;
+                      }
+                  }
+                  foreach (HtmlNode htmlNode in enumerable5)
+                  {
+                      if (htmlNode.HasAttributes && htmlNode.GetAttributeValue("value", "") != "" && htmlNode.Attributes["value"].Value != "")
+                      {
+                          endDate = Convert.ToDateTime(htmlNode.GetAttributeValue("value", ""));
+                          break;
+                      }
+                  }
+                  int num2 = DateTime.DaysInMonth(startDate.Year, startDate.Month);
+                  this.MesSel = startDate.Month.ToString("00") + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(startDate.Month).Substring(0, 3).ToUpper();
+                  this.AnoSel = "Emitidos" + Convert.ToString(Path.DirectorySeparatorChar) + Convert.ToString( startDate.Year);
+              }
+              foreach (HtmlNode htmlNode in htmlNodeArray)
+              {
+                  string str = htmlNode.Attributes[6].Value;
+                  int num2 = str.IndexOf("AccionCfdi('");
+                  int num3 = str.IndexOf("','Recuperacion'");
+                  this.ligas.Add("https://portalcfdi.facturaelectronica.sat.gob.mx/RecuperaCfdi.aspx?" + str.Substring(num2 + 12, num3 - num2 - 12).Replace("RecuperaCfdi.aspx?", ""));
+              }
+              this.Descargados = new List<DownloadItem>();
+             
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -304,7 +419,9 @@ namespace SunPlusXML
 
 
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
-                            html = html.Substring(posicionInicial + 21);
+                            html = html.Substring(posicionInicial + 21+50);
+                            String fechaExpedicion = html.Substring(0, 10);
+
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
                             html = html.Substring(posicionInicial + 21);
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
@@ -316,9 +433,17 @@ namespace SunPlusXML
                             posicionInicial = html.IndexOf("<");
                             String cantidad = html.Substring(0, posicionInicial);
 
+                            posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
+                            html = html.Substring(posicionInicial + 21 + 51);
+                            posicionInicial = html.IndexOf("<");
+                            String tipoDeComprobante = html.Substring(0, posicionInicial).ToUpper();
+                            String statusDeCancelado = "0";//gasto
+                            if(tipoDeComprobante.Equals("INGRESO"))
+                            {
+                                statusDeCancelado = "3";//ingreso
+                            }
 
-
-                            String query1 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '3' WHERE folioFiscal = '" + UUID + "'";
+                            String query1 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '" + statusDeCancelado + "' WHERE folioFiscal = '" + UUID + "'";
                             totalDeCancelados++;
                             try
                             {
@@ -364,7 +489,7 @@ namespace SunPlusXML
                                     else
                                     {
                                         //inserto el que no eexiste
-                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,STATUS,total,rfc,razonSocial) VALUES ('" + UUID + "', '3', '" + cantidad + "','" + rfcEmisor + "', '" + razonSocialEmisor + "')";
+                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (fechaExpedicion, folioFiscal,STATUS,total,rfc,razonSocial, ocultaEnLigar) VALUES ('"+fechaExpedicion+"', '" + UUID + "', '" + statusDeCancelado + "', '" + cantidad + "','" + rfcEmisor + "', '" + razonSocialEmisor + "',0)";
                                         String queryCheck2 = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + UUID + "'";
                                         try
                                         {
@@ -554,9 +679,28 @@ namespace SunPlusXML
                             }
                         }
                     }
-                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_Calendario_text').value='01/"+mes+"/"+year+"';");
-                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_Calendario_text').value='" + diaFinal.ToString() + "/" + mes + "/" + year + "';");
-
+                    if(modoGlobal==2)//ultra pesado
+                    {
+                        String mm = Convert.ToString(mesActual+1);
+                        if( (mesActual + 1)<10)
+                        {
+                            mm = "0" + (mesActual + 1);
+                        }
+                        String dd = diaActual.ToString();
+                        if(diaActual<10)
+                        {
+                            dd = "0" + diaActual;
+                        }
+                        entraUnaSolaVezAlAux = true;
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_Calendario_text').value='"+dd+"/"+mm+"/" + year + "';");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_Calendario_text').value='"+dd+"/"+mm+"/" + year + "';");
+                    }
+                    else
+                    {
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_Calendario_text').value='01/" + mes + "/" + year + "';");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_Calendario_text').value='" + diaFinal.ToString() + "/" + mes + "/" + year + "';");
+                    }
+                   
                     this.webView3.EvalScript("var arrayA = document.getElementsByTagName('a');var i = 0;for (i = 0; i < arrayA.length; i++){if (arrayA[i].innerHTML.valueOf() == new String('Vigente').valueOf()){arrayA[i].click();break;}}");
                     this.webView3.EvalScript("window.alert = function() {};");
                     this.webView3.EvalScript("document.getElementById('ctl00_MainContent_BtnBusqueda').click();");
@@ -689,7 +833,15 @@ namespace SunPlusXML
             }
             this.webView3.EvalScript("window.alert = function() {};");
             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
-            this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+            if (modoGlobal == 2)//ultrapesado
+            {
+                this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mesActual.ToString() + ";");
+            }
+            else
+            {
+                this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+            }
+            
             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_BtnBusqueda').click();");
 //            tmrSexto.Start();
 
@@ -825,7 +977,16 @@ namespace SunPlusXML
                             String cantidad = html.Substring(0, posicionInicial);
 
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
-                            html = html.Substring(posicionInicial + 21);
+                            html = html.Substring(posicionInicial + 21+50);
+                            posicionInicial = html.IndexOf("<");
+
+                            String tipoDeComprobante = html.Substring(0, posicionInicial).ToUpper();
+                            String statusDeCancelado = "3";//ingreso
+                            if(tipoDeComprobante.Equals("INGRESO"))
+                            {
+                                statusDeCancelado = "0";//gasto
+                            }
+
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
                             html = html.Substring(posicionInicial + 21);
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
@@ -833,11 +994,8 @@ namespace SunPlusXML
                             posicionInicial = html.IndexOf("<");
                             String fechaCancelacion = html.Substring(0, posicionInicial);
 
-
-
-
                             String query1 = "";
-                            query1= "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '0', fechaCancelacion = '"+fechaCancelacion+"' WHERE folioFiscal = '" + UUID + "'";
+                            query1 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '" + statusDeCancelado + "', fechaCancelacion = '" + fechaCancelacion + "' WHERE folioFiscal = '" + UUID + "'";
                             totalDeCancelados++;
                             try
                             {
@@ -883,7 +1041,7 @@ namespace SunPlusXML
                                     else
                                     {
                                         //inserto el que no eexiste
-                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,STATUS,fechaCancelacion,total,fechaExpedicion,rfc,razonSocial) VALUES ('" + UUID + "', '0', '"+fechaCancelacion+"', '"+cantidad+"', '"+fechaCancelacion+"','"+rfcEmisor+"', '"+razonSocialEmisor+"')";
+                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,STATUS,fechaCancelacion,total,fechaExpedicion,rfc,razonSocial, ocultaEnLigar) VALUES ('" + UUID + "', '" + statusDeCancelado + "', '" + fechaCancelacion + "', '" + cantidad + "', '" + fechaExpedicion + "','" + rfcEmisor + "', '" + razonSocialEmisor + "',0)";
                                         String queryCheck2 = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + UUID + "'";
                                         try
                                         {
@@ -920,19 +1078,35 @@ namespace SunPlusXML
 
                         }
                         mensajeParaElCorreo.Append(warnings);
-
-
-
-                        if (primeroElMesAnterior)
+                        if(modoGlobal==2)//ultra pesado
                         {
-                            primeroElMesAnterior = false;
-                            tmrSeptimo.Start();
-                            tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 7 START";
+                            if(mesActual<11)
+                            {
+                                mesActual++;
+                                tmrSeptimo.Start();
+                                tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 7 START";
+                            }
+                            else
+                            {
+                                mensajeParaElCorreo.Append(totalDeCancelados);
+                                diaActual = 1;
+                                mesActual = 0;
+                                empiezaConLosEmitidos();
+                            }
                         }
                         else
                         {
-                            mensajeParaElCorreo.Append(totalDeCancelados);
-                            empiezaConLosEmitidos();
+                            if (primeroElMesAnterior)
+                            {
+                                primeroElMesAnterior = false;
+                                tmrSeptimo.Start();
+                                tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 7 START";
+                            }
+                            else
+                            {
+                                mensajeParaElCorreo.Append(totalDeCancelados);
+                                empiezaConLosEmitidos();
+                            }
                         }
                     }
                 }
@@ -945,24 +1119,32 @@ namespace SunPlusXML
             tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 7 STOP";
           
             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_DdlEstadoComprobante').selectedIndex = 1;");
-            if(primeroElMesAnterior)
+            if(modoGlobal==2)//ultrapesado
             {
-                DateTime now = DateTime.Now;
-                int mes = now.Month - 2;
-                if (mes == -1)
-                {
-                    mes = 11;
-                    int year = now.Year - 2012;
-                    this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
-                }
-                this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mesActual.ToString() + ";");
             }
             else
             {
-                DateTime now = DateTime.Now;
-                int mes = now.Month - 1;
-                this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                if (primeroElMesAnterior)
+                {
+                    DateTime now = DateTime.Now;
+                    int mes = now.Month - 2;
+                    if (mes == -1)
+                    {
+                        mes = 11;
+                        int year = now.Year - 2012;
+                        this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
+                    }
+                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                }
+                else
+                {
+                    DateTime now = DateTime.Now;
+                    int mes = now.Month - 1;
+                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                }
             }
+           
             this.webView3.EvalScript("window.alert = function() {};");
             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = 0;");
             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_BtnBusqueda').click();");
@@ -1044,8 +1226,17 @@ namespace SunPlusXML
                     this.webView3.EvalScript("window.alert = function() {};");
                     this.webView3.EvalScript("document.getElementById('ctl00_MainContent_DdlEstadoComprobante').selectedIndex = 2;");
                     int mes = now.Month-1;
-                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
-                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                    if(modoGlobal==2)//ultra pesado
+                    {
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = "+mesActual.ToString()+";");
+                    }
+                    else
+                    {
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                    }
+                    
                     this.webView3.EvalScript("document.getElementById('ctl00_MainContent_BtnBusqueda').click();");
                     cualCheco = false;
                     tmrSexto.Start();
@@ -1209,7 +1400,7 @@ namespace SunPlusXML
         {
             tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 1 PROCESS";
             primeroElMesAnterior = true;
-            if(modoUnDia)
+            if(modoGlobal==1)
             {
                 mensajeParaElCorreo = new StringBuilder(this.Enters + "Todo bien amigo");         
                 DateTime now = DateTime.Now;
@@ -1218,6 +1409,10 @@ namespace SunPlusXML
             else
             {
                 diaActual = 1;
+                if(modoGlobal==2)//ultra pesado
+                {
+                    mesActual = 0;//enero
+                }
             }
             soloUnaVezNoveno = true;
             estoyEnEmitidos = false;
@@ -1287,8 +1482,8 @@ namespace SunPlusXML
         private void Form1_Load(object sender, EventArgs e)
         {
             Timer tmrSegundosDeVida = new Timer();
-             
-            if(modoUnDia)
+            modoGlobal = 2;//ultra pesado BORRAR 
+            if(modoGlobal==1)
             {
                 modoLabel.Text = "Modo: Ligero (solo facturas de hoy)";
                 tmrSegundosDeVida.Interval = 3300000;//55 minutos
@@ -1296,9 +1491,16 @@ namespace SunPlusXML
             }
             else
             {
-                modoLabel.Text = "Modo: Pesado (Facturas de todo el mes, y un poco del anterior)";
-                tmrSegundosDeVida.Interval = 21600000;//6 horas
-       
+                if(modoGlobal==2)
+                {
+                    modoLabel.Text = "Modo: Ultra Pesado (Facturas de todo el año)";
+                    tmrSegundosDeVida.Interval = 86400000;//24 horas
+                }
+                else
+                {
+                    modoLabel.Text = "Modo: Pesado (Facturas de todo el mes, y un poco del anterior)";
+                    tmrSegundosDeVida.Interval = 21600000;//6 horas
+                }
             }
             tmrSegundosDeVida.Tick += timerHandlerSegundosDeVida;
             tmrSegundosDeVida.Start();
@@ -1553,6 +1755,13 @@ namespace SunPlusXML
                         subTotal = obj2.Attributes["subTotal"].InnerText;
                     }
 
+                    String tipoDeComprobante = "INGRESO";
+                     bool istipoDeComprobante = obj2.Attributes["tipoDeComprobante"] != null;
+                    if (istipoDeComprobante)
+                    {
+                        tipoDeComprobante = obj2.Attributes["tipoDeComprobante"].InnerText.Trim().ToUpper();
+                    }
+                   
                    
 
 
@@ -1640,12 +1849,28 @@ namespace SunPlusXML
                         String query = "";
                        if( this.AnoSel.IndexOf("Emitidos")!=-1)
                        {
-                           query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2')";
+                           if(tipoDeComprobante.Equals("INGRESO"))
+                           {
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0)";
+                           }
+                           else
+                           {
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
+                           }
                            insertaProveedor(rfcReceptor, nombreReceptor);
                        }
                        else
                        {
-                           query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1')";
+                           if (tipoDeComprobante.Equals("INGRESO"))
+                           {
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
+                   
+                           }
+                           else
+                           {
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0)";
+                           }
+                           //query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
                            insertaProveedor(rfc, razon);
                        }
                       
@@ -1710,8 +1935,41 @@ namespace SunPlusXML
                                         }
                                         conceptosString = conceptosString + "\n" + cantidadc + " " + descripcionc + " $" + importec;
                                     }
-                                    XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
+                                    XmlNodeList retenciones = doc.GetElementsByTagName("cfdi:Retencion");
                                     String impuestosString = "";
+
+                                    for (i = 0; i < retenciones.Count; i++)
+                                    {
+                                        XmlNode objn = retenciones.Item(i);
+                                        String cantidad = "0";
+                                        String impuesto = "";
+                                        float tasa = 0;
+                                        bool isCantidad = objn.Attributes["importe"] != null;
+                                        if (isCantidad)
+                                        {
+                                            cantidad = objn.Attributes["importe"].InnerText;
+                                            impuesto = objn.Attributes["impuesto"].InnerText;
+                                            tasa = 0;
+                                            float importe = float.Parse(cantidad);
+                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nImporte: " + importe;
+                                            if (!readerImpuesto.HasRows)
+                                            {
+                                                readerImpuesto.Close();
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ")";
+                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                cmdImpuesto.ExecuteNonQuery();
+                                            }
+                                            else
+                                            {
+                                                readerImpuesto.Close();
+                                            }
+                                        }
+                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                    }
+                                    XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
                                     for (i = 0; i < traslados.Count; i++)
                                     {
                                         XmlNode objn = traslados.Item(i);
@@ -1802,7 +2060,61 @@ namespace SunPlusXML
                     }
                     else
                     {
-                        if(modoUnDia)
+                        if(modoGlobal==2 && estoyEnEmitidos)
+                        {
+                             DateTime now = DateTime.Now;
+                            int year = now.Year;
+                            int month = now.Month;
+                            if(modoGlobal==2)//ultrapesado
+                            {
+                                month = mesActual + 1;
+                            }
+                   
+                            int diaFinal = 28;
+                            if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                            {
+                                diaFinal = 31;
+                            }
+                            else
+                            {
+                                if (month == 4 || month == 6 || month == 9 || month == 11)
+                                {
+                                    diaFinal = 30;
+                                }
+                                else
+                                {
+                                    if (year % 4 == 0)//ano bisiesto
+                                    {
+                                        diaFinal = 29;
+                                    }
+                                }
+                            }
+
+                            if (diaActual < diaFinal)
+                            {
+                                diaActual++;
+                                tmrDecimoCuarto.Start();
+                                return;
+                            }
+                            else
+                            {
+                                diaActual = 1;
+                                if(mesActual<11)
+                                {
+                                    mesActual++;
+                                    tmrDecimoCuarto.Start();
+                                    return;
+                                }
+                                else
+                                {
+                                    tmrDecimoSexto.Start();
+                                    return;
+                                }
+                            }
+
+                            
+                        }
+                        if(modoGlobal==1)
                         {
                             if(estoyEnEmitidos)
                             {
@@ -1833,8 +2145,35 @@ namespace SunPlusXML
                                 tmrDecimoSexto.Start();
                                 return;
                             }
+                            DateTime now = DateTime.Now;
+                            int year = now.Year;
+                            int month = now.Month;
+                            if(modoGlobal==2)//ultrapesado
+                            {
+                                month = mesActual + 1;
+                            }
+                   
+                            int diaFinal = 28;
+                            if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                            {
+                                diaFinal = 31;
+                            }
+                            else
+                            {
+                                if (month == 4 || month == 6 || month == 9 || month == 11)
+                                {
+                                    diaFinal = 30;
+                                }
+                                else
+                                {
+                                    if (year % 4 == 0)//ano bisiesto
+                                    {
+                                        diaFinal = 29;
+                                    }
+                                }
+                            }
 
-                            if(diaActual<31)
+                            if (diaActual < diaFinal)
                             {
                                 diaActual++;
                                 if(estoyEnElMesAnterior)
@@ -1856,7 +2195,26 @@ namespace SunPlusXML
                                 }
                                 else
                                 {
-                                    empiezaConElMesAnterior();
+                                    if(modoGlobal==2)//ultrapesado
+                                    {
+                                        if(mesActual<11)
+                                        {
+                                            mesActual++;
+                                            diaActual = 1;
+                                            tmrDecimo.Start();
+                                        }
+                                        else
+                                        {
+                                            estoyEnElMesAnterior = false;
+                                            diaActual = 1;
+                                            mesActual = 0;
+                                            empiezaConLosCancelados();
+                                        }
+                                    }
+                                    else//modo pesado
+                                    {
+                                        empiezaConElMesAnterior();
+                                    }
                                 }
                             }
                         }
@@ -1918,7 +2276,58 @@ namespace SunPlusXML
                         }
                         else
                         {
-                            empiezaConElMesAnterior();
+                            if(modoGlobal==2)//ultra pesado
+                            {//saltate ese día
+                                 DateTime now = DateTime.Now;
+                                int year = now.Year;
+                                int month = now.Month;
+                                int diaFinal = 28;
+                                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                                {
+                                    diaFinal = 31;
+                                }
+                                else
+                                {
+                                    if (month == 4 || month == 6 || month == 9 || month == 11)
+                                    {
+                                        diaFinal = 30;
+                                    }
+                                    else
+                                    {
+                                        if (year % 4 == 0)//ano bisiesto
+                                        {
+                                            diaFinal = 29;
+                                        }
+                                    }
+                                }
+
+                                if (diaActual < diaFinal)
+                                {
+                                    diaActual++;
+                                    tmrQuinto.Start();
+                                }
+                                else
+                                {
+                                    if (mesActual < 11)
+                                    {
+                                        mesActual++;
+                                        diaActual = 1;
+                                        tmrDecimo.Start();
+                                    }
+                                    else
+                                    {
+                                        estoyEnElMesAnterior = false;
+                                        diaActual = 1;
+                                        mesActual = 0;
+                                        empiezaConLosCancelados();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                empiezaConElMesAnterior();
+                            }
+                            
                         }
 
                     }

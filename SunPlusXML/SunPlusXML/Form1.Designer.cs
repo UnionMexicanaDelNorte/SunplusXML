@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.proceso = new System.Windows.Forms.Label();
-            this.btnDescarga = new System.Windows.Forms.Button();
             this.webControl1 = new EO.WebBrowser.WinForm.WebControl();
             this.webView3 = new EO.WebBrowser.WebView();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -59,17 +58,6 @@
             this.proceso.Text = "label1";
             this.proceso.Click += new System.EventHandler(this.proceso_Click);
             // 
-            // btnDescarga
-            // 
-            this.btnDescarga.Location = new System.Drawing.Point(44, 67);
-            this.btnDescarga.Margin = new System.Windows.Forms.Padding(6);
-            this.btnDescarga.Name = "btnDescarga";
-            this.btnDescarga.Size = new System.Drawing.Size(150, 44);
-            this.btnDescarga.TabIndex = 2;
-            this.btnDescarga.Text = "descargar";
-            this.btnDescarga.UseVisualStyleBackColor = true;
-            this.btnDescarga.Click += new System.EventHandler(this.btnDescarga_Click_1);
-            // 
             // webControl1
             // 
             this.webControl1.BackColor = System.Drawing.Color.White;
@@ -88,20 +76,21 @@
             // carpeta
             // 
             this.carpeta.AutoSize = true;
-            this.carpeta.Location = new System.Drawing.Point(246, 123);
+            this.carpeta.Location = new System.Drawing.Point(378, 133);
             this.carpeta.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.carpeta.Name = "carpeta";
-            this.carpeta.Size = new System.Drawing.Size(0, 26);
+            this.carpeta.Size = new System.Drawing.Size(36, 26);
             this.carpeta.TabIndex = 4;
+            this.carpeta.Text = "hh";
             // 
             // salida
             // 
             this.salida.Location = new System.Drawing.Point(44, 123);
             this.salida.Margin = new System.Windows.Forms.Padding(6);
             this.salida.Name = "salida";
-            this.salida.Size = new System.Drawing.Size(150, 44);
+            this.salida.Size = new System.Drawing.Size(237, 44);
             this.salida.TabIndex = 5;
-            this.salida.Text = "Salida";
+            this.salida.Text = "Carpeta de salida";
             this.salida.UseVisualStyleBackColor = true;
             this.salida.Click += new System.EventHandler(this.salida_Click);
             // 
@@ -113,7 +102,7 @@
             this.ayudaToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2045, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(2079, 43);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -188,14 +177,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(2079, 1297);
+            this.ClientSize = new System.Drawing.Size(2113, 1297);
             this.Controls.Add(this.segundosDeVidaLabel);
             this.Controls.Add(this.modoLabel);
             this.Controls.Add(this.tiempoHastaTrigger);
             this.Controls.Add(this.salida);
             this.Controls.Add(this.carpeta);
             this.Controls.Add(this.webControl1);
-            this.Controls.Add(this.btnDescarga);
             this.Controls.Add(this.proceso);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -214,7 +202,6 @@
         #endregion
 
         private System.Windows.Forms.Label proceso;
-        private System.Windows.Forms.Button btnDescarga;
         private EO.WebBrowser.WinForm.WebControl webControl1;
         private EO.WebBrowser.WebView webView3;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;

@@ -33,6 +33,7 @@
             this.conceptoText = new System.Windows.Forms.TextBox();
             this.mensajeLabel = new System.Windows.Forms.Label();
             this.ligarAhoraSiButton = new System.Windows.Forms.Button();
+            this.logLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label3
@@ -60,7 +61,7 @@
             this.mensajeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.94764F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mensajeLabel.Location = new System.Drawing.Point(61, 40);
             this.mensajeLabel.Name = "mensajeLabel";
-            this.mensajeLabel.Size = new System.Drawing.Size(122, 44);
+            this.mensajeLabel.Size = new System.Drawing.Size(118, 42);
             this.mensajeLabel.TabIndex = 12;
             this.mensajeLabel.Text = "label1";
             // 
@@ -75,13 +76,22 @@
             this.ligarAhoraSiButton.UseVisualStyleBackColor = true;
             this.ligarAhoraSiButton.Click += new System.EventHandler(this.ligarAhoraSiButton_Click);
             // 
+            // logLabel
+            // 
+            this.logLabel.AutoSize = true;
+            this.logLabel.Location = new System.Drawing.Point(31, 351);
+            this.logLabel.Name = "logLabel";
+            this.logLabel.Size = new System.Drawing.Size(0, 26);
+            this.logLabel.TabIndex = 14;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1576, 367);
+            this.ClientSize = new System.Drawing.Size(1576, 401);
+            this.Controls.Add(this.logLabel);
             this.Controls.Add(this.ligarAhoraSiButton);
             this.Controls.Add(this.mensajeLabel);
             this.Controls.Add(this.conceptoText);
@@ -103,6 +113,7 @@
         private System.Windows.Forms.TextBox conceptoText;
         private System.Windows.Forms.Label mensajeLabel;
         private System.Windows.Forms.Button ligarAhoraSiButton;
+        private System.Windows.Forms.Label logLabel;
     }
 }
 

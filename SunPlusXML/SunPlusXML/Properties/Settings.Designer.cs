@@ -157,7 +157,7 @@ namespace SunPlusXML.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public string timeInterval {
             get {
                 return ((string)(this["timeInterval"]));

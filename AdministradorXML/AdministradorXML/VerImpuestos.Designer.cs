@@ -35,6 +35,8 @@
             this.tipoCombo = new System.Windows.Forms.ComboBox();
             this.impuestosList = new System.Windows.Forms.ListView();
             this.totalImpuestosLabel = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -79,11 +81,14 @@
             // 
             // impuestosList
             // 
-            this.impuestosList.Location = new System.Drawing.Point(50, 139);
+            this.impuestosList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.impuestosList.Location = new System.Drawing.Point(50, 148);
+            this.impuestosList.MultiSelect = false;
             this.impuestosList.Name = "impuestosList";
             this.impuestosList.Size = new System.Drawing.Size(1433, 634);
             this.impuestosList.TabIndex = 4;
             this.impuestosList.UseCompatibleStateImageBehavior = false;
+            this.impuestosList.SelectedIndexChanged += new System.EventHandler(this.impuestosList_SelectedIndexChanged);
             // 
             // totalImpuestosLabel
             // 
@@ -94,6 +99,24 @@
             this.totalImpuestosLabel.Size = new System.Drawing.Size(0, 38);
             this.totalImpuestosLabel.TabIndex = 5;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(45, 107);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(428, 26);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Selecciona un impuesto para ver su detalle";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1513, 795);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(18, 26);
+            this.label4.TabIndex = 7;
+            this.label4.Text = ".";
+            // 
             // VerImpuestos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -101,6 +124,8 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1547, 823);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.totalImpuestosLabel);
             this.Controls.Add(this.impuestosList);
             this.Controls.Add(this.tipoCombo);
@@ -127,5 +152,7 @@
         private System.Windows.Forms.ComboBox tipoCombo;
         private System.Windows.Forms.ListView impuestosList;
         private System.Windows.Forms.Label totalImpuestosLabel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -16,8 +16,8 @@ namespace AdministradorXML
         public List<Dictionary<string, object>> listaFinal { get; set; }
         public double totalCanceladasSAT { get; set; }
         public double totalContabilizadoCanceladasSAT { get; set; }
-        public bool siguiente { get; set; }
-      
+        public bool noentres { get; set; }
+       
         private class Item
         {
             public string Name;
@@ -43,7 +43,7 @@ namespace AdministradorXML
         {
             InitializeComponent();
         }
-        private void actualiza()
+        public void actualiza()
         {
             if(tipoCombo.Items.Count > 0 && periodosCombo.Items.Count>0)
             {
@@ -53,7 +53,7 @@ namespace AdministradorXML
                 int tipo = itm2.Value;
                  String periodo = itm.Name;
                  String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-                 canceladasList.Clear();
+                 canceladasList.Items.Clear();
                 listaFinal.Clear();
 
                 totalCanceladasSAT = 0;
@@ -127,10 +127,10 @@ namespace AdministradorXML
                                 canceladasList.View = View.Details;
                                 canceladasList.GridLines = true;
                                 canceladasList.FullRowSelect = true;
-                                canceladasList.Columns.Add("Razon Social", 180);
-                                canceladasList.Columns.Add("RFC", 100);
-                                canceladasList.Columns.Add("En el SAT", 100);
-                                canceladasList.Columns.Add("Contabilizado", 100);
+                                canceladasList.Columns.Add("Razon Social", 350);
+                                canceladasList.Columns.Add("RFC", 150);
+                                canceladasList.Columns.Add("En el SAT", 150);
+                                canceladasList.Columns.Add("Contabilizado", 150);
                                 foreach (Dictionary<string, object> dic in listaFinal)
                                 {
                                     if (dic.ContainsKey("rfc"))
@@ -140,8 +140,8 @@ namespace AdministradorXML
                                         //add items to ListView
                                         arr[0] = Convert.ToString(dic["razonSocial"]);
                                         arr[1] = Convert.ToString(dic["rfc"]);
-                                        arr[2] = Convert.ToString(dic["maximo"]);
-                                        arr[3] = Convert.ToString(dic["enlazado"]);
+                                        arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["maximo"]));
+                                        arr[3] = String.Format("{0:n}", Convert.ToDouble(dic["enlazado"]));
                                         totalCanceladasSAT += Convert.ToDouble(dic["maximo"]);
                                         totalContabilizadoCanceladasSAT += Convert.ToDouble(dic["enlazado"]);
                                         itm3 = new ListViewItem(arr);
@@ -164,12 +164,11 @@ namespace AdministradorXML
         }
         private void Canceladas_Load(object sender, EventArgs e)
         {
-            siguiente = true;
-           
+            canceladasList.ItemSelectionChanged += canceladasList_ItemSelectionChanged;
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
-            canceladasList.Location = new Point(50, 50);
-            canceladasList.Size = new Size(width -150, height-150);
+            canceladasList.Location = new Point(50, 75);
+            canceladasList.Size = new Size(width -150, height-175);
             listaFinal = new  List<Dictionary<string, object>> ();
             totalCanceladasLabel.Location = new Point(50, height - 100);
             tipoCombo.Items.Add(new Item("Gasto", 0));
@@ -206,6 +205,28 @@ namespace AdministradorXML
             }
             periodosCombo.SelectedIndex = periodosCombo.Items.Count - 1;
         }
+        
+        private void canceladasList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (canceladasList.SelectedItems.Count > 0 && e.IsSelected)
+            {
+
+                String rfc = canceladasList.SelectedItems[0].SubItems[1].Text.Trim();
+                Item itm2 = (Item)tipoCombo.SelectedItem;
+                int tipo = itm2.Value;
+                Item itm = (Item)periodosCombo.SelectedItem;
+                String periodo = itm.Name;
+
+                Detalle1 form = new Detalle1(rfc, tipo, periodo);
+
+               /* foreach (ListViewItem i in canceladasList.SelectedItems)
+                {
+                    i.Selected = false;
+                }*/
+                form.ShowDialog();
+                //actualiza();
+            }
+        }
 
         private void tipoCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -219,24 +240,8 @@ namespace AdministradorXML
 
         private void canceladasList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int cuantos = canceladasList.SelectedItems.Count;
-            if (cuantos > 0 && siguiente)
-            {
-                String rfc = canceladasList.SelectedItems[0].SubItems[1].Text.Trim();
-                Item itm2 = (Item)tipoCombo.SelectedItem;
-                int tipo = itm2.Value;
-              
-                Item itm = (Item)periodosCombo.SelectedItem;
-                String periodo = itm.Name;
-                Detalle1 form = new Detalle1(rfc, tipo, periodo);
-                form.ShowDialog();
-                actualiza();
-                siguiente = false;
-            }
-            else
-            {
-                siguiente = true;
-            }
+           
+           
         }
     }
 }

@@ -142,5 +142,29 @@ namespace AdministradorXML.Properties {
                 this["acreedora"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("B")]
+        public string sunLibroPresupuesto {
+            get {
+                return ((string)(this["sunLibroPresupuesto"]));
+            }
+            set {
+                this["sunLibroPresupuesto"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AOK")]
+        public string source {
+            get {
+                return ((string)(this["source"]));
+            }
+            set {
+                this["source"] = value;
+            }
+        }
     }
 }

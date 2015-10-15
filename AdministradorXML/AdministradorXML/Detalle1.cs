@@ -21,7 +21,8 @@ namespace AdministradorXML
         public Timer tmr { get; set; }
         System.Windows.Forms.MenuItem menuItem1;
         System.Windows.Forms.MenuItem menuItem2;
-     
+        System.Windows.Forms.MenuItem menuItem33;
+    
         System.Windows.Forms.ContextMenu contextMenu2;
 
         System.Windows.Forms.MenuItem menuItem11;
@@ -62,7 +63,25 @@ namespace AdministradorXML
                 System.Diagnostics.Process.Start(nombre);
             }
         }
+        public void VerXML(object sender, EventArgs e)
+        {
+            int cuantos = facturasList.SelectedItems.Count;
+            if (cuantos > 0)
+            {
+                String pdf = facturasList.SelectedItems[0].SubItems[7].Text;
+                String ruta = facturasList.SelectedItems[0].SubItems[5].Text;
+                if (pdf.Equals("") || ruta.Equals(""))
+                {
 
+                }
+                else
+                {
+                    String nombre = ruta + (object)Path.DirectorySeparatorChar + pdf;
+                    System.Diagnostics.Process.Start(nombre);
+                }
+
+            }
+        }
         public void VerPDF(object sender, EventArgs e)
         {
             int cuantos = facturasList.SelectedItems.Count;
@@ -161,20 +180,25 @@ namespace AdministradorXML
                 contextMenu22 = new System.Windows.Forms.ContextMenu();
                 menuItem11 = new System.Windows.Forms.MenuItem();
                 menuItem22 = new System.Windows.Forms.MenuItem();
+                menuItem33 = new System.Windows.Forms.MenuItem();
+             
                 if (tipoDeContabilidadGlobal == 1 || tipoDeContabilidadGlobal == 2)
                 {
-                    contextMenu22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { menuItem22, menuItem11 });
-                    menuItem11.Index = 1;
+                    contextMenu22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { menuItem22, menuItem11, menuItem33 });
+                    menuItem11.Index = 2;
                     menuItem11.Text = "Ligar XML";
                     menuItem11.Click += ligarXML;
                 }
                 else
                 {
-                    contextMenu22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { menuItem22 });
+                    contextMenu22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { menuItem22, menuItem33 });
                 }
                 menuItem22.Index = 0;
                 menuItem22.Text = "Ver PDF";
                 menuItem22.Click += VerPDF;
+                menuItem33.Index = 1;
+                menuItem33.Text = "Ver XML";
+                menuItem33.Click += VerXML;
                 facturasList.ContextMenu = contextMenu22;
             
 
@@ -325,7 +349,9 @@ namespace AdministradorXML
                                     arr[1] = Convert.ToString(dic["BUNIT"]);
                                     arr[2] = Convert.ToString(dic["JRNAL_NO"]);
                                     arr[3] = Convert.ToString(dic["JRNAL_LINE"]);
-                                    arr[4] = Convert.ToString(dic["amount"]);
+                                  //  arr[4] = Convert.ToString(dic["amount"]);
+                                    arr[4] = String.Format("{0:n}", Convert.ToDouble(dic["amount"]));
+                                
                                     arr[5] = Convert.ToString(dic["consecutivo"]);
                                     arr[6] = Convert.ToString(dic["rfcDelMomento"]);
                                     arr[7] = Convert.ToString(dic["nombreArchivoPDF2"]);
@@ -341,13 +367,13 @@ namespace AdministradorXML
                             facturasList.View = View.Details;
                             facturasList.GridLines = true;
                             facturasList.FullRowSelect = true;
-                            facturasList.Columns.Add("Fecha", 80);
+                            facturasList.Columns.Add("Fecha", 100);
                             facturasList.Columns.Add("RFC", 100);
-                            facturasList.Columns.Add("Cantidad", 90);
-                            facturasList.Columns.Add("Razon Social", 190);
+                            facturasList.Columns.Add("Cantidad", 100);
+                            facturasList.Columns.Add("Razon Social", 350);
                             facturasList.Columns.Add("RutaPDF", 0);
                             facturasList.Columns.Add("ruta", 0);
-                            facturasList.Columns.Add("folioFiscal", 100);
+                            facturasList.Columns.Add("folioFiscal", 130);
                             facturasList.Columns.Add("nombreArchivoXML", 0);
                             facturasList.Columns.Add("Folio", 100);
 
@@ -360,7 +386,9 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["fechaExpedicion"]);
                                     arr[1] = Convert.ToString(dic["rfc"]);
-                                    arr[2] = Convert.ToString(dic["maximo"]);
+                                    //arr[2] = Convert.ToString(dic["maximo"]);
+                                    arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["maximo"]));
+                                
                                     arr[3] = Convert.ToString(dic["razonSocial"]);
                                     arr[4] = Convert.ToString(dic["nombreArchivoPDF"]);
                                     arr[5] = Convert.ToString(dic["ruta"]);

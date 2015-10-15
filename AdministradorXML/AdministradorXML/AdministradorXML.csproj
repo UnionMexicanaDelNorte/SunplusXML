@@ -61,11 +61,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="asignarComceptosaWHO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="asignarComceptosaWHO.Designer.cs">
+      <DependentUpon>asignarComceptosaWHO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="asignarFNCTaWHO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="asignarFNCTaWHO.Designer.cs">
+      <DependentUpon>asignarFNCTaWHO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="asignarPROJaWHO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="asignarPROJaWHO.Designer.cs">
+      <DependentUpon>asignarPROJaWHO.cs</DependentUpon>
+    </Compile>
     <Compile Include="Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.Designer.cs">
       <DependentUpon>Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CambiaLinea.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CambiaLinea.Designer.cs">
+      <DependentUpon>CambiaLinea.cs</DependentUpon>
     </Compile>
     <Compile Include="Canceladas.cs">
       <SubType>Form</SubType>
@@ -84,6 +108,18 @@
     </Compile>
     <Compile Include="config.Designer.cs">
       <DependentUpon>config.cs</DependentUpon>
+    </Compile>
+    <Compile Include="configurarConceptos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="configurarConceptos.Designer.cs">
+      <DependentUpon>configurarConceptos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="confirmaNumeroDeDiario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="confirmaNumeroDeDiario.Designer.cs">
+      <DependentUpon>confirmaNumeroDeDiario.cs</DependentUpon>
     </Compile>
     <Compile Include="CuentasBancariasDeProveedores.cs">
       <SubType>Form</SubType>
@@ -109,11 +145,29 @@
     <Compile Include="eligeBanco.Designer.cs">
       <DependentUpon>eligeBanco.cs</DependentUpon>
     </Compile>
+    <Compile Include="FacturasNoEnlazadas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FacturasNoEnlazadas.Designer.cs">
+      <DependentUpon>FacturasNoEnlazadas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImpuestosDetalle1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImpuestosDetalle1.Designer.cs">
+      <DependentUpon>ImpuestosDetalle1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImpuestosDetalle2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImpuestosDetalle2.Designer.cs">
+      <DependentUpon>ImpuestosDetalle2.cs</DependentUpon>
     </Compile>
     <Compile Include="Ligar.cs">
       <SubType>Form</SubType>
@@ -127,6 +181,13 @@
     <Compile Include="Ligar2.Designer.cs">
       <DependentUpon>Ligar2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Login.cs" />
+    <Compile Include="mandarPush.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mandarPush.Designer.cs">
+      <DependentUpon>mandarPush.cs</DependentUpon>
+    </Compile>
     <Compile Include="misDatos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +199,18 @@
     </Compile>
     <Compile Include="PermisosDeCuentas.Designer.cs">
       <DependentUpon>PermisosDeCuentas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="polizasDeDepartamentales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="polizasDeDepartamentales.Designer.cs">
+      <DependentUpon>polizasDeDepartamentales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="presupuestoDeDepartamentales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="presupuestoDeDepartamentales.Designer.cs">
+      <DependentUpon>presupuestoDeDepartamentales.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -165,8 +238,20 @@
     <Compile Include="XMLPolizasDelMes.Designer.cs">
       <DependentUpon>XMLPolizasDelMes.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="asignarComceptosaWHO.resx">
+      <DependentUpon>asignarComceptosaWHO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="asignarFNCTaWHO.resx">
+      <DependentUpon>asignarFNCTaWHO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="asignarPROJaWHO.resx">
+      <DependentUpon>asignarPROJaWHO.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.resx">
       <DependentUpon>Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CambiaLinea.resx">
+      <DependentUpon>CambiaLinea.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Canceladas.resx">
       <DependentUpon>Canceladas.cs</DependentUpon>
@@ -176,6 +261,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="config.resx">
       <DependentUpon>config.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="configurarConceptos.resx">
+      <DependentUpon>configurarConceptos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="confirmaNumeroDeDiario.resx">
+      <DependentUpon>confirmaNumeroDeDiario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CuentasBancariasDeProveedores.resx">
       <DependentUpon>CuentasBancariasDeProveedores.cs</DependentUpon>
@@ -189,8 +280,17 @@
     <EmbeddedResource Include="eligeBanco.resx">
       <DependentUpon>eligeBanco.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FacturasNoEnlazadas.resx">
+      <DependentUpon>FacturasNoEnlazadas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImpuestosDetalle1.resx">
+      <DependentUpon>ImpuestosDetalle1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImpuestosDetalle2.resx">
+      <DependentUpon>ImpuestosDetalle2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ligar.resx">
       <DependentUpon>Ligar.cs</DependentUpon>
@@ -198,11 +298,20 @@
     <EmbeddedResource Include="Ligar2.resx">
       <DependentUpon>Ligar2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mandarPush.resx">
+      <DependentUpon>mandarPush.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="misDatos.resx">
       <DependentUpon>misDatos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PermisosDeCuentas.resx">
       <DependentUpon>PermisosDeCuentas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="polizasDeDepartamentales.resx">
+      <DependentUpon>polizasDeDepartamentales.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="presupuestoDeDepartamentales.resx">
+      <DependentUpon>presupuestoDeDepartamentales.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

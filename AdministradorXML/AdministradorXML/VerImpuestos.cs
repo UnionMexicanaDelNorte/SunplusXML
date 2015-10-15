@@ -18,7 +18,8 @@ namespace AdministradorXML
 
         System.Windows.Forms.ContextMenu contextMenu2;
 
-   
+        public Dictionary<string, double> contadoresImpuestos { get; set; }
+       
         public List<Dictionary<string, object>> listaFinal { get; set; }
         public double totalImpuestosSAT { get; set; }
         public double totalContabilizadoImpuestosSAT { get; set; }
@@ -73,11 +74,11 @@ namespace AdministradorXML
         }
         private void VerImpuestos_Load(object sender, EventArgs e)
         {
-            siguiente = true;
+            contadoresImpuestos= new Dictionary<string,double>();
             
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
-            impuestosList.Location = new Point(50, 50);
+            impuestosList.Location = new Point(50, 75);
             impuestosList.Size = new Size(width - 150, height - 150);
             listaFinal = new List<Dictionary<string, object>>();
             totalImpuestosLabel.Location = new Point(50, height - 100);
@@ -99,7 +100,7 @@ namespace AdministradorXML
             impuestosList.ContextMenu = contextMenu2;
 
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML]";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML]  WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -112,9 +113,37 @@ namespace AdministradorXML
                     {
                         while (reader.Read())
                         {
-                            var periodo = reader.GetString(0);
+                            String periodo = reader.GetString(0);
                             periodosCombo.Items.Add(new Item(periodo, empiezo));
                             empiezo++;
+                        }
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("No existen Periodos, primero descarga xml del buzon tributario.", "SunPlusXML", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            String queryPeriodos1 = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML]  WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
+            try
+            {
+                using (SqlConnection connection1 = new SqlConnection(connString))
+                {
+                    connection1.Open();
+                    SqlCommand cmdCheck1 = new SqlCommand(queryPeriodos1, connection1);
+                    SqlDataReader reader1 = cmdCheck1.ExecuteReader();
+                    int empiezo1 = 1;
+                    if (reader1.HasRows)
+                    {
+                        while (reader1.Read())
+                        {
+                            String periodo1 = reader1.GetString(0);
+                            periodosCombo.Items.Add(new Item(periodo1, empiezo1));
+                            empiezo1++;
                         }
                     }
                     else
@@ -152,17 +181,19 @@ namespace AdministradorXML
                 String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
                 impuestosList.Clear();
                 listaFinal.Clear();
-
+                
                 totalImpuestosSAT = 0;
                 totalContabilizadoImpuestosSAT = 0;
-
+                //selecciona distintos impuestos que existen en la tabla impuestos y ponlos a 0 - YA
+                //selecciona todas las facturas activas segun el periodo y segun el tipo 1 o 2
+                //si el folio de la factura activa coincide con el tipo de impuesto lo voy sumando
+                // alfinal lo muestro en la tabla
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(connString))
                     {
                         connection.Open();
-                        //canceladas SAT
-                        String queryXML = "SELECT f.ruta,f.nombreArchivoXML,f.nombreArchivoPDF,f.fechaExpedicion,f.rfc,f.razonSocial,f.total,f.folio,f.folioFiscal ,f.STATUS ,x.impuesto ,x.importe ,x.tasa FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] x on x.folioFiscal = f.folioFiscal WHERE f.STATUS = '"+tipo+"' AND SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '"+periodo+"' order by x.importe desc";
+                        String queryXML = "SELECT DISTINCT impuesto FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos]";
                         using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                         {
                             SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -170,83 +201,43 @@ namespace AdministradorXML
                             {
                                 while (reader.Read())
                                 {
-                                    String ruta = reader.GetString(0);
-                                    String nombreArchivoXML = reader.GetString(1);
-                                    String nombreArchivoPDF = reader.GetString(2);
-                                    String fechaExpedicion = reader.GetDateTime(3).ToString().Substring(0, 10);
-                                    String rfc = reader.GetString(4);
-                                    String razonSocial = reader.GetString(5);
-                                   
-
-
-
-                                    double total = Convert.ToDouble(Math.Abs(reader.GetDecimal(6)));
-                                    String folio = reader.GetString(7);
-                                    String folioFiscal = reader.GetString(8);
-                                    String impuesto = reader.GetString(10);
-                                   
-                                    double importe = Convert.ToDouble(Math.Abs(reader.GetDouble(11)));
-                                    double tasa = Convert.ToDouble(Math.Abs(reader.GetDouble(12)));
-                                 
-
-                                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                                    dictionary.Add("ruta", ruta);
-                                    dictionary.Add("nombreArchivoXML", nombreArchivoXML);
-                                    dictionary.Add("nombreArchivoPDF", nombreArchivoPDF);
-                                    dictionary.Add("fechaExpedicion", fechaExpedicion);
-                                    dictionary.Add("rfc", rfc);
-                                    dictionary.Add("razonSocial", razonSocial);
-                                  //  dictionary.Add("total", total);
-                                    dictionary.Add("folio", folio);
-                                    dictionary.Add("folioFiscal", folioFiscal);
-                                    dictionary.Add("impuesto", impuesto);
-                                    dictionary.Add("importe", importe);
-                                    dictionary.Add("tasa", tasa);
-                                    listaFinal.Add(dictionary);
+                                    contadoresImpuestos[reader.GetString(0)] = 0.0;
                                 }
-
-
-
-                                impuestosList.View = View.Details;
-                                impuestosList.GridLines = true;
-                                impuestosList.FullRowSelect = true;
-                                impuestosList.Columns.Add("ruta", 0);
-                                impuestosList.Columns.Add("nombreArchivoXML", 0);
-                                impuestosList.Columns.Add("nombreArchivoPDF", 0);
-                                impuestosList.Columns.Add("Fecha", 100);
-
-                                impuestosList.Columns.Add("RFC", 100);
-                                impuestosList.Columns.Add("Razon Social", 250);
-                                impuestosList.Columns.Add("Folio", 80);
-                                impuestosList.Columns.Add("Folio Fiscal", 200);
-                                impuestosList.Columns.Add("Impuesto", 120);
-                                impuestosList.Columns.Add("Importe", 150);
-                                impuestosList.Columns.Add("Tasa", 50);
-                                foreach (Dictionary<string, object> dic in listaFinal)
-                                {
-                                    if (dic.ContainsKey("rfc"))
+                            }
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connString))
+                    {
+                        connection.Open();
+                        String queryXML = "SELECT folioFiscal FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(10)),1," + periodo.Length + ") = '" + periodo + "' AND STATUS = '"+tipo+"'";
+                        using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
+                        {
+                            SqlDataReader reader = cmdCheck.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {             
+                                    String folioFiscal = reader.GetString(0);
+                                    String query2 = "SELECT impuesto, importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] WHERE folioFiscal = '"+folioFiscal+"'";
+                                    SqlCommand cmdCheck1 = new SqlCommand(query2, connection);
+                                    SqlDataReader reader1 = cmdCheck1.ExecuteReader();
+                                    if (reader1.HasRows)
                                     {
-                                        string[] arr = new string[12];
-                                        ListViewItem itm3;
-                                        //add items to ListView
-                                        arr[0] = Convert.ToString(dic["ruta"]);
-                                        arr[1] = Convert.ToString(dic["nombreArchivoXML"]);
-                                        arr[2] = Convert.ToString(dic["nombreArchivoPDF"]);
-                                        arr[3] = Convert.ToString(dic["fechaExpedicion"]);
-                                        arr[4] = Convert.ToString(dic["rfc"]);
-                                        arr[5] = Convert.ToString(dic["razonSocial"]);
-                                        arr[6] = Convert.ToString(dic["folio"]);
-                                        arr[7] = Convert.ToString(dic["folioFiscal"]);
-                                        arr[8] = Convert.ToString(dic["impuesto"]);
-                                        arr[9] = Convert.ToString(dic["importe"]);
-                                        arr[10] = Convert.ToString(dic["tasa"]);
-
-
-                                        totalImpuestosSAT += Convert.ToDouble(dic["importe"]);
-                                        itm3 = new ListViewItem(arr);
-                                        impuestosList.Items.Add(itm3);
+                                        while (reader1.Read())
+                                        {
+                                            String impuesto = reader1.GetString(0);
+                                            double importe = reader1.GetDouble(1);
+                                            contadoresImpuestos[impuesto] += importe;
+                                        }
                                     }
-                                }
+                                }  
                             }//if reader
                         }
                     }
@@ -255,8 +246,50 @@ namespace AdministradorXML
                 {
                     System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
-                totalImpuestosLabel.Text = "Total de impuestos pagados en el SAT: $" + Math.Round(totalImpuestosSAT,2).ToString() + " En el periodo: " + periodo;
+                foreach(KeyValuePair<string,double> impuesto in contadoresImpuestos)
+                {
+                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                    dictionary.Add("impuesto", impuesto.Key);
+                    dictionary.Add("importe", impuesto.Value);
+                    listaFinal.Add(dictionary);
+                }
+                impuestosList.View = View.Details;
+                impuestosList.GridLines = true;
+                impuestosList.FullRowSelect = true;
+                impuestosList.Columns.Add("Impuesto",250);
+                impuestosList.Columns.Add("Importe", 250);
+                foreach (Dictionary<string, object> dic in listaFinal)
+                {
+                    if (dic.ContainsKey("impuesto"))
+                    {
+                        string[] arr = new string[12];
+                        ListViewItem itm3;
+                        //add items to ListView
+                        arr[0] = Convert.ToString(dic["impuesto"]);
+                        arr[1] = String.Format("{0:n}", Convert.ToDouble(dic["importe"]));
+                        itm3 = new ListViewItem(arr);
+                        impuestosList.Items.Add(itm3);
+                    }
+                }
+   ///             totalImpuestosLabel.Text = "Total de impuestos pagados en el SAT: $" + Math.Round(totalImpuestosSAT,2).ToString() + " En el periodo: " + periodo;
                 this.Cursor = System.Windows.Forms.Cursors.Arrow;
+            }
+        }
+
+        private void impuestosList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(impuestosList.SelectedItems.Count>0)
+            {
+                //obtengo el tipo de impuesto, periodo y tipo 1 o 2
+                //selecciono todas las facturas por periodo y tipo
+                Item itm = (Item)periodosCombo.SelectedItem;
+                Item itm2 = (Item)tipoCombo.SelectedItem;
+                int tipo = itm2.Value;
+                String periodo = itm.Name;
+                String impuesto = impuestosList.SelectedItems[0].SubItems[0].Text.Trim();
+
+                ImpuestosDetalle1 form = new ImpuestosDetalle1(periodo, impuesto,tipo);
+                form.ShowDialog();
             }
         }
 

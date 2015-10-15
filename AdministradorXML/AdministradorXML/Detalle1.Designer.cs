@@ -47,6 +47,7 @@
             // 
             // facturasList
             // 
+            this.facturasList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.facturasList.Location = new System.Drawing.Point(51, 116);
             this.facturasList.MultiSelect = false;
             this.facturasList.Name = "facturasList";
@@ -57,6 +58,7 @@
             // 
             // ligadasList
             // 
+            this.ligadasList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ligadasList.Location = new System.Drawing.Point(51, 804);
             this.ligadasList.MultiSelect = false;
             this.ligadasList.Name = "ligadasList";

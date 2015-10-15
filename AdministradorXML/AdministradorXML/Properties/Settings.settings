@@ -32,5 +32,11 @@
     <Setting Name="acreedora" Type="System.String" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
+    <Setting Name="sunLibroPresupuesto" Type="System.String" Scope="User">
+      <Value Profile="(Default)">B</Value>
+    </Setting>
+    <Setting Name="source" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AOK</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

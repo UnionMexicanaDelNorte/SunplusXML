@@ -77,7 +77,6 @@ namespace Liga
                 {
                     referenciaGlobal = referenciaGlobal +" "+ args[i];
                 }
-                 
             }
         }
 
@@ -107,17 +106,17 @@ namespace Liga
                     String queryXML = "";
                     if (tipoDeContabilidadGlobal==1)
                     {
-                        queryXML = "SELECT total, folioFiscal, rfc, razonSocial, nombreArchivoPDF, fechaExpedicion ,ruta,nombreArchivoXML,folio FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE rfc = '" + RFC + "' AND STATUS =  '1' order by fechaExpedicion asc";
+                        queryXML = "SELECT total, folioFiscal, rfc, razonSocial, nombreArchivoPDF, fechaExpedicion ,ruta,nombreArchivoXML,folio FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE rfc = '" + RFC + "' AND STATUS =  '1' AND ocultaEnLigar = '0' order by fechaExpedicion asc";
                     }
                     else
                     {
                         if (tipoDeContabilidadGlobal==2)
                         {
-                            queryXML = "SELECT total, folioFiscal, rfc, razonSocial, nombreArchivoPDF, fechaExpedicion ,ruta,nombreArchivoXML,folio FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE rfc = '" + RFC + "' AND STATUS =  '2' order by fechaExpedicion asc";
+                            queryXML = "SELECT total, folioFiscal, rfc, razonSocial, nombreArchivoPDF, fechaExpedicion ,ruta,nombreArchivoXML,folio FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE rfc = '" + RFC + "' AND STATUS =  '2' AND ocultaEnLigar = '0' order by fechaExpedicion asc";
                         }
                         else
                         {
-                            queryXML = "SELECT total, folioFiscal, rfc, razonSocial, nombreArchivoPDF, fechaExpedicion ,ruta,nombreArchivoXML,folio FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE rfc = '" + RFC + "' AND STATUS in('1','2') order by fechaExpedicion asc";
+                            queryXML = "SELECT total, folioFiscal, rfc, razonSocial, nombreArchivoPDF, fechaExpedicion ,ruta,nombreArchivoXML,folio FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE rfc = '" + RFC + "' AND STATUS in('1','2') AND ocultaEnLigar = '0' order by fechaExpedicion asc";
                         }
                     }
                     listaCandidatos = new List<Dictionary<string, object>>();
@@ -372,148 +371,6 @@ namespace Liga
         }
         private void labelDiario4_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.Text))
-            {
-                String s = e.Data.GetData(DataFormats.Text) as String;
-                if (!String.IsNullOrEmpty(s))
-                {
-                    double cantidadAAsignar = 0;
-                    int posicionDelPuntero = s.IndexOf("|");
-                    String Fecha = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String RFC = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    if (todaLaCantidadCheckBox.Checked)
-                    {
-                        cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
-                    }
-                    else
-                    {
-                        double maximo = 0;
-                        cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
-                        if(cantidadAAsignar<cantidadQueFalta)
-                        {
-                            maximo = cantidadAAsignar;
-                        }
-                        else
-                        {
-                            maximo = cantidadQueFalta;
-                        }
-                        cantidadALigarXML form1 = new cantidadALigarXML(maximo);
-                        form1.ShowDialog();
-                        cantidadAAsignar = form1.cantidadLigada;
-                        if(cantidadAAsignar==0)
-                        {
-                            System.Windows.Forms.MessageBox.Show("Error: no puedes asignar $ 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                            return;
-                        }
-                    }
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String razonSocial = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String RutaPDF = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String ruta = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String folioFiscal = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String nombreArchivoXML = s.Substring(0, posicionDelPuntero);
-                    s = s.Substring(posicionDelPuntero + 1);
-                    posicionDelPuntero = s.IndexOf("|");
-
-                    String folio = s;
-                  
-                    if(cantidadAAsignar>cantidadQueFalta)
-                    {
-                        System.Windows.Forms.MessageBox.Show("Error, solo falta de asignar a este movimiento: $ "+cantidadQueFalta+" y estas tratando de asignar: $ "+cantidadAAsignar, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);     
-                        return;
-                    }
-
-                    cantidadQueFalta = Math.Round((cantidadQueFalta - Math.Round(cantidadAAsignar, 2)), 2);
-
-                    int cuantos = facturasAsignadasList.Items.Count;
-                    if (cuantos == 0)
-                    {
-                        facturasAsignadasList.Clear();
-                        facturasAsignadasList.View = View.Details;
-                        facturasAsignadasList.GridLines = true;
-                        facturasAsignadasList.FullRowSelect = true;
-                        facturasAsignadasList.Columns.Add("Fecha", 80);
-                        facturasAsignadasList.Columns.Add("RFC", 100);
-                        facturasAsignadasList.Columns.Add("Cantidad", 90);
-                        facturasAsignadasList.Columns.Add("Razon Social", 190);
-                        facturasAsignadasList.Columns.Add("RutaPDF", 0);
-                        facturasAsignadasList.Columns.Add("ruta", 0);
-                        facturasAsignadasList.Columns.Add("folioFiscal", 0);
-                        facturasAsignadasList.Columns.Add("nombreArchivoXML", 0);
-                        facturasAsignadasList.Columns.Add("Folio", 100);
-            
-                    }
-
-                    Dictionary<string, object> dic = new Dictionary<string, object>();
-                    dic.Add("fechaExpedicion", Fecha);
-                    dic.Add("rfc", RFC);
-                    dic.Add("cantidadAAsignar", cantidadAAsignar);
-                    dic.Add("razonSocial", razonSocial);
-                    dic.Add("nombreArchivoPDF", RutaPDF);
-                    dic.Add("ruta", ruta);
-                    dic.Add("folioFiscal", folioFiscal);
-                    dic.Add("nombreArchivoXML", nombreArchivoXML);
-                    dic.Add("folio", folio);
-                
-                    listaUUIDEnlazados.Add(dic);
-
-
-                    string[] arr = new string[10];
-                    ListViewItem itm;
-                    //add items to ListView
-                    arr[0] = Convert.ToString(dic["fechaExpedicion"]);
-                    arr[1] = Convert.ToString(dic["rfc"]);
-                    arr[2] = Convert.ToString(dic["cantidadAAsignar"]);
-                    arr[3] = Convert.ToString(dic["razonSocial"]);
-                    arr[4] = Convert.ToString(dic["nombreArchivoPDF"]);
-                    arr[5] = Convert.ToString(dic["ruta"]);
-                    arr[6] = Convert.ToString(dic["folioFiscal"]);
-                    arr[7] = Convert.ToString(dic["nombreArchivoXML"]);
-                    arr[8] = Convert.ToString(dic["folio"]);
-
-                    itm = new ListViewItem(arr);
-                    facturasAsignadasList.Items.Add(itm);
-                    foreach(ListViewItem listViewItem in listaDeCandidatos.Items)
-                    {
-                        if(listViewItem.SubItems[6].Text.Equals(folioFiscal))
-                        {
-                            listaDeCandidatos.Items.Remove(listViewItem);
-                            break;
-                        }
-                    }
-                    foreach (Dictionary<string, object> dic1 in listaCandidatos)
-                    {
-                        if (dic1["folioFiscal"].ToString().Equals(folioFiscal))
-                        {
-                            listaCandidatos.Remove(dic1);
-                            break;
-                        }
-                    }
-                    labelDiario4.Text = "Cantidad que falta a ligar: $ " + cantidadQueFalta;
-                    noPermitas = true;
-                }
-                   
-            }
             
         }
         private void listaDeCandidatos_MouseDown(object sender, MouseEventArgs e)
@@ -894,31 +751,8 @@ namespace Liga
                     s = s.Substring(posicionDelPuntero + 1);
                     posicionDelPuntero = s.IndexOf("|");
 
-                    if (todaLaCantidadCheckBox.Checked)
-                    {
-                        cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
-                    }
-                    else
-                    {
-                        double maximo = 0;
-                        cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
-                        if (cantidadAAsignar < cantidadQueFalta)
-                        {
-                            maximo = cantidadAAsignar;
-                        }
-                        else
-                        {
-                            maximo = cantidadQueFalta;
-                        }
-                        cantidadALigarXML form1 = new cantidadALigarXML(maximo);
-                        form1.ShowDialog();
-                        cantidadAAsignar = form1.cantidadLigada;
-                        if (cantidadAAsignar == 0)
-                        {
-                            System.Windows.Forms.MessageBox.Show("Error: no puedes asignar $ 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                            return;
-                        }
-                    }
+                   
+                    cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
                     s = s.Substring(posicionDelPuntero + 1);
                     posicionDelPuntero = s.IndexOf("|");
 
@@ -937,6 +771,30 @@ namespace Liga
                     String folioFiscal = s.Substring(0, posicionDelPuntero);
                     s = s.Substring(posicionDelPuntero + 1);
                     posicionDelPuntero = s.IndexOf("|");
+
+                    if (!todaLaCantidadCheckBox.Checked)
+                    {
+                        double maximo = 0;
+
+                        if (cantidadAAsignar < cantidadQueFalta)
+                        {
+                            maximo = cantidadAAsignar;
+                        }
+                        else
+                        {
+                            maximo = cantidadQueFalta;
+                        }
+                        cantidadALigarXML form1 = new cantidadALigarXML(maximo,folioFiscal);
+                        form1.ShowDialog();
+                        cantidadAAsignar = form1.cantidadLigada;
+                        if (cantidadAAsignar == 0)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Error: no puedes asignar $ 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            return;
+                        }
+                    }
+
+
 
                     String nombreArchivoXML = s.Substring(0, posicionDelPuntero);
                     s = s.Substring(posicionDelPuntero + 1);
@@ -1138,148 +996,7 @@ namespace Liga
         }
         private void listaDeCandidatos_MouseDoubleClick(object sender, EventArgs e)
         {
-            String s = listaDeCandidatos.SelectedItems[0].SubItems[0].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[1].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[2].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[3].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[4].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[5].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[6].Text +
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[7].Text+
-                    "|" + listaDeCandidatos.SelectedItems[0].SubItems[8].Text;
-            double cantidadAAsignar = 0;
-            int posicionDelPuntero = s.IndexOf("|");
-            String Fecha = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            String RFC = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            if (todaLaCantidadCheckBox.Checked)
-            {
-                cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
-            }
-            else
-            {
-                double maximo = 0;
-                cantidadAAsignar = Convert.ToDouble(s.Substring(0, posicionDelPuntero));
-                if (cantidadAAsignar < cantidadQueFalta)
-                {
-                    maximo = cantidadAAsignar;
-                }
-                else
-                {
-                    maximo = cantidadQueFalta;
-                }
-                cantidadALigarXML form1 = new cantidadALigarXML(maximo);
-                form1.ShowDialog();
-                cantidadAAsignar = form1.cantidadLigada;
-                if (cantidadAAsignar == 0)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: no puedes asignar $ 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
-            }
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            String razonSocial = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            String RutaPDF = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            String ruta = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            String folioFiscal = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-
-            String nombreArchivoXML = s.Substring(0, posicionDelPuntero);
-            s = s.Substring(posicionDelPuntero + 1);
-            posicionDelPuntero = s.IndexOf("|");
-
-            String folio = s;
-
-            if (cantidadAAsignar > cantidadQueFalta)
-            {
-                System.Windows.Forms.MessageBox.Show("Error, solo falta de asignar a este movimiento: $ " + cantidadQueFalta + " y estas tratando de asignar: $ " + cantidadAAsignar, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return;
-            }
-
-            cantidadQueFalta = Math.Round((cantidadQueFalta - Math.Round(cantidadAAsignar, 2)), 2);
-
-            int cuantos = facturasAsignadasList.Items.Count;
-            if (cuantos == 0)
-            {
-                facturasAsignadasList.Clear();
-                facturasAsignadasList.View = View.Details;
-                facturasAsignadasList.GridLines = true;
-                facturasAsignadasList.FullRowSelect = true;
-                facturasAsignadasList.Columns.Add("Fecha", 80);
-                facturasAsignadasList.Columns.Add("RFC", 100);
-                facturasAsignadasList.Columns.Add("Cantidad", 90);
-                facturasAsignadasList.Columns.Add("Razon Social", 190);
-                facturasAsignadasList.Columns.Add("RutaPDF", 0);
-                facturasAsignadasList.Columns.Add("ruta", 0);
-                facturasAsignadasList.Columns.Add("folioFiscal", 0);
-                facturasAsignadasList.Columns.Add("nombreArchivoXML", 0);
-                facturasAsignadasList.Columns.Add("Folio", 100);
-            }
-
-            Dictionary<string, object> dic = new Dictionary<string, object>();
-            dic.Add("fechaExpedicion", Fecha);
-            dic.Add("rfc", RFC);
-            dic.Add("cantidadAAsignar", cantidadAAsignar);
-            dic.Add("razonSocial", razonSocial);
-            dic.Add("nombreArchivoPDF", RutaPDF);
-            dic.Add("ruta", ruta);
-            dic.Add("folioFiscal", folioFiscal);
-            dic.Add("nombreArchivoXML", nombreArchivoXML);
-            dic.Add("folio", folio);
-            listaUUIDEnlazados.Add(dic);
-
-
-            string[] arr = new string[10];
-            ListViewItem itm;
-            //add items to ListView
-            arr[0] = Convert.ToString(dic["fechaExpedicion"]);
-            arr[1] = Convert.ToString(dic["rfc"]);
-            arr[2] = Convert.ToString(dic["cantidadAAsignar"]);
-            arr[3] = Convert.ToString(dic["razonSocial"]);
-            arr[4] = Convert.ToString(dic["nombreArchivoPDF"]);
-            arr[5] = Convert.ToString(dic["ruta"]);
-            arr[6] = Convert.ToString(dic["folioFiscal"]);
-            arr[7] = Convert.ToString(dic["nombreArchivoXML"]);
-            arr[8] = Convert.ToString(dic["folio"]);
-
-            itm = new ListViewItem(arr);
-            facturasAsignadasList.Items.Add(itm);
-            foreach (ListViewItem listViewItem in listaDeCandidatos.Items)
-            {
-                if (listViewItem.SubItems[6].Text.Equals(folioFiscal))
-                {
-                    listaDeCandidatos.Items.Remove(listViewItem);
-                    break;
-                }
-            }
-            foreach (Dictionary<string, object> dic1 in listaCandidatos)
-            {
-                if (dic1["folioFiscal"].ToString().Equals(folioFiscal))
-                {
-                    listaCandidatos.Remove(dic1);
-                    break;
-                }
-            }
-            labelDiario4.Text = "Cantidad que falta a ligar: $ " + cantidadQueFalta;
-            noPermitas = true;
+         
         }
         private void listaDeCandidatos_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1313,6 +1030,7 @@ namespace Liga
         {
             if(cantidadQueFalta!=0.0)
             {
+               // Seguro form = new Seguro("Todavía")
                 System.Windows.Forms.MessageBox.Show("Todavia te falta por asignar: $ "+cantidadQueFalta+" al movimiento contable.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else

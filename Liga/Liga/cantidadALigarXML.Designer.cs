@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cantidadLigadaText = new System.Windows.Forms.TextBox();
             this.ligarButton = new System.Windows.Forms.Button();
+            this.descartarCheck = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // puedesLigar
@@ -74,11 +75,22 @@
             this.ligarButton.UseVisualStyleBackColor = true;
             this.ligarButton.Click += new System.EventHandler(this.ligarButton_Click);
             // 
+            // descartarCheck
+            // 
+            this.descartarCheck.AutoSize = true;
+            this.descartarCheck.Location = new System.Drawing.Point(60, 256);
+            this.descartarCheck.Name = "descartarCheck";
+            this.descartarCheck.Size = new System.Drawing.Size(673, 30);
+            this.descartarCheck.TabIndex = 4;
+            this.descartarCheck.Text = "Descartar Factura (la factura ya no aparecerá en el menú de ligar)";
+            this.descartarCheck.UseVisualStyleBackColor = true;
+            // 
             // cantidadALigarXML
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(966, 266);
+            this.ClientSize = new System.Drawing.Size(980, 347);
+            this.Controls.Add(this.descartarCheck);
             this.Controls.Add(this.ligarButton);
             this.Controls.Add(this.cantidadLigadaText);
             this.Controls.Add(this.label1);
@@ -100,5 +112,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox cantidadLigadaText;
         private System.Windows.Forms.Button ligarButton;
+        private System.Windows.Forms.CheckBox descartarCheck;
     }
 }

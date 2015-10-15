@@ -35,6 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tipoCombo = new System.Windows.Forms.ComboBox();
             this.totalCanceladasLabel = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -59,7 +60,9 @@
             // 
             // canceladasList
             // 
+            this.canceladasList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.canceladasList.Location = new System.Drawing.Point(37, 156);
+            this.canceladasList.MultiSelect = false;
             this.canceladasList.Name = "canceladasList";
             this.canceladasList.Size = new System.Drawing.Size(121, 97);
             this.canceladasList.TabIndex = 2;
@@ -94,6 +97,15 @@
             this.totalCanceladasLabel.Size = new System.Drawing.Size(0, 26);
             this.totalCanceladasLabel.TabIndex = 5;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(32, 97);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(390, 26);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Seleccione un RFC para ver su detalle.";
+            // 
             // Canceladas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -101,6 +113,7 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1107, 628);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.totalCanceladasLabel);
             this.Controls.Add(this.tipoCombo);
             this.Controls.Add(this.label2);
@@ -127,5 +140,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox tipoCombo;
         private System.Windows.Forms.Label totalCanceladasLabel;
+        private System.Windows.Forms.Label label3;
     }
 }

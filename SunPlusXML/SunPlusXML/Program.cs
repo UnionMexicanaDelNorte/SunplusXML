@@ -16,16 +16,37 @@ namespace SunPlusXML
         {
           
             String thisprocessname = Process.GetCurrentProcess().ProcessName;
-
+            
             if (Process.GetProcesses().Count(p => p.ProcessName == thisprocessname) > 1)
             {
-                if (args.Length > 0)//quiere entrar en modo ligero, pero ya hay otra instancia
+                if (args.Length > 0)
                 {
-                    return; 
+                    if(args[0].Equals("2"))
+                    {
+                        //quiere entrar en modo ultrapesado, debemos de aniquilar cualquier otra instancia
+                        var processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
+                        int cuantos = processes.Length;
+                        int con = 0;
+                        foreach (var process in processes)
+                        {
+                            con++;
+                            if (con != cuantos)
+                            {
+                                process.CloseMainWindow();
+                                process.Kill();
+                            }
+                        }
+                    }
+                    else
+                    {//quiere entrar en modo ligero, pero ya hay otra instancia
+                        return; 
+                    }
                 }
                 else
                 {
                     //quiere entrar en modo pesado, debemos de aniquilar cualquier otra instancia
+                    //ATENCION! esto tambien elimina las instancias del modo ultrapesado, por lo tanto el modo ultra pesado
+                    //debe de ejecutarse cuando no este programada la ejecucion de ninguno de los otros modos
                     var processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
                     int cuantos = processes.Length;
                     int con = 0;
@@ -38,6 +59,7 @@ namespace SunPlusXML
                             process.Kill();
                         }
                     }
+
                 }
                 
 
@@ -49,11 +71,11 @@ namespace SunPlusXML
 
             if (args.Length >0)
             {
-                Application.Run(new Form1(true));
+                Application.Run(new Form1(Convert.ToInt32(args[0])));//modo ligero = 1, modo ultrapesado=  2
             }
             else
             {
-                Application.Run(new Form1(false));
+                Application.Run(new Form1(0));//modo pesado
             }
            
         

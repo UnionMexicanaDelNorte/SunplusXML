@@ -5,6 +5,7 @@
 \\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.config.resources
 \\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.Form1.resources
 \\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.Properties.Resources.resources
+\\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.Seguro.resources
 \\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.csproj.GenerateResource.Cache
 \\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.exe
 \\psf\home\Documents\Visual Studio 2013\Projects\Liga\Liga\obj\Debug\Liga.pdb

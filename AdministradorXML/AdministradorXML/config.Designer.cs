@@ -46,6 +46,11 @@
             this.cerrarButton = new System.Windows.Forms.Button();
             this.grabarButton = new System.Windows.Forms.Button();
             this.revisarConexionButton = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.presupuestoText = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.sourceText = new System.Windows.Forms.TextBox();
+            this.helpButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -191,11 +196,60 @@
             this.revisarConexionButton.UseVisualStyleBackColor = true;
             this.revisarConexionButton.Click += new System.EventHandler(this.revisarConexionButton_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(528, 40);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(191, 26);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Libro presupuesto:";
+            // 
+            // presupuestoText
+            // 
+            this.presupuestoText.Location = new System.Drawing.Point(739, 40);
+            this.presupuestoText.Name = "presupuestoText";
+            this.presupuestoText.Size = new System.Drawing.Size(192, 31);
+            this.presupuestoText.TabIndex = 18;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(528, 102);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(181, 26);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "Source x defecto:";
+            // 
+            // sourceText
+            // 
+            this.sourceText.Location = new System.Drawing.Point(739, 103);
+            this.sourceText.Name = "sourceText";
+            this.sourceText.Size = new System.Drawing.Size(192, 31);
+            this.sourceText.TabIndex = 20;
+            // 
+            // helpButton
+            // 
+            this.helpButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("helpButton.BackgroundImage")));
+            this.helpButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.helpButton.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.helpButton.Location = new System.Drawing.Point(827, 162);
+            this.helpButton.Name = "helpButton";
+            this.helpButton.Size = new System.Drawing.Size(104, 103);
+            this.helpButton.TabIndex = 21;
+            this.helpButton.UseVisualStyleBackColor = true;
+            this.helpButton.Click += new System.EventHandler(this.helpButton_Click);
+            // 
             // config
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(999, 518);
+            this.Controls.Add(this.helpButton);
+            this.Controls.Add(this.sourceText);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.presupuestoText);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.revisarConexionButton);
             this.Controls.Add(this.grabarButton);
             this.Controls.Add(this.cerrarButton);
@@ -243,5 +297,10 @@
         private System.Windows.Forms.Button cerrarButton;
         private System.Windows.Forms.Button grabarButton;
         private System.Windows.Forms.Button revisarConexionButton;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox presupuestoText;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox sourceText;
+        private System.Windows.Forms.Button helpButton;
     }
 }

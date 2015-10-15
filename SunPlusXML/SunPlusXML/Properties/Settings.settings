@@ -36,7 +36,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="timeInterval" Type="System.String" Scope="User">
-      <Value Profile="(Default)">10000</Value>
+      <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="RFC" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

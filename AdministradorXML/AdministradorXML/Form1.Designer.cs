@@ -45,8 +45,20 @@
             this.cuentasBancariasDeProveedoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asociarTipoDeDiarioCuentaSunplusCuentaBancariaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportesDeDepartamentalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configurarConceptosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asignarFNCTAWHOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asignarPROJAWHOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asignarPermisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.polizasDeDepartamentalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.presupuestoDeDepartamentalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mandarMensajeCustomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xMLDeCuentasToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.xMLDeBalanzaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logueadoComoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cerrarSesiónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ingresosSATList = new System.Windows.Forms.ListView();
             this.ingresosSunPlusList = new System.Windows.Forms.ListView();
             this.gastosSATList = new System.Windows.Forms.ListView();
@@ -57,8 +69,6 @@
             this.totalEgresosSATLabel = new System.Windows.Forms.Label();
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
-            this.xMLDeCuentasToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.xMLDeBalanzaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,10 +80,11 @@
             this.verToolStripMenuItem,
             this.generarToolStripMenuItem,
             this.administrarToolStripMenuItem,
-            this.ayudaToolStripMenuItem});
+            this.ayudaToolStripMenuItem,
+            this.logueadoComoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1590, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(1692, 43);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -88,7 +99,7 @@
             // variablesToolStripMenuItem
             // 
             this.variablesToolStripMenuItem.Name = "variablesToolStripMenuItem";
-            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(243, 40);
+            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(192, 40);
             this.variablesToolStripMenuItem.Text = "Variables";
             this.variablesToolStripMenuItem.Click += new System.EventHandler(this.variablesToolStripMenuItem_Click);
             // 
@@ -105,7 +116,7 @@
             // 
             this.impuestosDelMesToolStripMenuItem.Name = "impuestosDelMesToolStripMenuItem";
             this.impuestosDelMesToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
-            this.impuestosDelMesToolStripMenuItem.Text = "Impuestos del Mes";
+            this.impuestosDelMesToolStripMenuItem.Text = "Impuestos";
             this.impuestosDelMesToolStripMenuItem.Click += new System.EventHandler(this.impuestosDelMesToolStripMenuItem_Click);
             // 
             // facturasCanceladasToolStripMenuItem
@@ -153,7 +164,8 @@
             this.permisosDeCuentasToolStripMenuItem,
             this.cuentasBancariasDeProveedoresToolStripMenuItem,
             this.asociarTipoDeDiarioCuentaSunplusCuentaBancariaToolStripMenuItem,
-            this.asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem});
+            this.asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem,
+            this.reportesDeDepartamentalesToolStripMenuItem});
             this.administrarToolStripMenuItem.Name = "administrarToolStripMenuItem";
             this.administrarToolStripMenuItem.Size = new System.Drawing.Size(156, 39);
             this.administrarToolStripMenuItem.Text = "Administrar";
@@ -193,6 +205,69 @@
             this.asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem.Text = "Asociar código agrupador del SAT con cuenta Sunplus";
             this.asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem.Click += new System.EventHandler(this.asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem_Click);
             // 
+            // reportesDeDepartamentalesToolStripMenuItem
+            // 
+            this.reportesDeDepartamentalesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.configurarConceptosToolStripMenuItem,
+            this.asignarFNCTAWHOToolStripMenuItem,
+            this.asignarPROJAWHOToolStripMenuItem,
+            this.asignarPermisosToolStripMenuItem,
+            this.polizasDeDepartamentalesToolStripMenuItem,
+            this.presupuestoDeDepartamentalesToolStripMenuItem,
+            this.mandarMensajeCustomToolStripMenuItem});
+            this.reportesDeDepartamentalesToolStripMenuItem.Name = "reportesDeDepartamentalesToolStripMenuItem";
+            this.reportesDeDepartamentalesToolStripMenuItem.Size = new System.Drawing.Size(734, 40);
+            this.reportesDeDepartamentalesToolStripMenuItem.Text = "Reportes de departamentales";
+            // 
+            // configurarConceptosToolStripMenuItem
+            // 
+            this.configurarConceptosToolStripMenuItem.Name = "configurarConceptosToolStripMenuItem";
+            this.configurarConceptosToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.configurarConceptosToolStripMenuItem.Text = "Configurar conceptos";
+            this.configurarConceptosToolStripMenuItem.Click += new System.EventHandler(this.configurarConceptosToolStripMenuItem_Click);
+            // 
+            // asignarFNCTAWHOToolStripMenuItem
+            // 
+            this.asignarFNCTAWHOToolStripMenuItem.Name = "asignarFNCTAWHOToolStripMenuItem";
+            this.asignarFNCTAWHOToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.asignarFNCTAWHOToolStripMenuItem.Text = "Asignar FNCT a WHO";
+            this.asignarFNCTAWHOToolStripMenuItem.Click += new System.EventHandler(this.asignarFNCTAWHOToolStripMenuItem_Click);
+            // 
+            // asignarPROJAWHOToolStripMenuItem
+            // 
+            this.asignarPROJAWHOToolStripMenuItem.Name = "asignarPROJAWHOToolStripMenuItem";
+            this.asignarPROJAWHOToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.asignarPROJAWHOToolStripMenuItem.Text = "Asignar PROJ a WHO";
+            this.asignarPROJAWHOToolStripMenuItem.Click += new System.EventHandler(this.asignarPROJAWHOToolStripMenuItem_Click);
+            // 
+            // asignarPermisosToolStripMenuItem
+            // 
+            this.asignarPermisosToolStripMenuItem.Name = "asignarPermisosToolStripMenuItem";
+            this.asignarPermisosToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.asignarPermisosToolStripMenuItem.Text = "Asignar conceptos a WHO";
+            this.asignarPermisosToolStripMenuItem.Click += new System.EventHandler(this.asignarPermisosToolStripMenuItem_Click);
+            // 
+            // polizasDeDepartamentalesToolStripMenuItem
+            // 
+            this.polizasDeDepartamentalesToolStripMenuItem.Name = "polizasDeDepartamentalesToolStripMenuItem";
+            this.polizasDeDepartamentalesToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.polizasDeDepartamentalesToolStripMenuItem.Text = "Polizas de departamentales";
+            this.polizasDeDepartamentalesToolStripMenuItem.Click += new System.EventHandler(this.polizasDeDepartamentalesToolStripMenuItem_Click);
+            // 
+            // presupuestoDeDepartamentalesToolStripMenuItem
+            // 
+            this.presupuestoDeDepartamentalesToolStripMenuItem.Name = "presupuestoDeDepartamentalesToolStripMenuItem";
+            this.presupuestoDeDepartamentalesToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.presupuestoDeDepartamentalesToolStripMenuItem.Text = "Presupuesto de departamentales";
+            this.presupuestoDeDepartamentalesToolStripMenuItem.Click += new System.EventHandler(this.presupuestoDeDepartamentalesToolStripMenuItem_Click);
+            // 
+            // mandarMensajeCustomToolStripMenuItem
+            // 
+            this.mandarMensajeCustomToolStripMenuItem.Name = "mandarMensajeCustomToolStripMenuItem";
+            this.mandarMensajeCustomToolStripMenuItem.Size = new System.Drawing.Size(455, 40);
+            this.mandarMensajeCustomToolStripMenuItem.Text = "Mandar mensaje custom";
+            this.mandarMensajeCustomToolStripMenuItem.Click += new System.EventHandler(this.mandarMensajeCustomToolStripMenuItem_Click);
+            // 
             // ayudaToolStripMenuItem
             // 
             this.ayudaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -203,6 +278,20 @@
             this.ayudaToolStripMenuItem.Size = new System.Drawing.Size(97, 39);
             this.ayudaToolStripMenuItem.Text = "Ayuda";
             // 
+            // xMLDeCuentasToolStripMenuItem1
+            // 
+            this.xMLDeCuentasToolStripMenuItem1.Name = "xMLDeCuentasToolStripMenuItem1";
+            this.xMLDeCuentasToolStripMenuItem1.Size = new System.Drawing.Size(269, 40);
+            this.xMLDeCuentasToolStripMenuItem1.Text = "XML de Cuentas";
+            this.xMLDeCuentasToolStripMenuItem1.Click += new System.EventHandler(this.xMLDeCuentasToolStripMenuItem1_Click);
+            // 
+            // xMLDeBalanzaToolStripMenuItem1
+            // 
+            this.xMLDeBalanzaToolStripMenuItem1.Name = "xMLDeBalanzaToolStripMenuItem1";
+            this.xMLDeBalanzaToolStripMenuItem1.Size = new System.Drawing.Size(269, 40);
+            this.xMLDeBalanzaToolStripMenuItem1.Text = "XML de Balanza";
+            this.xMLDeBalanzaToolStripMenuItem1.Click += new System.EventHandler(this.xMLDeBalanzaToolStripMenuItem1_Click);
+            // 
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
@@ -210,8 +299,24 @@
             this.acercaDeToolStripMenuItem.Text = "Acerca de";
             this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
             // 
+            // logueadoComoToolStripMenuItem
+            // 
+            this.logueadoComoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cerrarSesiónToolStripMenuItem});
+            this.logueadoComoToolStripMenuItem.Name = "logueadoComoToolStripMenuItem";
+            this.logueadoComoToolStripMenuItem.Size = new System.Drawing.Size(215, 39);
+            this.logueadoComoToolStripMenuItem.Text = "Logueado como:";
+            // 
+            // cerrarSesiónToolStripMenuItem
+            // 
+            this.cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
+            this.cerrarSesiónToolStripMenuItem.Size = new System.Drawing.Size(235, 40);
+            this.cerrarSesiónToolStripMenuItem.Text = "Cerrar sesión";
+            this.cerrarSesiónToolStripMenuItem.Click += new System.EventHandler(this.cerrarSesiónToolStripMenuItem_Click);
+            // 
             // ingresosSATList
             // 
+            this.ingresosSATList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ingresosSATList.Location = new System.Drawing.Point(50, 100);
             this.ingresosSATList.Name = "ingresosSATList";
             this.ingresosSATList.Size = new System.Drawing.Size(542, 405);
@@ -221,6 +326,7 @@
             // 
             // ingresosSunPlusList
             // 
+            this.ingresosSunPlusList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ingresosSunPlusList.Location = new System.Drawing.Point(663, 113);
             this.ingresosSunPlusList.Name = "ingresosSunPlusList";
             this.ingresosSunPlusList.Size = new System.Drawing.Size(542, 405);
@@ -230,6 +336,7 @@
             // 
             // gastosSATList
             // 
+            this.gastosSATList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gastosSATList.Location = new System.Drawing.Point(36, 579);
             this.gastosSATList.Name = "gastosSATList";
             this.gastosSATList.Size = new System.Drawing.Size(542, 442);
@@ -239,6 +346,7 @@
             // 
             // gastosSunplusList
             // 
+            this.gastosSunplusList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gastosSunplusList.Location = new System.Drawing.Point(663, 579);
             this.gastosSunplusList.Name = "gastosSunplusList";
             this.gastosSunplusList.Size = new System.Drawing.Size(542, 442);
@@ -306,27 +414,13 @@
             this.totalEgresosSunplusLabel.TabIndex = 10;
             this.totalEgresosSunplusLabel.Text = "label1";
             // 
-            // xMLDeCuentasToolStripMenuItem1
-            // 
-            this.xMLDeCuentasToolStripMenuItem1.Name = "xMLDeCuentasToolStripMenuItem1";
-            this.xMLDeCuentasToolStripMenuItem1.Size = new System.Drawing.Size(269, 40);
-            this.xMLDeCuentasToolStripMenuItem1.Text = "XML de Cuentas";
-            this.xMLDeCuentasToolStripMenuItem1.Click += new System.EventHandler(this.xMLDeCuentasToolStripMenuItem1_Click);
-            // 
-            // xMLDeBalanzaToolStripMenuItem1
-            // 
-            this.xMLDeBalanzaToolStripMenuItem1.Name = "xMLDeBalanzaToolStripMenuItem1";
-            this.xMLDeBalanzaToolStripMenuItem1.Size = new System.Drawing.Size(269, 40);
-            this.xMLDeBalanzaToolStripMenuItem1.Text = "XML de Balanza";
-            this.xMLDeBalanzaToolStripMenuItem1.Click += new System.EventHandler(this.xMLDeBalanzaToolStripMenuItem1_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1624, 1068);
+            this.ClientSize = new System.Drawing.Size(1726, 1068);
             this.Controls.Add(this.totalEgresosSunplusLabel);
             this.Controls.Add(this.totalIngresosSunplusLabel);
             this.Controls.Add(this.totalEgresosSATLabel);
@@ -385,6 +479,16 @@
         private System.Windows.Forms.ToolStripMenuItem asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem xMLDeCuentasToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem xMLDeBalanzaToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem reportesDeDepartamentalesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem configurarConceptosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asignarPermisosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem polizasDeDepartamentalesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asignarFNCTAWHOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem presupuestoDeDepartamentalesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asignarPROJAWHOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mandarMensajeCustomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logueadoComoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cerrarSesiónToolStripMenuItem;
     }
 }
 

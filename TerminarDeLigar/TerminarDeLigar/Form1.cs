@@ -19,9 +19,6 @@ namespace TerminarDeLigar
         public String conceptoGlobal { get; set; }
         public List<Dictionary<string, object>> listaDiarios { get; set; }
         public List<Dictionary<string, object>> listaFacturas { get; set; }
-        System.Windows.Forms.MenuItem menuItem1;
-        System.Windows.Forms.MenuItem menuItem2;
-        System.Windows.Forms.ContextMenu contextMenu2;
          public int diarioGlobalEncontrado { get; set; }
          public List<String> TREFERENCE_temporales  { get; set; }
           
@@ -32,6 +29,7 @@ namespace TerminarDeLigar
         {
             InitializeComponent();
             sourceGlobal = "ERROR";
+            unidadDeNegocioGlobal = "ERROR";
         }
         public Form1(String source, String BUNIT)
         {
@@ -142,7 +140,7 @@ namespace TerminarDeLigar
                 using (SqlConnection connection = new SqlConnection(connStringSun))
                 {
                     connection.Open();
-                    String queryXML = "SELECT JRNAL_NO FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE JRNAL_SRCE = '" + sourceGlobal + "' AND JRNAL_NO > " + ultimoDiarioAuxDeLosTemporales + " order by JRNAL_NO asc";
+                    String queryXML = "SELECT DISTINCT JRNAL_NO FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE JRNAL_SRCE = '" + sourceGlobal + "' AND JRNAL_NO > " + ultimoDiarioAuxDeLosTemporales + " order by JRNAL_NO asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -165,6 +163,7 @@ namespace TerminarDeLigar
             foreach(int diarioCandidato in diariosMayoresalUltimoDiarioAux)
             {
                 inserto = true;
+               
                 TREFERENCE_diarioCandidato.Clear();
                 try
                 {
@@ -179,7 +178,7 @@ namespace TerminarDeLigar
                             {
                                 while (reader.Read())
                                 {
-                                    TREFERENCE_diarioCandidato.Add(reader.GetString(0));
+                                    TREFERENCE_diarioCandidato.Add(reader.GetString(0).Trim());
                                 }
                             }
                         }
@@ -190,12 +189,14 @@ namespace TerminarDeLigar
                     System.Windows.Forms.MessageBox.Show(" 4    " + ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
+
                 bool yanoSigasMas = false;
                 foreach(String TREFERENCE in TREFERENCE_temporales)
                 {
                     if(!TREFERENCE_diarioCandidato.Contains(TREFERENCE))
                     {
                         yanoSigasMas = true;
+                        inserto = false;
                     }
                 }
                 
@@ -204,6 +205,7 @@ namespace TerminarDeLigar
                     
                     foreach(String TREFERENCE in TREFERENCE_temporales)
                     {
+                        
                         try
                         {
                             using (SqlConnection connection = new SqlConnection(connStringSun))
@@ -260,22 +262,33 @@ namespace TerminarDeLigar
                                             }
                                             if(consecutivoActual!=consecutivoEnElQueEstoy)
                                             {
-                                                if (!(Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["D_C"]).Equals(dic["D_C"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["ACNT_CODE"]).Equals(dic["ACNT_CODE"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["JRNAL_TYPE"]).Equals(dic["tipoDeDiario"].ToString()) && Math.Round(Convert.ToDouble(Convert.ToDecimal(listaDiariosReference[consecutivoEnElQueEstoy - 1]["AMOUNT"].ToString())), 2) == amountTemporales))
+
+                                                double aver = Math.Abs(Math.Round(Convert.ToDouble(Convert.ToDecimal(listaDiariosReference[consecutivoEnElQueEstoy - 1]["AMOUNT"].ToString())), 2));
+                                                aver = Math.Truncate(100 * aver) / 100;
+                                                amountTemporales = Math.Truncate(100 * amountTemporales) / 100;
+
+                                      
+                                                if (!(Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["D_C"]).Equals(dic["D_C"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["ACNT_CODE"]).Equals(dic["ACNT_CODE"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["JRNAL_TYPE"]).Equals(dic["tipoDeDiario"].ToString()) && aver == amountTemporales))
                                                 {
                                                       inserto = false;
                                                 }
                                                 consecutivoEnElQueEstoy = consecutivoActual;
-                                                amountTemporales = 0;
+                                                amountTemporales = Math.Abs(Math.Round(Convert.ToDouble(Convert.ToDecimal(dic["amount"].ToString())), 2));
                                             }
                                             else
                                             {
-                                                amountTemporales += Math.Round(Convert.ToDouble( Convert.ToDecimal(dic["amount"].ToString())),2);
+                                                amountTemporales += Math.Abs( Math.Round(Convert.ToDouble( Convert.ToDecimal(dic["amount"].ToString())),2));
                                             }
                                         }
                                         //el ultimo consecutivo de los temporales
                                         Dictionary<string, object> dic1 = listaTemporalesReference[listaTemporalesReference.Count - 1];
                                         consecutivoEnElQueEstoy = consecutivoActual;
-                                        if (!(Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["D_C"]).Equals(dic1["D_C"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["ACNT_CODE"]).Equals(dic1["ACNT_CODE"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["JRNAL_TYPE"]).Equals(dic1["tipoDeDiario"].ToString()) && Math.Round(Convert.ToDouble(Convert.ToDecimal(listaDiariosReference[consecutivoEnElQueEstoy - 1]["AMOUNT"].ToString())), 2) == amountTemporales))
+                                        double aver1 = Math.Abs(Math.Round(Convert.ToDouble(Convert.ToDecimal(listaDiariosReference[consecutivoEnElQueEstoy - 1]["AMOUNT"].ToString())), 2));
+                                        aver1 = Math.Truncate(100 * aver1) / 100;
+                                        amountTemporales = Math.Truncate(100 * amountTemporales) / 100;
+
+                                        
+                                        if (!(Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["D_C"]).Equals(dic1["D_C"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["ACNT_CODE"]).Equals(dic1["ACNT_CODE"].ToString()) && Convert.ToString(listaDiariosReference[consecutivoEnElQueEstoy - 1]["JRNAL_TYPE"]).Equals(dic1["tipoDeDiario"].ToString()) && aver1 == amountTemporales))
                                         {
                                             inserto = false;
                                         }
@@ -289,6 +302,10 @@ namespace TerminarDeLigar
                         catch (Exception ex)
                         {
                             System.Windows.Forms.MessageBox.Show(" 5    " + ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        if(inserto)
+                        {
+                            break;
                         }
                     }
                 }
@@ -397,7 +414,7 @@ namespace TerminarDeLigar
                                     consecutivoDelMayor++;
                                     Dictionary<string, object> dictionary = new Dictionary<string, object>();
                                     dictionary.Add("JRNAL_LINE", Convert.ToString(reader.GetInt32(0)).Trim());
-                                    dictionary.Add("consecutivoDelMayor", consecutivoDelMayor.ToString());
+                                    dictionary.Add("consecutivoDelMayor", consecutivoDelMayor.ToString().Trim());
                                     listaDiariosReference.Add(dictionary);
                                 }
                             }
