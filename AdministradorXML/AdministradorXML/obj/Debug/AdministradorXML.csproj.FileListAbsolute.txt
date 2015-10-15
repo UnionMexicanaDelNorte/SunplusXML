@@ -1,6 +1,7 @@
 \\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.exe.config
 \\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.exe
 \\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.pdb
+\\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.csprojResolveAssemblyReference.cache
 \\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarComceptosaWHO.resources
 \\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarFNCTaWHO.resources
 \\psf\home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarPROJaWHO.resources

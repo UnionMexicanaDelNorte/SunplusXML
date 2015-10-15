@@ -58,8 +58,8 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-            AdministradorXML.Login.sourceGlobal = "CHE";
-            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
+            AdministradorXML.Login.sourceGlobal = "ERROR";
+            AdministradorXML.Login.unidadDeNegocioGlobal = "ERROR";
         }
 
         public Form1(String s, String bunit)

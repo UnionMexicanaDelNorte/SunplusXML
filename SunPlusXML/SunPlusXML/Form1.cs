@@ -1482,7 +1482,7 @@ namespace SunPlusXML
         private void Form1_Load(object sender, EventArgs e)
         {
             Timer tmrSegundosDeVida = new Timer();
-            modoGlobal = 2;//ultra pesado BORRAR 
+            //modoGlobal = 2;//ultra pesado BORRAR 
             if(modoGlobal==1)
             {
                 modoLabel.Text = "Modo: Ligero (solo facturas de hoy)";
