@@ -156,6 +156,10 @@ namespace AdministradorXML
             {
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+
+            impuestoCombo.Items.Add(new Item("Traslados", 1));
+            impuestoCombo.Items.Add(new Item("Retenciones", 2));
+            impuestoCombo.SelectedIndex = 0;
             periodosCombo.SelectedIndex = periodosCombo.Items.Count - 1;
         }
 
@@ -171,13 +175,15 @@ namespace AdministradorXML
 
         private void actualiza()
         {
-            if (tipoCombo.Items.Count > 0 && periodosCombo.Items.Count > 0)
+            if (tipoCombo.SelectedIndex != -1 && periodosCombo.SelectedIndex != -1 && impuestoCombo.SelectedIndex != -1)
             {
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 Item itm = (Item)periodosCombo.SelectedItem;
                 Item itm2 = (Item)tipoCombo.SelectedItem;
                 int tipo = itm2.Value;
                 String periodo = itm.Name;
+                Item itm4 = (Item)impuestoCombo.SelectedItem;
+                int tipoImpuesto = itm4.Value;
                 String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
                 impuestosList.Clear();
                 listaFinal.Clear();
@@ -225,7 +231,7 @@ namespace AdministradorXML
                                 while (reader.Read())
                                 {             
                                     String folioFiscal = reader.GetString(0);
-                                    String query2 = "SELECT impuesto, importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] WHERE folioFiscal = '"+folioFiscal+"'";
+                                    String query2 = "SELECT impuesto, importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] WHERE folioFiscal = '" + folioFiscal + "' AND tipo = " + tipoImpuesto;
                                     SqlCommand cmdCheck1 = new SqlCommand(query2, connection);
                                     SqlDataReader reader1 = cmdCheck1.ExecuteReader();
                                     if (reader1.HasRows)
@@ -287,10 +293,16 @@ namespace AdministradorXML
                 int tipo = itm2.Value;
                 String periodo = itm.Name;
                 String impuesto = impuestosList.SelectedItems[0].SubItems[0].Text.Trim();
-
-                ImpuestosDetalle1 form = new ImpuestosDetalle1(periodo, impuesto,tipo);
+                Item itm3 = (Item)impuestoCombo.SelectedItem;
+                int tipoImpuesto = itm3.Value;
+                ImpuestosDetalle1 form = new ImpuestosDetalle1(periodo, impuesto, tipo, tipoImpuesto);
                 form.ShowDialog();
             }
+        }
+
+        private void impuestoCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            actualiza();
         }
 
     }

@@ -139,7 +139,7 @@ namespace AdministradorXML
          
             String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
 
-            String queryCuentas = "SELECT ANL_CODE,LOOKUP FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ANL_CODE] WHERE ANL_CAT_ID= '07' AND SUBSTRING( ANL_CODE,1,2) = 'ER' order by ANL_CODE asc";
+            String queryCuentas = "SELECT ANL_CODE,LOOKUP FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ANL_CODE] WHERE ANL_CAT_ID= '07' AND SUBSTRING( ANL_CODE,1,2) = 'ER' order by ANL_CODE asc";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -715,7 +715,7 @@ namespace AdministradorXML
                     //insert
                     try
                     {
-                        String query1 = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] ( BUNIT,JRNAL_NO,JRNAL_LINE,JRNAL_SOURCE,FOLIO_FISCAL,CONCEPTO,AMOUNT,STATUS,consecutivo) VALUES  ('" + Properties.Settings.Default.sunUnidadDeNegocio + "', -1, " + numeroDeLinea + ",'" + Properties.Settings.Default.source + "','" + UUID + "','" + conceptoText.Text + "'," + amount + ",'1',1) ";/*siempre gasto!! y siempre 1 en el consecutivo*/
+                        String query1 = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] ( BUNIT,JRNAL_NO,JRNAL_LINE,JRNAL_SOURCE,FOLIO_FISCAL,CONCEPTO,AMOUNT,STATUS,consecutivo) VALUES  ('" + Login.unidadDeNegocioGlobal + "', -1, " + numeroDeLinea + ",'" + Login.sourceGlobal + "','" + UUID + "','" + conceptoText.Text + "'," + amount + ",'1',1) ";/*siempre gasto!! y siempre 1 en el consecutivo*/
                         String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
                         try
                         {

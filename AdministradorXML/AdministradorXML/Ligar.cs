@@ -14,6 +14,9 @@ namespace AdministradorXML
     public partial class Ligar : Form
     {
         public String folioFiscalGlobal { get; set; }
+        public String original { get; set; }
+        public double maximoActual { get; set; }
+      
         public double maximoGlobal { get; set; }
         public double maximoTemporal { get; set; }
         public int tipoDeContabilidadGlobal { get; set; }
@@ -22,12 +25,13 @@ namespace AdministradorXML
       
         public double lineaMaximo { get; set; }
         public List<Dictionary<string, object>> listaFinal { get; set; }
-        public Ligar(String folio, double maximo, int tipo)
+        public Ligar(String folio, double maximo, int tipo, String o)
         {
             InitializeComponent();
             maximoGlobal = maximo;
             folioFiscalGlobal = folio;
             tipoDeContabilidadGlobal = tipo;
+            original = o;
         }
               
         public Ligar()
@@ -49,11 +53,13 @@ namespace AdministradorXML
 
         private void Ligar_Load(object sender, EventArgs e)
         {
+            maximoActual = maximoGlobal;
             lineaMaximo = -1;
             firstTime = true;
+            maxFactura.Text = "Cantidad original: $"+original;
             maximoFacturaLabel.Text = "Máximo factura: $" + maximoGlobal.ToString();
             cantidadALigar.Text = maximoGlobal.ToString();
-            this.Size = new Size(887,639);
+            //this.Size = new Size(887,639);
         }
         
         private void leeDiario()
@@ -67,7 +73,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     String queryXML = "";
-                    queryXML = "SELECT s.JRNAL_NO, s.JRNAL_LINE,s.AMOUNT,s.DESCRIPTN,s.TRANS_DATETIME , s.ACCNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s WHERE s.JRNAL_NO = '" + diariosText.Text + "' AND s.ALLOCATION != 'C' AND s.JRNAL_NO = '" + diariosText.Text.Trim() + "'";
+                    queryXML = "SELECT s.JRNAL_NO, s.JRNAL_LINE,s.AMOUNT,s.DESCRIPTN,s.TRANS_DATETIME , s.ACCNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s WHERE s.JRNAL_NO = '" + diariosText.Text + "' AND s.ALLOCATION != 'C' AND s.JRNAL_NO = '" + diariosText.Text.Trim() + "'";
 
                     listaFinal = new List<Dictionary<string, object>>();
 
@@ -86,7 +92,7 @@ namespace AdministradorXML
                                 String ACCNT_CODE = reader.GetString(5);
                                
                                 //cuanto esta enlazado de esa linea
-                                String queryFISCAL = "SELECT f.FOLIO_FISCAL,f.BUNIT,f.JRNAL_NO,f.JRNAL_LINE,f.AMOUNT,f.consecutivo , x.rfc,x.nombreArchivoPDF, x.ruta, x.razonSocial, s.DESCRIPTN FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE f.JRNAL_NO = " + JRNAL_NO1 + " AND f.JRNAL_LINE = " + JRNAL_LINE1;
+                                String queryFISCAL = "SELECT f.FOLIO_FISCAL,f.BUNIT,f.JRNAL_NO,f.JRNAL_LINE,f.AMOUNT,f.consecutivo , x.rfc,x.nombreArchivoPDF, x.ruta, x.razonSocial, s.DESCRIPTN FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE f.JRNAL_NO = " + JRNAL_NO1 + " AND f.JRNAL_LINE = " + JRNAL_LINE1;
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -178,52 +184,15 @@ namespace AdministradorXML
 
         private void cantidadALigar_TextChanged(object sender, EventArgs e)
         {
-            if(firstTime)
+            double test = Convert.ToDouble(cantidadALigar.Text.Trim());
+            if (test > maximoGlobal)
             {
-                firstTime = false;
+                System.Windows.Forms.MessageBox.Show("No puedes ligar más de " + maximoGlobal, "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                double cuantoFactura = Math.Round(Convert.ToDouble(cantidadALigar.Text), 2);
-                cantidadDeLaLineaText.Text = cuantoFactura.ToString();
+                maximoActual = test;
             }
-            /*double cuanto = Math.Round(Convert.ToDouble(cantidadDeLaLineaText.Text), 2);
-           
-            if(lineaMaximo==-1)
-            {
-                maximoTemporal = maximoGlobal;
-            }
-            if (cuantoFactura > maximoGlobal)
-            {
-                cuantoFactura = maximoGlobal;
-            }
-            if (cuantoFactura > cuanto)
-            {
-                maximoTemporal = cuanto;
-                cantidadALigar.Text = maximoTemporal.ToString();
-                cantidadDeLaLineaText.Text = maximoTemporal.ToString();
-            }
-            else
-            {
-                maximoTemporal = cuantoFactura;
-                cantidadDeLaLineaText.Text = maximoTemporal.ToString();
-                cantidadALigar.Text = maximoTemporal.ToString();
-            }
-              int cuantos = lineasList.SelectedItems.Count;
-              if (cuantos > 0)
-              {
-                  informacionLabel.Text = "La cantidad $" + cuanto + " de la linea " + lineasList.SelectedItems[0].SubItems[1].Text + " del diario " + lineasList.SelectedItems[0].SubItems[0].Text + " sera ligada a la factura por la cantidad de $" + cantidadALigar.Text;
-              }
-          /*  if (cuanto > maximoTemporal)
-            {
-                cantidadALigar.Text = maximoTemporal.ToString();
-                int cuantos = lineasList.SelectedItems.Count;
-                if (cuantos > 0)
-                {
-                    informacionLabel.Text = "La cantidad $" + cantidadDeLaLineaText.Text + " de la linea " + lineasList.SelectedItems[0].SubItems[1].Text + " del diario " + lineasList.SelectedItems[0].SubItems[0].Text + " sera ligada a la factura por la cantidad de $" + cantidadALigar.Text;
-                }
-            }
-           * */
            
         }
 
@@ -301,7 +270,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     String queryXML = "";
-                    queryXML = "SELECT tipoDeContabilidad FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE ACNT_CODE = '" + cuenta+ "' AND unidadDeNegocio = '" + Properties.Settings.Default.sunUnidadDeNegocio + "'";
+                    queryXML = "SELECT tipoDeContabilidad FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE ACNT_CODE = '" + cuenta+ "' AND unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "'";
 
                   
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
@@ -357,6 +326,11 @@ namespace AdministradorXML
                 System.Windows.Forms.MessageBox.Show("Solo puedes ligar $" + lineaMaximo + " de la linea", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+            if (cuanto > maximoActual)
+            {
+                System.Windows.Forms.MessageBox.Show("Solo puedes ligar $" + lineaMaximo + " de la linea, debido a que la cantidad que se va a ligar a la factura, es " + maximoActual, "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             if(cuantoFactura>maximo)
             {
                 System.Windows.Forms.MessageBox.Show("Solo puedes ligar $" + maximo, "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -371,7 +345,7 @@ namespace AdministradorXML
                  int consecutivo = 0;
                  String diario = lineasList.SelectedItems[0].SubItems[0].Text.Trim();
 
-                 String queryCheck = "SELECT consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE BUNIT = '" + Properties.Settings.Default.sunUnidadDeNegocio + "' and JRNAL_NO = " + diario + " and JRNAL_LINE = " + linea + " order by consecutivo desc";
+                 String queryCheck = "SELECT consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE BUNIT = '" + Login.unidadDeNegocioGlobal + "' and JRNAL_NO = " + diario + " and JRNAL_LINE = " + linea + " order by consecutivo desc";
              
                  try
                  {
@@ -392,13 +366,13 @@ namespace AdministradorXML
                              String query = "";
                              if (tipoDeContabilidadGlobal == 1)
                              {
-                                 query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Properties.Settings.Default.sunUnidadDeNegocio + "', "+diario+", " + linea + ", '" + folioFiscalGlobal + "', " + cantidad + ", '1', '" + xmlText + "' , " + consecutivo + ",  'adminSunplusito')";
+                                 query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Login.unidadDeNegocioGlobal + "', "+diario+", " + linea + ", '" + folioFiscalGlobal + "', " + cantidad + ", '1', '" + xmlText + "' , " + consecutivo + ",  '"+Login.sourceGlobal+"')";
                              }
                              else
                              {
                                  if (tipoDeContabilidadGlobal == 2)
                                  {
-                                     query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Properties.Settings.Default.sunUnidadDeNegocio + "', " + diario + ", " + linea + ", '" + folioFiscalGlobal + "', " + cantidad + ", '2', '" + xmlText + "' , " + consecutivo + ",  'adminSunplusito')";
+                                     query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Login.unidadDeNegocioGlobal + "', " + diario + ", " + linea + ", '" + folioFiscalGlobal + "', " + cantidad + ", '2', '" + xmlText + "' , " + consecutivo + ",  '"+Login.sourceGlobal+"')";
                                  }
                                  else
                                  {

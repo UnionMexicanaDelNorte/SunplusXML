@@ -25,6 +25,7 @@ namespace AdministradorXML
     
         System.Windows.Forms.ContextMenu contextMenu2;
 
+        System.Windows.Forms.MenuItem menuItemPorCuenta;
         System.Windows.Forms.MenuItem menuItem11;
         System.Windows.Forms.MenuItem menuItem22;
        
@@ -45,8 +46,19 @@ namespace AdministradorXML
         public void ligarXML(object sender, EventArgs e)
         {
             double maximo = Math.Round( Convert.ToDouble( facturasList.SelectedItems[0].SubItems[2].Text),2);
+            String original = facturasList.SelectedItems[0].SubItems[9].Text.Trim();
             String folio_fiscal = facturasList.SelectedItems[0].SubItems[6].Text;
-            Ligar ligar = new Ligar(folio_fiscal,maximo,tipoDeContabilidadGlobal);
+            Ligar ligar = new Ligar(folio_fiscal, maximo, tipoDeContabilidadGlobal, original);
+            ligar.ShowDialog();
+            ligar.TopMost = true;
+            rellena();
+        }
+        public void ligarXMLPorCuenta(object sender, EventArgs e)
+        {
+            double maximo = Math.Round(Convert.ToDouble(facturasList.SelectedItems[0].SubItems[2].Text), 2);
+            String original = facturasList.SelectedItems[0].SubItems[9].Text.Trim();
+            String folio_fiscal = facturasList.SelectedItems[0].SubItems[6].Text;
+            LigarPorCuenta ligar = new LigarPorCuenta(folio_fiscal, maximo, tipoDeContabilidadGlobal, original);
             ligar.ShowDialog();
             ligar.TopMost = true;
             rellena();
@@ -181,13 +193,18 @@ namespace AdministradorXML
                 menuItem11 = new System.Windows.Forms.MenuItem();
                 menuItem22 = new System.Windows.Forms.MenuItem();
                 menuItem33 = new System.Windows.Forms.MenuItem();
-             
                 if (tipoDeContabilidadGlobal == 1 || tipoDeContabilidadGlobal == 2)
                 {
-                    contextMenu22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { menuItem22, menuItem11, menuItem33 });
+                    menuItemPorCuenta = new System.Windows.Forms.MenuItem();
+                    contextMenu22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { menuItem22, menuItem11, menuItem33, menuItemPorCuenta });
                     menuItem11.Index = 2;
-                    menuItem11.Text = "Ligar XML";
+                    menuItem11.Text = "Ligar XML por diario";
                     menuItem11.Click += ligarXML;
+
+                    menuItemPorCuenta.Index = 3;
+                    menuItemPorCuenta.Text = "Ligar XML por cuenta";
+                    menuItemPorCuenta.Click += ligarXMLPorCuenta;
+
                 }
                 else
                 {
@@ -263,7 +280,9 @@ namespace AdministradorXML
                                 //}
                               
                                 //cuanto esta enlazado de esa factura
-                                String queryFISCAL = "SELECT f.FOLIO_FISCAL,f.BUNIT,f.JRNAL_NO,f.JRNAL_LINE,f.AMOUNT,f.consecutivo , x.rfc,x.nombreArchivoPDF, x.ruta, x.razonSocial, s.DESCRIPTN FROM ["+Properties.Settings.Default.databaseFiscal+"].[dbo].[FISCAL_xml] f INNER JOIN ["+Properties.Settings.Default.databaseFiscal+"].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN ["+Properties.Settings.Default.sunDatabase+"].[dbo].["+Properties.Settings.Default.sunUnidadDeNegocio+"_"+Properties.Settings.Default.sunLibro+"_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE FOLIO_FISCAL = '"+folioFiscal+"'";
+                                double original = Math.Round(Convert.ToDouble(Math.Abs(reader.GetDecimal(0))), 2);
+                                       
+                                String queryFISCAL = "SELECT f.FOLIO_FISCAL,f.BUNIT,f.JRNAL_NO,f.JRNAL_LINE,f.AMOUNT,f.consecutivo , x.rfc,x.nombreArchivoPDF, x.ruta, x.razonSocial, s.DESCRIPTN FROM ["+Properties.Settings.Default.databaseFiscal+"].[dbo].[FISCAL_xml] f INNER JOIN ["+Properties.Settings.Default.databaseFiscal+"].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN ["+Properties.Settings.Default.sunDatabase+"].[dbo].["+Login.unidadDeNegocioGlobal+"_"+Properties.Settings.Default.sunLibro+"_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE FOLIO_FISCAL = '"+folioFiscal+"'";
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -284,7 +303,7 @@ namespace AdministradorXML
 
 
                                             double amount = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(4)));
-
+                                         //   original = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(4)));
 
                                             Dictionary<string, object> dictionary = new Dictionary<string, object>();
                                             dictionary.Add("FOLIO_FISCAL", FOLIO_FISCAL);
@@ -307,6 +326,7 @@ namespace AdministradorXML
                                     if (total > 0)
                                     {
                                         Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                                        dictionary.Add("original", original);
                                         dictionary.Add("maximo", total);
                                         dictionary.Add("folioFiscal", folioFiscal);
                                         dictionary.Add("rfc", rfc);
@@ -342,7 +362,7 @@ namespace AdministradorXML
                             {
                                 if (dic.ContainsKey("FOLIO_FISCAL"))
                                 {
-                                    string[] arr = new string[12];
+                                    string[] arr = new string[13];
                                     ListViewItem itm;
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["FOLIO_FISCAL"]);
@@ -358,6 +378,7 @@ namespace AdministradorXML
                                     arr[8] = Convert.ToString(dic["ruta2"]);
                                     arr[9] = Convert.ToString(dic["razonSocial2"]);
                                     arr[10] = Convert.ToString(dic["DESCRIPTN"]);
+                                  
                                     itm = new ListViewItem(arr);
                                     ligadasList.Items.Add(itm);
                                 }
@@ -381,7 +402,7 @@ namespace AdministradorXML
                             {
                                 if (dic.ContainsKey("folioFiscal"))
                                 {
-                                    string[] arr = new string[10];
+                                    string[] arr = new string[11];
                                     ListViewItem itm;
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["fechaExpedicion"]);
@@ -395,6 +416,8 @@ namespace AdministradorXML
                                     arr[6] = Convert.ToString(dic["folioFiscal"]);
                                     arr[7] = Convert.ToString(dic["nombreArchivoXML"]);
                                     arr[8] = Convert.ToString(dic["folio"]);
+                                    arr[9] = String.Format("{0:n}", Convert.ToDouble(dic["original"]));
+                                
                                     itm = new ListViewItem(arr);
                                     facturasList.Items.Add(itm);
                                 }

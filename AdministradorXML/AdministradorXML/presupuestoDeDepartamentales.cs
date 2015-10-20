@@ -44,7 +44,7 @@ namespace AdministradorXML
         {
             listaFinal = new List<Dictionary<string, object>>();
             String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryCuentas = "SELECT ANL_CODE,LOOKUP FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ANL_CODE] WHERE ANL_CAT_ID= '07' AND SUBSTRING( ANL_CODE,1,2) = 'ER' order by ANL_CODE asc";
+            String queryCuentas = "SELECT ANL_CODE,LOOKUP FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ANL_CODE] WHERE ANL_CAT_ID= '07' AND SUBSTRING( ANL_CODE,1,2) = 'ER' order by ANL_CODE asc";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -110,7 +110,7 @@ namespace AdministradorXML
                     System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 
-                queryPresupuesto = "SELECT DISTINCT b.ACCNT_CODE, SUM( b.AMOUNT) as amount, MAX(c.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibroPresupuesto + "_SALFLDG] b INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] c on c.ACNT_CODE = b.ACCNT_CODE WHERE b.ANAL_T3 = '" + FNCT + "' AND b.ANAL_T6 = '" + WHO + "' AND SUBSTRING( CAST(PERIOD AS NVARCHAR(10)),1," + periodo.Length + ") = '" + periodo + "'  GROUP BY  b.ACCNT_CODE";
+                queryPresupuesto = "SELECT DISTINCT b.ACCNT_CODE, SUM( b.AMOUNT) as amount, MAX(c.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibroPresupuesto + "_SALFLDG] b INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] c on c.ACNT_CODE = b.ACCNT_CODE WHERE b.ANAL_T3 = '" + FNCT + "' AND b.ANAL_T6 = '" + WHO + "' AND SUBSTRING( CAST(PERIOD AS NVARCHAR(10)),1," + periodo.Length + ") = '" + periodo + "'  GROUP BY  b.ACCNT_CODE";
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(connString))
@@ -126,7 +126,7 @@ namespace AdministradorXML
                                 double PRESUPUESTO = Math.Round(Math.Abs( Convert.ToDouble(reader.GetDecimal(1))), 2);
                                 String DESCR = reader.GetString(2).Trim();
                                 double gastado = 0;
-                                String queryGastado = "SELECT ACCNT_CODE, AMOUNT, DESCRIPTN, TREFERENCE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ANAL_T3 = '"+FNCT+"' AND ANAL_T6 = '"+WHO+"' AND  SUBSTRING( CAST(PERIOD AS NVARCHAR(10)),1,"+periodo.Length+") = '"+periodo+"' AND ACCNT_CODE = '"+ACCNT_CODE+"'";
+                                String queryGastado = "SELECT ACCNT_CODE, AMOUNT, DESCRIPTN, TREFERENCE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ANAL_T3 = '"+FNCT+"' AND ANAL_T6 = '"+WHO+"' AND  SUBSTRING( CAST(PERIOD AS NVARCHAR(10)),1,"+periodo.Length+") = '"+periodo+"' AND ACCNT_CODE = '"+ACCNT_CODE+"'";
                                 using (SqlCommand cmdCheck1 = new SqlCommand(queryGastado, connection))
                                 {
                                     SqlDataReader reader1 = cmdCheck1.ExecuteReader();
@@ -186,7 +186,7 @@ namespace AdministradorXML
         {
             periodosCombo.Items.Clear();
             String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(PERIOD AS NVARCHAR(10)) ,1,"+limite+") FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibroPresupuesto + "_SALFLDG] order by SUBSTRING( CAST(PERIOD AS NVARCHAR(10)) ,1,"+limite+") asc";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(PERIOD AS NVARCHAR(10)) ,1,"+limite+") FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibroPresupuesto + "_SALFLDG] order by SUBSTRING( CAST(PERIOD AS NVARCHAR(10)) ,1,"+limite+") asc";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))

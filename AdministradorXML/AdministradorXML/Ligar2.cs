@@ -403,7 +403,7 @@ namespace AdministradorXML
                 String cantidad = cantidadALigar.Text.Trim();
                 int consecutivo = 0;
                 String folioFiscalGlobal = facturasPosiblesList.SelectedItems[0].SubItems[6].Text.Trim();
-                String queryCheck = "SELECT consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE BUNIT = '" + Properties.Settings.Default.sunUnidadDeNegocio + "' and JRNAL_NO = " + diarioGlobal + " and JRNAL_LINE = " + lineaGlobal + " order by consecutivo desc";
+                String queryCheck = "SELECT consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE BUNIT = '" + Login.unidadDeNegocioGlobal+ "' and JRNAL_NO = " + diarioGlobal + " and JRNAL_LINE = " + lineaGlobal + " order by consecutivo desc";
 
                 try
                 {
@@ -424,13 +424,13 @@ namespace AdministradorXML
                         String query = "";
                         if (tipoDeContabilidad == 1)
                         {
-                            query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Properties.Settings.Default.sunUnidadDeNegocio + "', " + diarioGlobal + ", " + lineaGlobal + ", '" + folioFiscalGlobal + "', " + cantidad + ", '1', '" + xmlText + "' , " + consecutivo + ",  'adminSunplusito')";
+                            query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Login.unidadDeNegocioGlobal + "', " + diarioGlobal + ", " + lineaGlobal + ", '" + folioFiscalGlobal + "', " + cantidad + ", '1', '" + xmlText + "' , " + consecutivo + ",  '"+Login.sourceGlobal+"')";
                         }
                         else
                         {
                             if (tipoDeContabilidad == 2)
                             {
-                                query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Properties.Settings.Default.sunUnidadDeNegocio + "', " + diarioGlobal + ", " + lineaGlobal + ", '" + folioFiscalGlobal + "', " + cantidad + ", '2', '" + xmlText + "' , " + consecutivo + ",  'adminSunplusito')";
+                                query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE) VALUES ('" + Login.unidadDeNegocioGlobal + "', " + diarioGlobal + ", " + lineaGlobal + ", '" + folioFiscalGlobal + "', " + cantidad + ", '2', '" + xmlText + "' , " + consecutivo + ",  '"+Login.sourceGlobal+"')";
                             }
                             else
                             {

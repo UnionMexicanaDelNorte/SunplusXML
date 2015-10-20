@@ -145,7 +145,7 @@ namespace AdministradorXML
 
             String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
 
-            String queryPeriodos = "SELECT TOP 10 ANL_CAT_ID, LOOKUP FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ANL_CAT] order by ANL_CAT_ID asc";
+            String queryPeriodos = "SELECT TOP 10 ANL_CAT_ID, LOOKUP FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ANL_CAT] order by ANL_CAT_ID asc";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -174,7 +174,7 @@ namespace AdministradorXML
                             {
                                 d1label.Text = LOOKUP;
                             }
-                            String queryANL = "SELECT ANL_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ANL_CODE] WHERE ANL_CAT_ID = '" + ANL_CAT_ID + "' order by ANL_CODE asc";
+                            String queryANL = "SELECT ANL_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ANL_CODE] WHERE ANL_CAT_ID = '" + ANL_CAT_ID + "' order by ANL_CODE asc";
 
                             using (SqlCommand cmdCheck1 = new SqlCommand(queryANL, connection))
                             {
@@ -248,7 +248,7 @@ namespace AdministradorXML
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            String queryCuentas = "SELECT ACNT_CODE, DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] order by ACNT_CODE asc";
+            String queryCuentas = "SELECT ACNT_CODE, DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] order by ACNT_CODE asc";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))

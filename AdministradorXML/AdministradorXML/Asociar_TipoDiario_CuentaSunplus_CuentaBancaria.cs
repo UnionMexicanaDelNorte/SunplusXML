@@ -64,7 +64,7 @@ namespace AdministradorXML
                 tipoS = "Transferencias";
             }
             // primero obtengo la lista de lo que ya hay, para no agregarlo a las 3 listas
-            String queryLoQueTengo = "SELECT p.JRNAL_TYPE, p.ACNT_CODE, b.nombreCorto, p.cuentaBancaria FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[predefinidosDeChequeYTransferencia] p INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[bancos] b on b.clave = p.banco WHERE p.BUNIT = '"+Properties.Settings.Default.sunUnidadDeNegocio+"' AND p.tipo = "+tipoGlobal;
+            String queryLoQueTengo = "SELECT p.JRNAL_TYPE, p.ACNT_CODE, b.nombreCorto, p.cuentaBancaria FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[predefinidosDeChequeYTransferencia] p INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[bancos] b on b.clave = p.banco WHERE p.BUNIT = '"+Login.unidadDeNegocioGlobal+"' AND p.tipo = "+tipoGlobal;
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -82,7 +82,7 @@ namespace AdministradorXML
                             String cuentaBancaria = reader.GetString(3);
                             Dictionary<string, object> dictionary = new Dictionary<string, object>();
                             dictionary.Add("tipo", tipoS);
-                            dictionary.Add("unidadDeNegocio", Properties.Settings.Default.sunUnidadDeNegocio);
+                            dictionary.Add("unidadDeNegocio", Login.unidadDeNegocioGlobal);
                             dictionary.Add("JRNAL_TYPE", JRNAL_TYPE);
                             dictionary.Add("ACNT_CODE", ACNT_CODE);
                             dictionary.Add("nombreCorto", nombreCorto);
@@ -127,7 +127,7 @@ namespace AdministradorXML
 
             String connStringSun = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             //para tipos de diarios
-            String queryTiposDediarios = "SELECT JOURNAL_TYPE, JOURNAL_NAME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_JNL_DEFN]";
+            String queryTiposDediarios = "SELECT JOURNAL_TYPE, JOURNAL_NAME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_JNL_DEFN]";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connStringSun))
@@ -179,7 +179,7 @@ namespace AdministradorXML
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("No existen tipo de diarios para la unidad de negocios: " + Properties.Settings.Default.sunUnidadDeNegocio + ", favor de verificar.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        System.Windows.Forms.MessageBox.Show("No existen tipo de diarios para la unidad de negocios: " + Login.unidadDeNegocioGlobal + ", favor de verificar.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
             }
@@ -188,7 +188,7 @@ namespace AdministradorXML
                 System.Windows.Forms.MessageBox.Show(ex1.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             //para cuentas sunplus
-            String queryPeriodos = "SELECT ACNT_CODE, DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT]";
+            String queryPeriodos = "SELECT ACNT_CODE, DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT]";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connStringSun))
@@ -240,7 +240,7 @@ namespace AdministradorXML
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("No existen Cuentas para la unidad de negocios: " + Properties.Settings.Default.sunUnidadDeNegocio + ", favor de verificar.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        System.Windows.Forms.MessageBox.Show("No existen Cuentas para la unidad de negocios: " + Login.unidadDeNegocioGlobal + ", favor de verificar.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
             }
@@ -392,7 +392,7 @@ namespace AdministradorXML
                 String ACNT_CODE = cuentasSunplusList.SelectedItems[0].SubItems[0].Text.Trim();
                 String clave = cuentasBancariasList.SelectedItems[0].SubItems[2].Text.Trim();
                 String cuentaBancaria = cuentasBancariasList.SelectedItems[0].SubItems[1].Text.Trim();
-                String query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[predefinidosDeChequeYTransferencia] (tipo,BUNIT,JRNAL_TYPE,ACNT_CODE,banco,cuentaBancaria) VALUES ("+tipoGlobal+", '" + Properties.Settings.Default.sunUnidadDeNegocio + "', '" + JOURNAL_TYPE + "', '" + ACNT_CODE + "', '"+clave+"', '"+cuentaBancaria+"')";
+                String query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[predefinidosDeChequeYTransferencia] (tipo,BUNIT,JRNAL_TYPE,ACNT_CODE,banco,cuentaBancaria) VALUES ("+tipoGlobal+", '" + Login.unidadDeNegocioGlobal + "', '" + JOURNAL_TYPE + "', '" + ACNT_CODE + "', '"+clave+"', '"+cuentaBancaria+"')";
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(connString))

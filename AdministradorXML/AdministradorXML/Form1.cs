@@ -120,7 +120,7 @@ namespace AdministradorXML
                     System.Environment.Exit(1);
                 }
             }
-            logueadoComoToolStripMenuItem.Text = "Logueado como: " + AdministradorXML.Login.sourceGlobal;
+            logueadoComoToolStripMenuItem.Text = "Logueado como: " + AdministradorXML.Login.sourceGlobal+" en "+Login.unidadDeNegocioGlobal;
             siguiente = true;
             try
             {   // Open the text file using a stream reader.
@@ -165,7 +165,9 @@ namespace AdministradorXML
             gastosSunplusList.Location = new Point((width / 2) + (posX / 2), posY + (height / 2) - (posY * 2) + posY);
             gastosSunplusList.Size = new Size((width / 2) - (posX * 2), (height / 2) - (posY * 2));
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL' order by SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) asc";
+            //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
+           
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -434,7 +436,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Properties.Settings.Default.sunUnidadDeNegocio + "' AND tipoDeContabilidad = '1'";
+                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '1'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         bool first = true;
@@ -470,7 +472,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Properties.Settings.Default.sunUnidadDeNegocio + "' AND tipoDeContabilidad = '2'";
+                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '2'";
 
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
@@ -508,7 +510,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Properties.Settings.Default.sunUnidadDeNegocio + "' AND tipoDeContabilidad = '3'";
+                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '3'";
 
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
@@ -543,8 +545,14 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0)  as suma, MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.ACCNT_CODE in (" + todasLasCuentasDeIngresos.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
-
+                    if(todasLasCuentasDeIngresos.Length==0)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Hola, te falta indicartus cuentas de Ingreso en sunplus, y probablemente las de egreso y balanza también.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    String queryXML = "SELECT s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0)  as suma, MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.ACCNT_CODE in (" + todasLasCuentasDeIngresos.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
+                   
+     
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -564,7 +572,7 @@ namespace AdministradorXML
 
                                 listaFinalIngresosSunplus.Add(dictionary);
 
-                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
 
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
@@ -588,7 +596,7 @@ namespace AdministradorXML
                             }
                             if (todasLasCuentasDeBalanza.ToString().Length > 1)
                             {
-                                String queryFISCAL1 = "SELECT  s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0) as suma,MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'C' AND s.ACCNT_CODE in (" + todasLasCuentasDeBalanza.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
+                                String queryFISCAL1 = "SELECT  s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0) as suma,MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'C' AND s.ACCNT_CODE in (" + todasLasCuentasDeBalanza.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
 
                                 using (SqlCommand cmdCheckFISCAL1 = new SqlCommand(queryFISCAL1, connection))
                                 {
@@ -607,7 +615,7 @@ namespace AdministradorXML
                                             dictionary1.Add("enlazado", 0);
 
                                             listaFinalIngresosSunplus.Add(dictionary1);
-                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
 
                                             using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
                                             {
@@ -683,7 +691,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //gastos sunplus
-                    String queryXML = "SELECT s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0)  as suma,MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.ACCNT_CODE in (" + todasLasCuentasDeEgresos.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
+                    String queryXML = "SELECT s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0)  as suma,MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.ACCNT_CODE in (" + todasLasCuentasDeEgresos.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -702,7 +710,7 @@ namespace AdministradorXML
                                 dictionary.Add("enlazado", 0);
 
                                 listaFinalEgresosSunPlus.Add(dictionary);
-                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
                                 
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
@@ -726,7 +734,7 @@ namespace AdministradorXML
                             }
                             if (todasLasCuentasDeBalanza.ToString().Length > 1)
                             {
-                                String queryFISCAL1 = "SELECT s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0) as suma,MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'D' AND s.ACCNT_CODE in (" + todasLasCuentasDeBalanza.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
+                                String queryFISCAL1 = "SELECT s.ACCNT_CODE, ISNULL(SUM(s.AMOUNT),0) as suma,MAX( a.DESCR) as DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = s.ACCNT_CODE WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'D' AND s.ACCNT_CODE in (" + todasLasCuentasDeBalanza.ToString() + ") GROUP BY s.ACCNT_CODE ORDER BY  s.ACCNT_CODE asc ";
                                 using (SqlCommand cmdCheckFISCAL1 = new SqlCommand(queryFISCAL1, connection))
                                 {
                                     SqlDataReader readerFISCAL1 = cmdCheckFISCAL1.ExecuteReader();
@@ -744,7 +752,7 @@ namespace AdministradorXML
                                             dictionary1.Add("enlazado", 0);
 
                                             listaFinalEgresosSunPlus.Add(dictionary1);
-                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
                                          
                                             using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
                                             {
@@ -829,7 +837,7 @@ namespace AdministradorXML
         private void ingresosSATList_SelectedIndexChanged(object sender, EventArgs e)
         {
             int cuantos = ingresosSATList.SelectedItems.Count;
-            if (cuantos > 0 && siguiente)
+            if (cuantos > 0)
             {
                 String rfc = ingresosSATList.SelectedItems[0].SubItems[1].Text.Trim();
                 int tipo = 2;//ingresos vigentes
@@ -837,20 +845,14 @@ namespace AdministradorXML
                 String periodo = itm.Name;
                 Detalle1 form = new Detalle1(rfc, tipo, periodo);
                 form.ShowDialog();
-                actualiza();
-                siguiente = false;
+               // actualiza();
             }
-            else
-            {
-                siguiente = true;
-            }
-
         }
 
         private void gastosSATList_SelectedIndexChanged(object sender, EventArgs e)
         {
              int cuantos = gastosSATList.SelectedItems.Count;
-             if (cuantos > 0 && siguiente)
+             if (cuantos > 0)
              {
                  String rfc = gastosSATList.SelectedItems[0].SubItems[1].Text.Trim();
                  int tipo = 1;//egresos vigentes
@@ -858,19 +860,14 @@ namespace AdministradorXML
                  String periodo = itm.Name;
                  Detalle1 form = new Detalle1(rfc, tipo, periodo);
                  form.ShowDialog();
-                 actualiza();
-                 siguiente = false;
-             }
-             else
-             {
-                 siguiente = true;
+              //   actualiza();
              }
         }
 
         private void ingresosSunPlusList_SelectedIndexChanged(object sender, EventArgs e)
         {
             int cuantos = ingresosSunPlusList.SelectedItems.Count;
-            if (cuantos > 0 && siguiente)
+            if (cuantos > 0)
             {
                 String cuenta = ingresosSunPlusList.SelectedItems[0].SubItems[0].Text.Trim();
                 int tipo = 2;//ingresos vigentes
@@ -878,19 +875,14 @@ namespace AdministradorXML
                 String periodo = itm.Name;
                 Detalle2 form2 = new Detalle2(cuenta, tipo, periodo, todasLasCuentasDeIngresos.ToString(), todasLasCuentasDeEgresos.ToString(), todasLasCuentasDeBalanza.ToString());
                 form2.ShowDialog();
-                actualiza(); 
-                siguiente = false;
-            }
-            else
-            {
-                siguiente = true;
+                //actualiza(); 
             }
         }
 
         private void gastosSunplusList_SelectedIndexChanged(object sender, EventArgs e)
         {
             int cuantos = gastosSunplusList.SelectedItems.Count;
-            if (cuantos > 0 && siguiente)
+            if (cuantos > 0)
             {
                 String cuenta = gastosSunplusList.SelectedItems[0].SubItems[0].Text.Trim();
                 int tipo = 1;//gastos vigentes
@@ -898,12 +890,7 @@ namespace AdministradorXML
                 String periodo = itm.Name;
                 Detalle2 form2 = new Detalle2(cuenta, tipo, periodo, todasLasCuentasDeIngresos.ToString(), todasLasCuentasDeEgresos.ToString(), todasLasCuentasDeBalanza.ToString());
                 form2.ShowDialog();
-                actualiza();
-                siguiente = false;
-            }
-            else
-            {
-                siguiente = true;
+                //actualiza();
             }
         }
 
@@ -1013,6 +1000,31 @@ namespace AdministradorXML
         {
             FacturasNoEnlazadas form = new FacturasNoEnlazadas();
             form.ShowDialog();
+        }
+
+        private void actualizarButton_Click(object sender, EventArgs e)
+        {
+            actualiza();
+        }
+
+        private void borrarMisTemporalesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+                    String query = "DELETE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[temporales] WHERE BUNIT ='" + Login.unidadDeNegocioGlobal + "' AND JRNAL_SOURCE = '" + Login.sourceGlobal + "'";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+                    System.Windows.Forms.MessageBox.Show("Temporales borrados para "+Login.sourceGlobal+" en "+Login.unidadDeNegocioGlobal, "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }         
         }
     }
 }

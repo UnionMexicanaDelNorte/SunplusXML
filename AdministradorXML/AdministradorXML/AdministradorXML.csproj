@@ -181,6 +181,12 @@
     <Compile Include="Ligar2.Designer.cs">
       <DependentUpon>Ligar2.cs</DependentUpon>
     </Compile>
+    <Compile Include="LigarPorCuenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LigarPorCuenta.Designer.cs">
+      <DependentUpon>LigarPorCuenta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs" />
     <Compile Include="mandarPush.cs">
       <SubType>Form</SubType>
@@ -297,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Ligar2.resx">
       <DependentUpon>Ligar2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LigarPorCuenta.resx">
+      <DependentUpon>LigarPorCuenta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mandarPush.resx">
       <DependentUpon>mandarPush.cs</DependentUpon>

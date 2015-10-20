@@ -69,6 +69,8 @@
             this.totalEgresosSATLabel = new System.Windows.Forms.Label();
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
+            this.actualizarButton = new System.Windows.Forms.Button();
+            this.borrarMisTemporalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,7 +86,7 @@
             this.logueadoComoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1692, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(1726, 43);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -99,7 +101,7 @@
             // variablesToolStripMenuItem
             // 
             this.variablesToolStripMenuItem.Name = "variablesToolStripMenuItem";
-            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(192, 40);
+            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(243, 40);
             this.variablesToolStripMenuItem.Text = "Variables";
             this.variablesToolStripMenuItem.Click += new System.EventHandler(this.variablesToolStripMenuItem_Click);
             // 
@@ -271,6 +273,7 @@
             // ayudaToolStripMenuItem
             // 
             this.ayudaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.borrarMisTemporalesToolStripMenuItem,
             this.xMLDeCuentasToolStripMenuItem1,
             this.xMLDeBalanzaToolStripMenuItem1,
             this.acercaDeToolStripMenuItem});
@@ -281,21 +284,21 @@
             // xMLDeCuentasToolStripMenuItem1
             // 
             this.xMLDeCuentasToolStripMenuItem1.Name = "xMLDeCuentasToolStripMenuItem1";
-            this.xMLDeCuentasToolStripMenuItem1.Size = new System.Drawing.Size(269, 40);
+            this.xMLDeCuentasToolStripMenuItem1.Size = new System.Drawing.Size(337, 40);
             this.xMLDeCuentasToolStripMenuItem1.Text = "XML de Cuentas";
             this.xMLDeCuentasToolStripMenuItem1.Click += new System.EventHandler(this.xMLDeCuentasToolStripMenuItem1_Click);
             // 
             // xMLDeBalanzaToolStripMenuItem1
             // 
             this.xMLDeBalanzaToolStripMenuItem1.Name = "xMLDeBalanzaToolStripMenuItem1";
-            this.xMLDeBalanzaToolStripMenuItem1.Size = new System.Drawing.Size(269, 40);
+            this.xMLDeBalanzaToolStripMenuItem1.Size = new System.Drawing.Size(337, 40);
             this.xMLDeBalanzaToolStripMenuItem1.Text = "XML de Balanza";
             this.xMLDeBalanzaToolStripMenuItem1.Click += new System.EventHandler(this.xMLDeBalanzaToolStripMenuItem1_Click);
             // 
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(269, 40);
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
             this.acercaDeToolStripMenuItem.Text = "Acerca de";
             this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
             // 
@@ -414,13 +417,31 @@
             this.totalEgresosSunplusLabel.TabIndex = 10;
             this.totalEgresosSunplusLabel.Text = "label1";
             // 
+            // actualizarButton
+            // 
+            this.actualizarButton.Location = new System.Drawing.Point(531, 59);
+            this.actualizarButton.Name = "actualizarButton";
+            this.actualizarButton.Size = new System.Drawing.Size(125, 38);
+            this.actualizarButton.TabIndex = 11;
+            this.actualizarButton.Text = "Actualizar";
+            this.actualizarButton.UseVisualStyleBackColor = true;
+            this.actualizarButton.Click += new System.EventHandler(this.actualizarButton_Click);
+            // 
+            // borrarMisTemporalesToolStripMenuItem
+            // 
+            this.borrarMisTemporalesToolStripMenuItem.Name = "borrarMisTemporalesToolStripMenuItem";
+            this.borrarMisTemporalesToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
+            this.borrarMisTemporalesToolStripMenuItem.Text = "Borrar mis temporales";
+            this.borrarMisTemporalesToolStripMenuItem.Click += new System.EventHandler(this.borrarMisTemporalesToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1726, 1068);
+            this.ClientSize = new System.Drawing.Size(1760, 1068);
+            this.Controls.Add(this.actualizarButton);
             this.Controls.Add(this.totalEgresosSunplusLabel);
             this.Controls.Add(this.totalIngresosSunplusLabel);
             this.Controls.Add(this.totalEgresosSATLabel);
@@ -489,6 +510,8 @@
         private System.Windows.Forms.ToolStripMenuItem mandarMensajeCustomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem logueadoComoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesiónToolStripMenuItem;
+        private System.Windows.Forms.Button actualizarButton;
+        private System.Windows.Forms.ToolStripMenuItem borrarMisTemporalesToolStripMenuItem;
     }
 }
 

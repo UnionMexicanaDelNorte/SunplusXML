@@ -90,7 +90,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connStringSun))
                 {
                     connection.Open();
-                    String queryPeriodos = "SELECT a.ACNT_CODE, a.DESCR, b.ANL_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] a INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT_ANL_CAT] b on b.ACNT_CODE = a.ACNT_CODE WHERE b.ANL_CAT_ID = 14 order by a.ACNT_CODE asc";
+                    String queryPeriodos = "SELECT a.ACNT_CODE, a.DESCR, b.ANL_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT] a INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT_ANL_CAT] b on b.ACNT_CODE = a.ACNT_CODE WHERE b.ANL_CAT_ID = 14 order by a.ACNT_CODE asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryPeriodos, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -102,7 +102,7 @@ namespace AdministradorXML
                                 String DESCR = reader.GetString(1).Trim();
                                 String ENTER_ANL_10 = reader.GetString(2).Trim();
                                 //si esta enlazado de esa cuenta
-                                String queryFISCAL = "SELECT codigoAgrupador,ACNT_CODE, BUNIT FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] WHERE ACNT_CODE = '"+ACNT_CODE+"' AND BUNIT = '"+Properties.Settings.Default.sunUnidadDeNegocio+"'";
+                                String queryFISCAL = "SELECT codigoAgrupador,ACNT_CODE, BUNIT FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] WHERE ACNT_CODE = '"+ACNT_CODE+"' AND BUNIT = '"+Login.unidadDeNegocioGlobal+"'";
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -265,7 +265,7 @@ namespace AdministradorXML
                             {
                                 String ACNT_CODE = listItem.SubItems[0].Text.Trim();
                                 String codigoAgrupador = agrupadoresList.SelectedItems[0].SubItems[1].Text.Trim();
-                                String query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] (codigoAgrupador, ACNT_CODE,BUNIT) VALUES ('" + codigoAgrupador + "', '" + ACNT_CODE + "','" + Properties.Settings.Default.sunUnidadDeNegocio + "')";
+                                String query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] (codigoAgrupador, ACNT_CODE,BUNIT) VALUES ('" + codigoAgrupador + "', '" + ACNT_CODE + "','" + Login.unidadDeNegocioGlobal + "')";
                                 SqlCommand cmd = new SqlCommand(query, connection);
                                 cmd.ExecuteNonQuery();
                             }

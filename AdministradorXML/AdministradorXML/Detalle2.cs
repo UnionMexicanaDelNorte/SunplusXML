@@ -171,11 +171,11 @@ namespace AdministradorXML
                     String queryXML = "";
                     if(tipoDeContabilidadGlobal==1)//gastos
                     {
-                        queryXML = "SELECT s.JRNAL_NO, s.JRNAL_LINE,s.AMOUNT,s.DESCRIPTN,s.TRANS_DATETIME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'D' AND s.ACCNT_CODE = '" + cuentaGlobal + "'";
+                        queryXML = "SELECT s.JRNAL_NO, s.JRNAL_LINE,s.AMOUNT,s.DESCRIPTN,s.TRANS_DATETIME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'D' AND s.ACCNT_CODE = '" + cuentaGlobal + "'";
                     }
                     else
                     {//ingresos
-                        queryXML = "SELECT s.JRNAL_NO, s.JRNAL_LINE,s.AMOUNT,s.DESCRIPTN,s.TRANS_DATETIME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'C' AND s.ACCNT_CODE = '" + cuentaGlobal + "'";
+                        queryXML = "SELECT s.JRNAL_NO, s.JRNAL_LINE,s.AMOUNT,s.DESCRIPTN,s.TRANS_DATETIME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s WHERE s.PERIOD = '" + periodoParaQuery + "' AND s.ALLOCATION != 'C' AND s.D_C = 'C' AND s.ACCNT_CODE = '" + cuentaGlobal + "'";
                     }
                     
                     listaFinal = new List<Dictionary<string, object>>();
@@ -195,7 +195,7 @@ namespace AdministradorXML
                                 String TRANS_DATETIME = Convert.ToString( reader.GetDateTime(4));
                              
                                 //cuanto esta enlazado de esa linea
-                                String queryFISCAL = "SELECT f.FOLIO_FISCAL,f.BUNIT,f.JRNAL_NO,f.JRNAL_LINE,f.AMOUNT,f.consecutivo , x.rfc,x.nombreArchivoPDF, x.ruta, x.razonSocial, s.DESCRIPTN FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE f.JRNAL_NO = " + JRNAL_NO1 + " AND f.JRNAL_LINE = "+JRNAL_LINE1;
+                                String queryFISCAL = "SELECT f.FOLIO_FISCAL,f.BUNIT,f.JRNAL_NO,f.JRNAL_LINE,f.AMOUNT,f.consecutivo , x.rfc,x.nombreArchivoPDF, x.ruta, x.razonSocial, s.DESCRIPTN FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE f.JRNAL_NO = " + JRNAL_NO1 + " AND f.JRNAL_LINE = "+JRNAL_LINE1;
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();

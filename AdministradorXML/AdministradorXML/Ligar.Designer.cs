@@ -41,6 +41,8 @@
             this.cantidadDeLaLineaText = new System.Windows.Forms.TextBox();
             this.maximoFacturaLabel = new System.Windows.Forms.Label();
             this.maximoLineaLabel = new System.Windows.Forms.Label();
+            this.maxFactura = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -148,7 +150,7 @@
             this.maximoFacturaLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.94764F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.maximoFacturaLabel.Location = new System.Drawing.Point(875, 44);
             this.maximoFacturaLabel.Name = "maximoFacturaLabel";
-            this.maximoFacturaLabel.Size = new System.Drawing.Size(122, 44);
+            this.maximoFacturaLabel.Size = new System.Drawing.Size(118, 42);
             this.maximoFacturaLabel.TabIndex = 11;
             this.maximoFacturaLabel.Text = "label4";
             // 
@@ -158,14 +160,35 @@
             this.maximoLineaLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.94764F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.maximoLineaLabel.Location = new System.Drawing.Point(883, 317);
             this.maximoLineaLabel.Name = "maximoLineaLabel";
-            this.maximoLineaLabel.Size = new System.Drawing.Size(0, 44);
+            this.maximoLineaLabel.Size = new System.Drawing.Size(0, 42);
             this.maximoLineaLabel.TabIndex = 12;
+            // 
+            // maxFactura
+            // 
+            this.maxFactura.AutoSize = true;
+            this.maxFactura.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maxFactura.Location = new System.Drawing.Point(542, 117);
+            this.maxFactura.Name = "maxFactura";
+            this.maxFactura.Size = new System.Drawing.Size(103, 38);
+            this.maxFactura.TabIndex = 13;
+            this.maxFactura.Text = "label4";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1631, 1093);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(18, 26);
+            this.label4.TabIndex = 14;
+            this.label4.Text = ".";
             // 
             // Ligar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1661, 1128);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.maxFactura);
             this.Controls.Add(this.maximoLineaLabel);
             this.Controls.Add(this.maximoFacturaLabel);
             this.Controls.Add(this.cantidadDeLaLineaText);
@@ -203,5 +226,7 @@
         private System.Windows.Forms.TextBox cantidadDeLaLineaText;
         private System.Windows.Forms.Label maximoFacturaLabel;
         private System.Windows.Forms.Label maximoLineaLabel;
+        private System.Windows.Forms.Label maxFactura;
+        private System.Windows.Forms.Label label4;
     }
 }

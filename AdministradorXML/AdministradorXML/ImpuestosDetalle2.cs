@@ -17,6 +17,8 @@ namespace AdministradorXML
         public String impuesto { get; set; }
         public int tipo { get; set; }
         public String rfc { get; set; }
+        public int tipoImpuesto { get; set; }
+       
         public List<Dictionary<string, object>> listaFinal { get; set; }
         System.Windows.Forms.MenuItem menuItem1;
         System.Windows.Forms.MenuItem menuItem2;
@@ -27,13 +29,14 @@ namespace AdministradorXML
         {
             InitializeComponent();
         }
-         public ImpuestosDetalle2(String p, String i, int t,String r)
+         public ImpuestosDetalle2(String p, String i, int t,String r, int tp)
         {
             InitializeComponent();
             periodo = p;
             impuesto = i;
             tipo = t;
             rfc = r;
+            tipoImpuesto = tp;
         }
          public void VerPDF(object sender, EventArgs e)
          {
@@ -73,13 +76,22 @@ namespace AdministradorXML
             facturasList.ContextMenu = contextMenu2;
 
             listaFinal = new List<Dictionary<string, object>>();
-            if (tipo == 1)
+            String append = "";
+            if (tipoImpuesto==1)
             {
-                cambiarLabel.Text = "" + impuesto + " del periodo: " + periodo + " del gasto del RFC: "+rfc;
+                append = " del tipo de impuesto Traslados";
             }
             else
             {
-                cambiarLabel.Text = "" + impuesto + " del periodo: " + periodo + " de ingreso del RFC: " + rfc;
+                append = " del tipo de impuesto Retenciones";
+            }
+            if (tipo == 1)
+            {
+                cambiarLabel.Text = "" + impuesto + " del periodo: " + periodo + " del gasto del RFC: "+rfc+append;
+            }
+            else
+            {
+                cambiarLabel.Text = "" + impuesto + " del periodo: " + periodo + " de ingreso del RFC: " + rfc+append;
             }
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             try
@@ -87,7 +99,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT f.folioFiscal,f.ruta,f.nombreArchivoPDF,f.nombreArchivoXML,f.folio,f.fechaExpedicion,i.impuesto,i.importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] i on i.folioFiscal = f.folioFiscal WHERE f.STATUS = '"+tipo+"' AND SUBSTRING( CAST(f.fechaExpedicion AS NVARCHAR(10)),1,"+periodo.Length+") = '"+periodo+"' AND i.impuesto = '"+impuesto+"' AND f.rfc = '"+rfc+"' order by f.fechaExpedicion asc";
+                    String queryXML = "SELECT f.folioFiscal,f.ruta,f.nombreArchivoPDF,f.nombreArchivoXML,f.folio,f.fechaExpedicion,i.impuesto,i.importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] i on i.folioFiscal = f.folioFiscal WHERE f.STATUS = '" + tipo + "' AND SUBSTRING( CAST(f.fechaExpedicion AS NVARCHAR(10)),1," + periodo.Length + ") = '" + periodo + "' AND i.impuesto = '" + impuesto + "' AND i.tipo = " + tipoImpuesto + " AND f.rfc = '" + rfc + "' order by f.fechaExpedicion asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();

@@ -37,6 +37,8 @@
             this.totalImpuestosLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.impuestoCombo = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -63,7 +65,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(665, 50);
+            this.label2.Location = new System.Drawing.Point(637, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 38);
             this.label2.TabIndex = 2;
@@ -73,9 +75,9 @@
             // 
             this.tipoCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tipoCombo.FormattingEnabled = true;
-            this.tipoCombo.Location = new System.Drawing.Point(835, 50);
+            this.tipoCombo.Location = new System.Drawing.Point(754, 54);
             this.tipoCombo.Name = "tipoCombo";
-            this.tipoCombo.Size = new System.Drawing.Size(435, 45);
+            this.tipoCombo.Size = new System.Drawing.Size(293, 45);
             this.tipoCombo.TabIndex = 3;
             this.tipoCombo.SelectedIndexChanged += new System.EventHandler(this.tipoCombo_SelectedIndexChanged);
             // 
@@ -85,7 +87,7 @@
             this.impuestosList.Location = new System.Drawing.Point(50, 148);
             this.impuestosList.MultiSelect = false;
             this.impuestosList.Name = "impuestosList";
-            this.impuestosList.Size = new System.Drawing.Size(1433, 634);
+            this.impuestosList.Size = new System.Drawing.Size(1644, 762);
             this.impuestosList.TabIndex = 4;
             this.impuestosList.UseCompatibleStateImageBehavior = false;
             this.impuestosList.SelectedIndexChanged += new System.EventHandler(this.impuestosList_SelectedIndexChanged);
@@ -111,11 +113,31 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1513, 795);
+            this.label4.Location = new System.Drawing.Point(1700, 910);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(18, 26);
             this.label4.TabIndex = 7;
             this.label4.Text = ".";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(1077, 61);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(275, 38);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Tipo de impuesto:";
+            // 
+            // impuestoCombo
+            // 
+            this.impuestoCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.impuestoCombo.FormattingEnabled = true;
+            this.impuestoCombo.Location = new System.Drawing.Point(1397, 64);
+            this.impuestoCombo.Name = "impuestoCombo";
+            this.impuestoCombo.Size = new System.Drawing.Size(271, 45);
+            this.impuestoCombo.TabIndex = 9;
+            this.impuestoCombo.SelectedIndexChanged += new System.EventHandler(this.impuestoCombo_SelectedIndexChanged);
             // 
             // VerImpuestos
             // 
@@ -123,7 +145,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1547, 823);
+            this.ClientSize = new System.Drawing.Size(1730, 945);
+            this.Controls.Add(this.impuestoCombo);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.totalImpuestosLabel);
@@ -154,5 +178,7 @@
         private System.Windows.Forms.Label totalImpuestosLabel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox impuestoCombo;
     }
 }

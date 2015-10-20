@@ -20,9 +20,6 @@
     <Setting Name="sunLibro" Type="System.String" Scope="User">
       <Value Profile="(Default)">A</Value>
     </Setting>
-    <Setting Name="sunUnidadDeNegocio" Type="System.String" Scope="User">
-      <Value Profile="(Default)">CEA</Value>
-    </Setting>
     <Setting Name="rfcGlobal" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -34,9 +31,6 @@
     </Setting>
     <Setting Name="sunLibroPresupuesto" Type="System.String" Scope="User">
       <Value Profile="(Default)">B</Value>
-    </Setting>
-    <Setting Name="source" Type="System.String" Scope="User">
-      <Value Profile="(Default)">AOK</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -46,7 +46,7 @@ namespace AdministradorXML
             listaCuentasConPermisos.Clear();
             listaCuentasSinDarPermisos.Clear();
             String connStringSun = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT ACNT_CODE, DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT]";
+            String queryPeriodos = "SELECT ACNT_CODE, DESCR FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT]";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connStringSun))
@@ -63,7 +63,7 @@ namespace AdministradorXML
                             Dictionary<string, object> dictionary = new Dictionary<string, object>();
                             dictionary.Add("ACNT_CODE", ACNT_CODE);
                             dictionary.Add("DESCR", DESCR);
-                            String queryFISCAL = "SELECT ACNT_CODE,DESCR FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '"+Properties.Settings.Default.sunUnidadDeNegocio+"' AND tipoDeContabilidad = "+tipo+" AND ACNT_CODE = '"+ACNT_CODE+"'";
+                            String queryFISCAL = "SELECT ACNT_CODE,DESCR FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '"+Login.unidadDeNegocioGlobal+"' AND tipoDeContabilidad = "+tipo+" AND ACNT_CODE = '"+ACNT_CODE+"'";
                             using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                             {
                                 SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -116,7 +116,7 @@ namespace AdministradorXML
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("No existen Cuentas para la unidad de negocios: "+Properties.Settings.Default.sunUnidadDeNegocio+", favor de verificar.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        System.Windows.Forms.MessageBox.Show("No existen Cuentas para la unidad de negocios: "+Login.unidadDeNegocioGlobal+", favor de verificar.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
             }
@@ -166,7 +166,7 @@ namespace AdministradorXML
                         {
                             String ACNT_CODE = cuenta.SubItems[0].Text.Trim();
                             String DESCR = cuenta.SubItems[1].Text.Trim();
-                            String query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] (ACNT_CODE,DESCR,tipoDeContabilidad,unidadDeNegocio) VALUES ('" + ACNT_CODE + "', '"+DESCR+"', " + tipoGlobal + ", '" + Properties.Settings.Default.sunUnidadDeNegocio + "')";
+                            String query = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] (ACNT_CODE,DESCR,tipoDeContabilidad,unidadDeNegocio) VALUES ('" + ACNT_CODE + "', '"+DESCR+"', " + tipoGlobal + ", '" + Login.unidadDeNegocioGlobal + "')";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             cmd.ExecuteNonQuery();
                             ListViewItem clon = (ListViewItem)cuenta.Clone();
@@ -201,7 +201,7 @@ namespace AdministradorXML
                         {
                             String ACNT_CODE = cuenta.SubItems[0].Text.Trim();
                             String DESCR = cuenta.SubItems[1].Text.Trim();
-                            String query = "DELETE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE ACNT_CODE ='" + ACNT_CODE + "' AND tipoDeContabilidad = " + tipoGlobal + " AND unidadDeNegocio = '" + Properties.Settings.Default.sunUnidadDeNegocio + "'";
+                            String query = "DELETE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE ACNT_CODE ='" + ACNT_CODE + "' AND tipoDeContabilidad = " + tipoGlobal + " AND unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             cmd.ExecuteNonQuery();
                             ListViewItem clon = (ListViewItem)cuenta.Clone();
@@ -234,7 +234,7 @@ namespace AdministradorXML
                         {
                             String ACNT_CODE = cuenta.SubItems[0].Text.Trim();
                             String DESCR = cuenta.SubItems[1].Text.Trim();
-                            String query = "DELETE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE ACNT_CODE ='" + ACNT_CODE + "' AND tipoDeContabilidad = " + tipoGlobal + " AND unidadDeNegocio = '" + Properties.Settings.Default.sunUnidadDeNegocio + "'";
+                            String query = "DELETE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE ACNT_CODE ='" + ACNT_CODE + "' AND tipoDeContabilidad = " + tipoGlobal + " AND unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "'";
                             SqlCommand cmd = new SqlCommand(query, connection);
                             cmd.ExecuteNonQuery();
                             ListViewItem clon = (ListViewItem)cuenta.Clone();

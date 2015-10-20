@@ -25,7 +25,7 @@ namespace AdministradorXML
             if(!diarioText.Text.Trim().Equals(""))
             {
                 String diario = diarioText.Text.Trim();
-                String query1 = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] set JRNAL_NO = " + diario + " WHERE JRNAL_SOURCE = '" + Properties.Settings.Default.source + "' AND JRNAL_NO = -1";
+                String query1 = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] set JRNAL_NO = " + diario + " WHERE JRNAL_SOURCE = '" + Login.sourceGlobal + "' AND JRNAL_NO = -1";
                 String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
                 try
                 {

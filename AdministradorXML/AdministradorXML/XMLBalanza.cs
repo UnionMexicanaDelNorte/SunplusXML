@@ -46,7 +46,7 @@ namespace AdministradorXML
         private void XMLBalanza_Load(object sender, EventArgs e)
         {
             String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT PERIOD FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] order by PERIOD asc";
+            String queryPeriodos = "SELECT DISTINCT PERIOD FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] order by PERIOD asc";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -187,7 +187,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT ACNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_ACNT] order by ACNT_CODE asc";
+                    String queryXML = "SELECT ACNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] order by ACNT_CODE asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -201,7 +201,7 @@ namespace AdministradorXML
                                 String saldoDebe = "0";
                                 String saldoHaber = "0";
                                 //saldo inicial
-                                String queryFISCAL = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '"+ACNT_CODE+"' AND PERIOD in (" + periodosAnteriores.ToString() + ")";
+                                String queryFISCAL = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '"+ACNT_CODE+"' AND PERIOD in (" + periodosAnteriores.ToString() + ")";
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -219,7 +219,7 @@ namespace AdministradorXML
                                 }
 
                                 //saldo final
-                                String queryFISCAL1 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND PERIOD in (" + hastaAlPeriodoActual + ")";
+                                String queryFISCAL1 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND PERIOD in (" + hastaAlPeriodoActual + ")";
                                 using (SqlCommand cmdCheckFISCAL1 = new SqlCommand(queryFISCAL1, connection))
                                 {
                                     SqlDataReader readerFISCAL1 = cmdCheckFISCAL1.ExecuteReader();
@@ -237,7 +237,7 @@ namespace AdministradorXML
                                 }
 
                                 //saldo debe
-                                String queryFISCAL2 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '"+ACNT_CODE+"' AND D_C='D' AND PERIOD in ('"+periodo+"')";
+                                String queryFISCAL2 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '"+ACNT_CODE+"' AND D_C='D' AND PERIOD in ('"+periodo+"')";
                                 using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
                                 {
                                     SqlDataReader readerFISCAL2 = cmdCheckFISCAL2.ExecuteReader();
@@ -255,7 +255,7 @@ namespace AdministradorXML
                                 }
 
                                 //saldo haber
-                                String queryFISCAL3 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Properties.Settings.Default.sunUnidadDeNegocio + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND D_C='C' AND PERIOD in ('" + periodo + "')";
+                                String queryFISCAL3 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND D_C='C' AND PERIOD in ('" + periodo + "')";
                                 using (SqlCommand cmdCheckFISCAL3 = new SqlCommand(queryFISCAL3, connection))
                                 {
                                     SqlDataReader readerFISCAL3 = cmdCheckFISCAL3.ExecuteReader();

@@ -352,7 +352,8 @@ namespace SunPlusXML
                     {
                         if (siEncontroResultados.Equals("inline"))
                         {
-                            tiempoHastaTrigger.Text = "ENTRO A CUAL CHECO";
+                            string html = this.webView3.GetHtml();
+                            tiempoHastaTrigger.Text = "NO ENCONTRE CANCELADOS DE LOS EMITIDOS";
                             tmrDecimoSeptimo.Stop();
                             mandaCorreo();
                         }
@@ -434,7 +435,7 @@ namespace SunPlusXML
                             String cantidad = html.Substring(0, posicionInicial);
 
                             posicionInicial = html.IndexOf("WORD-BREAK:BREAK-ALL;");
-                            html = html.Substring(posicionInicial + 21 + 51);
+                            html = html.Substring(posicionInicial + 21 + 50);
                             posicionInicial = html.IndexOf("<");
                             String tipoDeComprobante = html.Substring(0, posicionInicial).ToUpper();
                             String statusDeCancelado = "0";//gasto
@@ -551,9 +552,23 @@ namespace SunPlusXML
                 {
                     primeraVez = 1;
                     tmrDecimoSexto.Stop();
+                    DateTime now = DateTime.Now;
+                    int year = now.Year;
+                 
                     tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 16 STOP";
+                    if(modoGlobal==2)//ultrapesado
+                    {
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_Calendario_text').value='01/01/" + year + "';");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_Calendario_text').value='31/12/" + year + "';");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlHora').value='23';");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlMinuto').value='59';");
+                   
+                    }
+
                     this.webView3.EvalScript("var arrayA = document.getElementsByTagName('a');var i = 0;for (i = 0; i < arrayA.length; i++){if (arrayA[i].innerHTML.valueOf() == new String('Cancelado').valueOf()){arrayA[i].click();break;}}");
                     this.webView3.EvalScript("window.alert = function() {};");
+
+
                     this.webView3.EvalScript("document.getElementById('ctl00_MainContent_BtnBusqueda').click();");
                     tmrDecimoSeptimo.Start();
                     tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 17 START";
@@ -692,6 +707,10 @@ namespace SunPlusXML
                             dd = "0" + diaActual;
                         }
                         entraUnaSolaVezAlAux = true;
+                        String html = this.webView3.GetHtml();
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlHora').value='23';");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlMinuto').value='59';");
+                    
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_Calendario_text').value='"+dd+"/"+mm+"/" + year + "';");
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_Calendario_text').value='"+dd+"/"+mm+"/" + year + "';");
                     }
@@ -907,7 +926,7 @@ namespace SunPlusXML
                     {
                         if (siEncontroResultados.Equals("inline"))
                         {
-                            tiempoHastaTrigger.Text = "ENTRO A CUAL CHECO";
+                            tiempoHastaTrigger.Text = "NO ENCONTRE CANCELADOS DE LOS RECIBIDOS";
          
 
                         }
@@ -1329,14 +1348,21 @@ namespace SunPlusXML
                     }
                     else
                     {
-                        primeraVez = 1;
-                        tmrSegundo.Stop();
-                        tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 2 STOP";
-                        this.webView3.EvalScript("document.getElementsByName('Ecom_User_ID')[0].value='"+Properties.Settings.Default.RFC+"';");
-                        this.webView3.EvalScript("document.getElementsByName('Ecom_Password')[0].value='"+Properties.Settings.Default.pass+"';");
-                        this.webView3.EvalScript("document.getElementById('submit').click();");
-                        tmrTercero.Start();
-                        tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 3 START";
+                        if (Properties.Settings.Default.RFC.Trim().Equals(""))
+                        {
+                            tiempoHastaTrigger.Text = "PRIMERO LLENA LAS VARIABLES";
+                        }
+                        else
+                        {
+                            primeraVez = 1;
+                            tmrSegundo.Stop();
+                            tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 2 STOP";
+                            this.webView3.EvalScript("document.getElementsByName('Ecom_User_ID')[0].value='" + Properties.Settings.Default.RFC + "';");
+                            this.webView3.EvalScript("document.getElementsByName('Ecom_Password')[0].value='" + Properties.Settings.Default.pass + "';");
+                            this.webView3.EvalScript("document.getElementById('submit').click();");
+                            tmrTercero.Start();
+                            tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 3 START";
+                        }
                     }
                 }
             }
@@ -1482,7 +1508,6 @@ namespace SunPlusXML
         private void Form1_Load(object sender, EventArgs e)
         {
             Timer tmrSegundosDeVida = new Timer();
-            //modoGlobal = 2;//ultra pesado BORRAR 
             if(modoGlobal==1)
             {
                 modoLabel.Text = "Modo: Ligero (solo facturas de hoy)";
@@ -1642,6 +1667,11 @@ namespace SunPlusXML
                     folio_fiscal = folio_fiscal.ToUpper();
                    
                     XmlNodeList titlesx = doc.GetElementsByTagName("cfdi:Receptor");
+                    if(titlesx.Count==0)
+                    {
+                        titlesx = doc.GetElementsByTagName("Receptor");
+                    }
+
                     XmlNode objx = titlesx.Item(0);
                     String rfcReceptor = "";
                     String nombreReceptor = "";
@@ -1657,6 +1687,11 @@ namespace SunPlusXML
                     }
 
                     XmlNodeList titles1 = doc.GetElementsByTagName("cfdi:Emisor");
+                    if (titles1.Count == 0)
+                    {
+                        titles1 = doc.GetElementsByTagName("Emisor");
+                    }
+
                     XmlNode obj1 = titles1.Item(0);
                     String rfc = "";
                     bool isRFC = obj1.Attributes["rfc"] != null;
@@ -1674,9 +1709,19 @@ namespace SunPlusXML
                     }
                   
                     XmlNodeList titles2 = doc.GetElementsByTagName("cfdi:Comprobante");
+                    if (titles2.Count == 0)
+                    {
+                        titles2 = doc.GetElementsByTagName("Comprobante");
+                    }
+
+
                     XmlNode obj2 = titles2.Item(0);
 
                     XmlNodeList titlesY = doc.GetElementsByTagName("cfdi:DomicilioFiscal");
+                    if (titlesY.Count == 0)
+                    {
+                        titlesY = doc.GetElementsByTagName("DomicilioFiscal");
+                    }
                     String calle = "";
                     String noExterior = "";
                     String colonia = "";
@@ -1721,6 +1766,12 @@ namespace SunPlusXML
                     
 
                     XmlNodeList titles4 = doc.GetElementsByTagName("cfdi:Impuestos");
+                    if (titles4.Count == 0)
+                    {
+                        titles4 = doc.GetElementsByTagName("Impuestos");
+                    }
+
+
                     XmlNode obj4 = titles4.Item(0);
                   
                     String iva = "0";
@@ -1732,6 +1783,10 @@ namespace SunPlusXML
                     else
                     {
                         XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
+                        if (traslados.Count == 0)
+                        {
+                            traslados = doc.GetElementsByTagName("Traslado");
+                        }
                         int i;
                         for(i=0;i<traslados.Count;i++)
                         {
@@ -1904,6 +1959,11 @@ namespace SunPlusXML
                                     const Double FontSize = 9.0;
                                     PdfFileWriter.TextBox Box = new PdfFileWriter.TextBox(Width, 0.25);
                                     XmlNodeList conceptos = doc.GetElementsByTagName("cfdi:Concepto");
+                                    if (conceptos.Count == 0)
+                                    {
+                                        conceptos = doc.GetElementsByTagName("Concepto");
+                                    }
+
                                     int i;
                                     String conceptosString = "";
                                     for (i = 0; i < conceptos.Count; i++)
@@ -1935,9 +1995,51 @@ namespace SunPlusXML
                                         }
                                         conceptosString = conceptosString + "\n" + cantidadc + " " + descripcionc + " $" + importec;
                                     }
-                                    XmlNodeList retenciones = doc.GetElementsByTagName("cfdi:Retencion");
                                     String impuestosString = "";
 
+                                    XmlNodeList retencionesLocales = doc.GetElementsByTagName("implocal:RetencionesLocales");
+                                    if (retencionesLocales.Count == 0)
+                                    {
+                                        retencionesLocales = doc.GetElementsByTagName("RetencionesLocales");
+                                    }
+                                    for (i = 0; i < retencionesLocales.Count; i++)
+                                    {
+                                        XmlNode objn = retencionesLocales.Item(i);
+                                        String cantidad = "0";
+                                        String impuesto = "";
+                                        float tasa = 0;
+                                        bool isCantidad = objn.Attributes["Importe"] != null;
+                                        if (isCantidad)
+                                        {
+                                            cantidad = objn.Attributes["Importe"].InnerText;
+                                            impuesto = objn.Attributes["ImpLocRetenido"].InnerText;
+                                            tasa = float.Parse(objn.Attributes["TasadeRetencion"].InnerText);
+                                            float importe = float.Parse(cantidad);
+                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
+                                            if (!readerImpuesto.HasRows)
+                                            {
+                                                readerImpuesto.Close();
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2)";
+                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                cmdImpuesto.ExecuteNonQuery();
+                                            }
+                                            else
+                                            {
+                                                readerImpuesto.Close();
+                                            }
+                                        }
+                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                    }
+
+                                    XmlNodeList retenciones = doc.GetElementsByTagName("cfdi:Retencion");
+                                    if (retenciones.Count == 0)
+                                    {
+                                        retenciones = doc.GetElementsByTagName("Retencion");
+                                    }
+                                  
                                     for (i = 0; i < retenciones.Count; i++)
                                     {
                                         XmlNode objn = retenciones.Item(i);
@@ -1958,7 +2060,7 @@ namespace SunPlusXML
                                             if (!readerImpuesto.HasRows)
                                             {
                                                 readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ")";
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2)";
                                                 SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
                                                 cmdImpuesto.ExecuteNonQuery();
                                             }
@@ -1969,7 +2071,49 @@ namespace SunPlusXML
                                         }
                                         iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
                                     }
+
+                                    XmlNodeList trasladosLocales = doc.GetElementsByTagName("implocal:TrasladosLocales");
+                                    if (trasladosLocales.Count == 0)
+                                    {
+                                        trasladosLocales = doc.GetElementsByTagName("TrasladosLocales");
+                                    }
+                                    for (i = 0; i < trasladosLocales.Count; i++)
+                                    {
+                                        XmlNode objn = trasladosLocales.Item(i);
+                                        String cantidad = "0";
+                                        String impuesto = "";
+                                        float tasa = 0;
+                                        bool isCantidad = objn.Attributes["Importe"] != null;
+                                        if (isCantidad)
+                                        {
+                                            cantidad = objn.Attributes["Importe"].InnerText;
+                                            impuesto = objn.Attributes["ImpLocTrasladado"].InnerText;
+                                            tasa = float.Parse(objn.Attributes["TasadeTraslado"].InnerText);
+                                            float importe = float.Parse(cantidad);
+                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
+                                            if (!readerImpuesto.HasRows)
+                                            {
+                                                readerImpuesto.Close();
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1)";
+                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                cmdImpuesto.ExecuteNonQuery();
+                                            }
+                                            else
+                                            {
+                                                readerImpuesto.Close();
+                                            }
+                                        }
+                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                    }
+
                                     XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
+                                    if (traslados.Count == 0)
+                                    {
+                                        traslados = doc.GetElementsByTagName("Traslado");
+                                    }
                                     for (i = 0; i < traslados.Count; i++)
                                     {
                                         XmlNode objn = traslados.Item(i);
@@ -1990,7 +2134,7 @@ namespace SunPlusXML
                                             if (!readerImpuesto.HasRows)
                                             {
                                                 readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ")";
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1)";
                                                 SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
                                                 cmdImpuesto.ExecuteNonQuery();
                                             }
@@ -2268,6 +2412,56 @@ namespace SunPlusXML
                 {
                     if (siEncontroResultados.Equals("inline"))
                     {
+                        if(modoGlobal==2 && estoyEnEmitidos)//ultrapesado
+                        {
+                            DateTime now = DateTime.Now;
+                            int year = now.Year;
+                            int month = now.Month;
+                            int diaFinal = 28;
+                            if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                            {
+                                diaFinal = 31;
+                            }
+                            else
+                            {
+                                if (month == 4 || month == 6 || month == 9 || month == 11)
+                                {
+                                    diaFinal = 30;
+                                }
+                                else
+                                {
+                                    if (year % 4 == 0)//ano bisiesto
+                                    {
+                                        diaFinal = 29;
+                                    }
+                                }
+                            }
+
+                            if (diaActual < diaFinal)
+                            {
+                                diaActual++;
+                                tmrDecimoCuarto.Start();
+                            }
+                            else
+                            {
+                                if (mesActual < 11)
+                                {
+                                    mesActual++;
+                                    diaActual = 1;
+                                    tmrDecimoCuarto.Start();
+                                }
+                                else
+                                {
+                                    estoyEnElMesAnterior = false;
+                                    diaActual = 1;
+                                    mesActual = 0;
+                                    tmrDecimoSexto.Start();
+                                }
+                            }
+                            return;
+                        }
+
+
                         if (estoyEnElMesAnterior)
                         {
                             estoyEnElMesAnterior = false;

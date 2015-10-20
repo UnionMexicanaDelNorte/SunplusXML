@@ -97,18 +97,6 @@ namespace AdministradorXML.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CEA")]
-        public string sunUnidadDeNegocio {
-            get {
-                return ((string)(this["sunUnidadDeNegocio"]));
-            }
-            set {
-                this["sunUnidadDeNegocio"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string rfcGlobal {
             get {
@@ -152,18 +140,6 @@ namespace AdministradorXML.Properties {
             }
             set {
                 this["sunLibroPresupuesto"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("AOK")]
-        public string source {
-            get {
-                return ((string)(this["source"]));
-            }
-            set {
-                this["source"] = value;
             }
         }
     }

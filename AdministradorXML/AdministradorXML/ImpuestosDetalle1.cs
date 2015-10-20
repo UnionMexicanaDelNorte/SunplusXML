@@ -17,29 +17,40 @@ namespace AdministradorXML
         public String impuesto { get; set; }
         public int tipo { get; set; }
         public List<Dictionary<string, object>> listaFinal { get; set; }
-       
+        public int tipoImpuesto { get; set; }
+     
         public ImpuestosDetalle1()
         {
             InitializeComponent();
         }
-        public ImpuestosDetalle1(String p, String i, int t)
+        public ImpuestosDetalle1(String p, String i, int t, int tp)
         {
             InitializeComponent();
             periodo = p;
             impuesto = i;
             tipo = t;
+            tipoImpuesto = tp;
         }
 
         private void ImpuestosDetalle1_Load(object sender, EventArgs e)
         {
             listaFinal = new List<Dictionary<string, object>>();
-            if(tipo==1)
+            String append = "";
+            if (tipoImpuesto == 1)
             {
-                cambiarLabel.Text=""+impuesto+" del periodo: "+periodo+" del gasto";
+                append = " del tipo de impuesto Traslados";
             }
             else
             {
-                cambiarLabel.Text=""+impuesto+" del periodo: "+periodo+" de ingreso";
+                append = " del tipo de impuesto Retenciones";
+            }
+            if(tipo==1)
+            {
+                cambiarLabel.Text=""+impuesto+" del periodo: "+periodo+" del gasto"+append;
+            }
+            else
+            {
+                cambiarLabel.Text=""+impuesto+" del periodo: "+periodo+" de ingreso"+append;
             }
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             try
@@ -47,7 +58,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT MAX(f.rfc) as rfc, MAX(f.razonSocial) as razonSocial,SUM( i.importe) as importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] i on i.folioFiscal = f.folioFiscal WHERE f.STATUS = '"+tipo+"' AND SUBSTRING( CAST(f.fechaExpedicion AS NVARCHAR(10)),1,"+periodo.Length+") = '"+periodo+"' AND i.impuesto = '"+impuesto+"' GROUP BY f.rfc order by f.rfc asc";
+                    String queryXML = "SELECT MAX(f.rfc) as rfc, MAX(f.razonSocial) as razonSocial,SUM( i.importe) as importe FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[impuestos] i on i.folioFiscal = f.folioFiscal WHERE f.STATUS = '" + tipo + "' AND SUBSTRING( CAST(f.fechaExpedicion AS NVARCHAR(10)),1," + periodo.Length + ") = '" + periodo + "' AND i.impuesto = '" + impuesto + "' AND i.tipo = '" + tipoImpuesto + "' GROUP BY f.rfc order by f.rfc asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -100,7 +111,7 @@ namespace AdministradorXML
             if(rfcImpuestosList.SelectedItems.Count>0)
             {
                 String rfc = rfcImpuestosList.SelectedItems[0].SubItems[0].Text.Trim();
-                ImpuestosDetalle2 form = new ImpuestosDetalle2(periodo, impuesto, tipo,rfc);
+                ImpuestosDetalle2 form = new ImpuestosDetalle2(periodo, impuesto, tipo, rfc, tipoImpuesto);
                 form.ShowDialog();
             }
         }
