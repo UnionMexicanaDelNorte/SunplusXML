@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfFileWriter">
+      <HintPath>C:\Users\Cuacua\Downloads\PdfFileWriter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -115,12 +118,19 @@
     <Compile Include="configurarConceptos.Designer.cs">
       <DependentUpon>configurarConceptos.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfigurarDestinatariosIglesias.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigurarDestinatariosIglesias.Designer.cs">
+      <DependentUpon>ConfigurarDestinatariosIglesias.cs</DependentUpon>
+    </Compile>
     <Compile Include="confirmaNumeroDeDiario.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="confirmaNumeroDeDiario.Designer.cs">
       <DependentUpon>confirmaNumeroDeDiario.cs</DependentUpon>
     </Compile>
+    <Compile Include="Conversiones.cs" />
     <Compile Include="CuentasBancariasDeProveedores.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,6 +191,12 @@
     <Compile Include="Ligar2.Designer.cs">
       <DependentUpon>Ligar2.cs</DependentUpon>
     </Compile>
+    <Compile Include="LigarDiario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LigarDiario.Designer.cs">
+      <DependentUpon>LigarDiario.cs</DependentUpon>
+    </Compile>
     <Compile Include="LigarPorCuenta.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,6 +209,12 @@
     </Compile>
     <Compile Include="mandarPush.Designer.cs">
       <DependentUpon>mandarPush.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MandarReciboDeCaja.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MandarReciboDeCaja.Designer.cs">
+      <DependentUpon>MandarReciboDeCaja.cs</DependentUpon>
     </Compile>
     <Compile Include="misDatos.cs">
       <SubType>Form</SubType>
@@ -271,6 +293,9 @@
     <EmbeddedResource Include="configurarConceptos.resx">
       <DependentUpon>configurarConceptos.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurarDestinatariosIglesias.resx">
+      <DependentUpon>ConfigurarDestinatariosIglesias.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="confirmaNumeroDeDiario.resx">
       <DependentUpon>confirmaNumeroDeDiario.cs</DependentUpon>
     </EmbeddedResource>
@@ -304,11 +329,17 @@
     <EmbeddedResource Include="Ligar2.resx">
       <DependentUpon>Ligar2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LigarDiario.resx">
+      <DependentUpon>LigarDiario.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LigarPorCuenta.resx">
       <DependentUpon>LigarPorCuenta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mandarPush.resx">
       <DependentUpon>mandarPush.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MandarReciboDeCaja.resx">
+      <DependentUpon>MandarReciboDeCaja.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="misDatos.resx">
       <DependentUpon>misDatos.cs</DependentUpon>

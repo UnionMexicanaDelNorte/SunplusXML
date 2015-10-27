@@ -525,6 +525,33 @@ namespace Liga
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.sunDatasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 10";
+            String queryCheck = "USE [" + Properties.Settings.Default.sunDatabase + "] SELECT name FROM sys.tables";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+
+                    SqlCommand cmdCheck = new SqlCommand(queryCheck, connection);
+                    SqlDataReader reader = cmdCheck.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                       // System.Windows.Forms.MessageBox.Show("Conexión Establecida satisfactoriamente", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        config form = new config();
+                        form.ShowDialog();
+                      //  System.Windows.Forms.MessageBox.Show("Sin conexión", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                System.Windows.Forms.MessageBox.Show("Sin conexión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            /*
             try
             {   // Open the text file using a stream reader.
                 using (StreamReader sr = new StreamReader("settings.txt"))
@@ -537,7 +564,7 @@ namespace Liga
             catch (Exception ex)
             {
                 ex.ToString();
-            }
+            }*/
             this.connStringSun = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.sunDatasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
 
            checarSiElSourceLeFaltoDeLigarElDiario();
@@ -659,10 +686,10 @@ namespace Liga
                 List<String> rfcS = new List<String>();
                 List<String> razonesSocialeS = new List<String>();
                 
-                String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.sunDatasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 10";
+                String connString1 = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.sunDatasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 10";
                 try
                 {
-                    using (SqlConnection connection = new SqlConnection(connString))
+                    using (SqlConnection connection = new SqlConnection(connString1))
                     {
                         connection.Open();
                         String queryXML = "";

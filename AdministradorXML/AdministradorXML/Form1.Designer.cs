@@ -35,6 +35,10 @@
             this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.impuestosDelMesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.facturasCanceladasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.accionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ligarDiarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configurarDestinatariosDeIglesiaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mandarReciboDeCajaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeCuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeBalanzaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +58,7 @@
             this.presupuestoDeDepartamentalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mandarMensajeCustomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarMisTemporalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeCuentasToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeBalanzaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +75,6 @@
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
             this.actualizarButton = new System.Windows.Forms.Button();
-            this.borrarMisTemporalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,13 +84,14 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bDToolStripMenuItem,
             this.verToolStripMenuItem,
+            this.accionesToolStripMenuItem,
             this.generarToolStripMenuItem,
             this.administrarToolStripMenuItem,
             this.ayudaToolStripMenuItem,
             this.logueadoComoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1726, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(1760, 43);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -101,7 +106,7 @@
             // variablesToolStripMenuItem
             // 
             this.variablesToolStripMenuItem.Name = "variablesToolStripMenuItem";
-            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(243, 40);
+            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(192, 40);
             this.variablesToolStripMenuItem.Text = "Variables";
             this.variablesToolStripMenuItem.Click += new System.EventHandler(this.variablesToolStripMenuItem_Click);
             // 
@@ -127,6 +132,37 @@
             this.facturasCanceladasToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
             this.facturasCanceladasToolStripMenuItem.Text = "Facturas Canceladas";
             this.facturasCanceladasToolStripMenuItem.Click += new System.EventHandler(this.facturasCanceladasToolStripMenuItem_Click);
+            // 
+            // accionesToolStripMenuItem
+            // 
+            this.accionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ligarDiarioToolStripMenuItem,
+            this.configurarDestinatariosDeIglesiaToolStripMenuItem,
+            this.mandarReciboDeCajaToolStripMenuItem});
+            this.accionesToolStripMenuItem.Name = "accionesToolStripMenuItem";
+            this.accionesToolStripMenuItem.Size = new System.Drawing.Size(126, 39);
+            this.accionesToolStripMenuItem.Text = "Acciones";
+            // 
+            // ligarDiarioToolStripMenuItem
+            // 
+            this.ligarDiarioToolStripMenuItem.Name = "ligarDiarioToolStripMenuItem";
+            this.ligarDiarioToolStripMenuItem.Size = new System.Drawing.Size(469, 40);
+            this.ligarDiarioToolStripMenuItem.Text = "Ligar diario";
+            this.ligarDiarioToolStripMenuItem.Click += new System.EventHandler(this.ligarDiarioToolStripMenuItem_Click);
+            // 
+            // configurarDestinatariosDeIglesiaToolStripMenuItem
+            // 
+            this.configurarDestinatariosDeIglesiaToolStripMenuItem.Name = "configurarDestinatariosDeIglesiaToolStripMenuItem";
+            this.configurarDestinatariosDeIglesiaToolStripMenuItem.Size = new System.Drawing.Size(469, 40);
+            this.configurarDestinatariosDeIglesiaToolStripMenuItem.Text = "Configurar destinatarios de iglesia";
+            this.configurarDestinatariosDeIglesiaToolStripMenuItem.Click += new System.EventHandler(this.configurarDestinatariosDeIglesiaToolStripMenuItem_Click);
+            // 
+            // mandarReciboDeCajaToolStripMenuItem
+            // 
+            this.mandarReciboDeCajaToolStripMenuItem.Name = "mandarReciboDeCajaToolStripMenuItem";
+            this.mandarReciboDeCajaToolStripMenuItem.Size = new System.Drawing.Size(469, 40);
+            this.mandarReciboDeCajaToolStripMenuItem.Text = "Mandar recibo de caja";
+            this.mandarReciboDeCajaToolStripMenuItem.Click += new System.EventHandler(this.mandarReciboDeCajaToolStripMenuItem_Click);
             // 
             // generarToolStripMenuItem
             // 
@@ -281,6 +317,13 @@
             this.ayudaToolStripMenuItem.Size = new System.Drawing.Size(97, 39);
             this.ayudaToolStripMenuItem.Text = "Ayuda";
             // 
+            // borrarMisTemporalesToolStripMenuItem
+            // 
+            this.borrarMisTemporalesToolStripMenuItem.Name = "borrarMisTemporalesToolStripMenuItem";
+            this.borrarMisTemporalesToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
+            this.borrarMisTemporalesToolStripMenuItem.Text = "Borrar mis temporales";
+            this.borrarMisTemporalesToolStripMenuItem.Click += new System.EventHandler(this.borrarMisTemporalesToolStripMenuItem_Click);
+            // 
             // xMLDeCuentasToolStripMenuItem1
             // 
             this.xMLDeCuentasToolStripMenuItem1.Name = "xMLDeCuentasToolStripMenuItem1";
@@ -427,20 +470,13 @@
             this.actualizarButton.UseVisualStyleBackColor = true;
             this.actualizarButton.Click += new System.EventHandler(this.actualizarButton_Click);
             // 
-            // borrarMisTemporalesToolStripMenuItem
-            // 
-            this.borrarMisTemporalesToolStripMenuItem.Name = "borrarMisTemporalesToolStripMenuItem";
-            this.borrarMisTemporalesToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
-            this.borrarMisTemporalesToolStripMenuItem.Text = "Borrar mis temporales";
-            this.borrarMisTemporalesToolStripMenuItem.Click += new System.EventHandler(this.borrarMisTemporalesToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1760, 1068);
+            this.ClientSize = new System.Drawing.Size(1794, 1068);
             this.Controls.Add(this.actualizarButton);
             this.Controls.Add(this.totalEgresosSunplusLabel);
             this.Controls.Add(this.totalIngresosSunplusLabel);
@@ -512,6 +548,10 @@
         private System.Windows.Forms.ToolStripMenuItem cerrarSesiónToolStripMenuItem;
         private System.Windows.Forms.Button actualizarButton;
         private System.Windows.Forms.ToolStripMenuItem borrarMisTemporalesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem accionesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ligarDiarioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mandarReciboDeCajaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem configurarDestinatariosDeIglesiaToolStripMenuItem;
     }
 }
 

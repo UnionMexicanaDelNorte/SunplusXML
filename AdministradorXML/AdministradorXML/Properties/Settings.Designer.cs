@@ -37,7 +37,7 @@ namespace AdministradorXML.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SUNPLUSSVR")]
         public string datasource {
             get {
                 return ((string)(this["datasource"]));
@@ -140,6 +140,42 @@ namespace AdministradorXML.Properties {
             }
             set {
                 this["sunLibroPresupuesto"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string correoEmisor {
+            get {
+                return ((string)(this["correoEmisor"]));
+            }
+            set {
+                this["correoEmisor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string correoReceptor {
+            get {
+                return ((string)(this["correoReceptor"]));
+            }
+            set {
+                this["correoReceptor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string passEmisor {
+            get {
+                return ((string)(this["passEmisor"]));
+            }
+            set {
+                this["passEmisor"] = value;
             }
         }
     }

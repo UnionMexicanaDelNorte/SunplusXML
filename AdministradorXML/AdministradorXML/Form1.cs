@@ -58,7 +58,7 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-            AdministradorXML.Login.sourceGlobal = "ERROR";
+            AdministradorXML.Login.sourceGlobal = "ERROR";//borrar
             AdministradorXML.Login.unidadDeNegocioGlobal = "ERROR";
         }
 
@@ -122,6 +122,32 @@ namespace AdministradorXML
             }
             logueadoComoToolStripMenuItem.Text = "Logueado como: " + AdministradorXML.Login.sourceGlobal+" en "+Login.unidadDeNegocioGlobal;
             siguiente = true;
+            String connString2 = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 10";
+            String queryCheck = "USE [" + Properties.Settings.Default.sunDatabase + "] SELECT name FROM sys.tables";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString2))
+                {
+                    connection.Open();
+
+                    SqlCommand cmdCheck = new SqlCommand(queryCheck, connection);
+                    SqlDataReader reader = cmdCheck.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        // System.Windows.Forms.MessageBox.Show("Conexión Establecida satisfactoriamente", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        config form = new config();
+                        form.ShowDialog();
+                        //  System.Windows.Forms.MessageBox.Show("Sin conexión", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                System.Windows.Forms.MessageBox.Show("Sin conexión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }/*
             try
             {   // Open the text file using a stream reader.
                 using (StreamReader sr = new StreamReader("settings.txt"))
@@ -134,7 +160,7 @@ namespace AdministradorXML
             catch (Exception ex)
             {
                 ex.ToString();
-            }
+            }*/
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
             int posX = 50;
@@ -662,7 +688,8 @@ namespace AdministradorXML
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["ACCNT_CODE"]);
                                     arr[1] = Convert.ToString(dic["DESCR"]);
-                                
+                                    arr[2] = String.Format("{0:n}", Convert.ToDouble(dic["total"]));
+                                 
                                     arr[3] = String.Format("{0:n}", Convert.ToDouble(dic["enlazado"]));
                                     totalIngresoSunplus += Convert.ToDouble(dic["total"]);
                                     totalContabilizadoIngresoSunplus += Convert.ToDouble(dic["enlazado"]);
@@ -817,10 +844,10 @@ namespace AdministradorXML
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            totalIngresoSATLabel.Text = "Ingreso en el SAT: $" + totalIngresoSAT + " Contabilizado: $" + totalContabilizadoIngresoSAT;
-            totalEgresosSATLabel.Text = "Egreso en el SAT: $" + totalEgresoSAT + " Contabilizado: $" + totalContabilizadoEgresoSAT;
-            totalIngresosSunplusLabel.Text = "Ingreso en el Sunplus: $" + totalIngresoSunplus + " Contabilizado: $" + totalContabilizadoIngresoSunplus;
-            totalEgresosSunplusLabel.Text = "Egreso en el Sunplus: $" + totalEgresoSunplus + " Contabilizado: $" + totalContabilizadoEgresoSunplus;
+            totalIngresoSATLabel.Text = "Ingreso en el SAT: $" + String.Format("{0:n}", totalIngresoSAT) + " Enlazado: $" + String.Format("{0:n}", totalContabilizadoIngresoSAT);
+            totalEgresosSATLabel.Text = "Egreso en el SAT: $" + String.Format("{0:n}", totalEgresoSAT) + " Enlazado: $" + String.Format("{0:n}", totalContabilizadoEgresoSAT);
+            totalIngresosSunplusLabel.Text = "Ingreso en el Sunplus: $" + String.Format("{0:n}", totalIngresoSunplus) + " Enlazado: $" + String.Format("{0:n}", totalContabilizadoIngresoSunplus);
+            totalEgresosSunplusLabel.Text = "Egreso en el Sunplus: $" + String.Format("{0:n}", totalEgresoSunplus) + " Enlazado: $" + String.Format("{0:n}", totalContabilizadoEgresoSunplus);
 
 
 
@@ -1007,7 +1034,9 @@ namespace AdministradorXML
             actualiza();
         }
 
-        private void borrarMisTemporalesToolStripMenuItem_Click(object sender, EventArgs e)
+         
+            
+        private void    borrarMisTemporalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             try
@@ -1025,6 +1054,29 @@ namespace AdministradorXML
             {
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }         
+        }
+
+        private void accionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        
+        }
+
+        private void ligarDiarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LigarDiario ligarDiario = new LigarDiario();
+            ligarDiario.ShowDialog();
+        }
+
+        private void configurarDestinatariosDeIglesiaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConfigurarDestinatariosIglesias form = new ConfigurarDestinatariosIglesias();
+            form.ShowDialog();
+        }
+
+        private void mandarReciboDeCajaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MandarReciboDeCaja form = new MandarReciboDeCaja();
+            form.ShowDialog();
         }
     }
 }

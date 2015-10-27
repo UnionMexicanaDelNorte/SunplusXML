@@ -34,6 +34,9 @@ namespace AdministradorXML
             passwordText.Text = Properties.Settings.Default.password;
             presupuestoText.Text = Properties.Settings.Default.sunLibroPresupuesto;
             databaseFiscalText.Text = Properties.Settings.Default.databaseFiscal;
+            correoReceptor.Text = Properties.Settings.Default.correoReceptor;
+            correoEmisor.Text = Properties.Settings.Default.correoEmisor;
+            passEmisor.Text = Properties.Settings.Default.passEmisor;
         }
         private void save()
         {
@@ -44,6 +47,9 @@ namespace AdministradorXML
             Properties.Settings.Default.sunLibroPresupuesto = presupuestoText.Text.Trim();
             Properties.Settings.Default.password = passwordText.Text;
             Properties.Settings.Default.databaseFiscal = databaseFiscalText.Text.Trim();
+            Properties.Settings.Default.correoReceptor = correoReceptor.Text.Trim();
+            Properties.Settings.Default.correoEmisor = correoEmisor.Text.Trim();
+            Properties.Settings.Default.passEmisor = passEmisor.Text.Trim();
             Properties.Settings.Default.Save();
         }
         private void grabarButton_Click(object sender, EventArgs e)

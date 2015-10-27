@@ -6,7 +6,7 @@
       <Value Profile="(Default)">SUNPLUSADV</Value>
     </Setting>
     <Setting Name="datasource" Type="System.String" Scope="User">
-      <Value Profile="(Default)">localhost</Value>
+      <Value Profile="(Default)">SUNPLUSSVR</Value>
     </Setting>
     <Setting Name="databaseFiscal" Type="System.String" Scope="User">
       <Value Profile="(Default)">SU_FISCAL</Value>
@@ -31,6 +31,15 @@
     </Setting>
     <Setting Name="sunLibroPresupuesto" Type="System.String" Scope="User">
       <Value Profile="(Default)">B</Value>
+    </Setting>
+    <Setting Name="correoEmisor" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="correoReceptor" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="passEmisor" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

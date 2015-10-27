@@ -446,10 +446,7 @@ namespace AdministradorXML
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show(ex.ToString(), "Error Title", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-
-                    //  Logs.Escribir("Error en download complete : " + ex.ToString());
+                    System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }

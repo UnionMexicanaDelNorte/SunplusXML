@@ -47,6 +47,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.presupuestoText = new System.Windows.Forms.TextBox();
             this.helpButton = new System.Windows.Forms.Button();
+            this.correoReceptor = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.correoEmisor = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.passEmisor = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -179,7 +185,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(61, 429);
+            this.label8.Location = new System.Drawing.Point(41, 432);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(191, 26);
             this.label8.TabIndex = 17;
@@ -197,18 +203,73 @@
             this.helpButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("helpButton.BackgroundImage")));
             this.helpButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.helpButton.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.helpButton.Location = new System.Drawing.Point(827, 162);
+            this.helpButton.Location = new System.Drawing.Point(907, 214);
             this.helpButton.Name = "helpButton";
-            this.helpButton.Size = new System.Drawing.Size(104, 103);
+            this.helpButton.Size = new System.Drawing.Size(57, 51);
             this.helpButton.TabIndex = 21;
             this.helpButton.UseVisualStyleBackColor = true;
             this.helpButton.Click += new System.EventHandler(this.helpButton_Click);
+            // 
+            // correoReceptor
+            // 
+            this.correoReceptor.Location = new System.Drawing.Point(756, 36);
+            this.correoReceptor.Name = "correoReceptor";
+            this.correoReceptor.Size = new System.Drawing.Size(187, 31);
+            this.correoReceptor.TabIndex = 23;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(523, 36);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(169, 26);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "Correo receptor:";
+            // 
+            // correoEmisor
+            // 
+            this.correoEmisor.Location = new System.Drawing.Point(756, 103);
+            this.correoEmisor.Name = "correoEmisor";
+            this.correoEmisor.Size = new System.Drawing.Size(187, 31);
+            this.correoEmisor.TabIndex = 25;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(523, 103);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(156, 26);
+            this.label9.TabIndex = 24;
+            this.label9.Text = "Correo emisor:";
+            // 
+            // passEmisor
+            // 
+            this.passEmisor.Location = new System.Drawing.Point(756, 170);
+            this.passEmisor.Name = "passEmisor";
+            this.passEmisor.PasswordChar = '*';
+            this.passEmisor.Size = new System.Drawing.Size(187, 31);
+            this.passEmisor.TabIndex = 27;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(523, 170);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(186, 26);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "Password emisor:";
             // 
             // config
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(999, 518);
+            this.Controls.Add(this.passEmisor);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.correoEmisor);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.correoReceptor);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.helpButton);
             this.Controls.Add(this.presupuestoText);
             this.Controls.Add(this.label8);
@@ -258,5 +319,11 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox presupuestoText;
         private System.Windows.Forms.Button helpButton;
+        private System.Windows.Forms.TextBox correoReceptor;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox correoEmisor;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox passEmisor;
+        private System.Windows.Forms.Label label10;
     }
 }
