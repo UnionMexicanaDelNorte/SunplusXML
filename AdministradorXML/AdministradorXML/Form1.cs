@@ -146,7 +146,9 @@ namespace AdministradorXML
             }
             catch (Exception)
             {
-                System.Windows.Forms.MessageBox.Show("Sin conexión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                config form = new config();
+                form.ShowDialog();
+                //System.Windows.Forms.MessageBox.Show("Sin conexión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }/*
             try
             {   // Open the text file using a stream reader.
@@ -311,7 +313,7 @@ namespace AdministradorXML
                             ingresosSATList.Columns.Add("Razon Social", 200);
                             ingresosSATList.Columns.Add("RFC", 150);
                             ingresosSATList.Columns.Add("En el SAT", 150);
-                            ingresosSATList.Columns.Add("Contabilizado", 150);
+                            ingresosSATList.Columns.Add("Enlazado", 150);
                             foreach (Dictionary<string, object> dic in listaFinal)
                             {
                                 if (dic.ContainsKey("rfc"))
@@ -413,7 +415,7 @@ namespace AdministradorXML
                             gastosSATList.Columns.Add("Razon Social", 250);
                             gastosSATList.Columns.Add("RFC", 150);
                             gastosSATList.Columns.Add("En el SAT", 150);
-                            gastosSATList.Columns.Add("Contabilizado", 150);
+                            gastosSATList.Columns.Add("Enlazado", 150);
                             foreach (Dictionary<string, object> dic in listaFinalEgresosSAT)
                             {
                                 if (dic.ContainsKey("rfc"))
@@ -598,7 +600,7 @@ namespace AdministradorXML
 
                                 listaFinalIngresosSunplus.Add(dictionary);
 
-                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "' AND s.PERIOD = '" + periodoParaQuery + "'";
 
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
@@ -641,7 +643,7 @@ namespace AdministradorXML
                                             dictionary1.Add("enlazado", 0);
 
                                             listaFinalIngresosSunplus.Add(dictionary1);
-                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.D_C= 'C' AND s.ACCNT_CODE = '" + ACCNT_CODE + "' AND s.PERIOD = '" + periodoParaQuery + "'";
 
                                             using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
                                             {
@@ -727,9 +729,9 @@ namespace AdministradorXML
                             String ACCNT_CODE = "";
                             while (reader.Read())
                             {
-                                ACCNT_CODE = reader.GetString(0);
+                                ACCNT_CODE = reader.GetString(0).Trim();
                                 double total = Convert.ToDouble(Math.Abs(reader.GetDecimal(1)));
-                                String DESCR = reader.GetString(2);
+                                String DESCR = reader.GetString(2).Trim();
                                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
                                 dictionary.Add("ACCNT_CODE", ACCNT_CODE);
                                 dictionary.Add("total", total);
@@ -737,8 +739,7 @@ namespace AdministradorXML
                                 dictionary.Add("enlazado", 0);
 
                                 listaFinalEgresosSunPlus.Add(dictionary);
-                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
-                                
+                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "' AND s.PERIOD = '" + periodoParaQuery + "'";
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -769,9 +770,9 @@ namespace AdministradorXML
                                     {
                                         while (readerFISCAL1.Read())
                                         {
-                                            ACCNT_CODE = readerFISCAL1.GetString(0);
+                                            ACCNT_CODE = readerFISCAL1.GetString(0).Trim();
                                             double total = Convert.ToDouble(Math.Abs(readerFISCAL1.GetDecimal(1)));
-                                            String DESCR = readerFISCAL1.GetString(2);
+                                            String DESCR = readerFISCAL1.GetString(2).Trim();
                                             Dictionary<string, object> dictionary1 = new Dictionary<string, object>();
                                             dictionary1.Add("ACCNT_CODE", ACCNT_CODE);
                                             dictionary1.Add("total", total);
@@ -779,7 +780,7 @@ namespace AdministradorXML
                                             dictionary1.Add("enlazado", 0);
 
                                             listaFinalEgresosSunPlus.Add(dictionary1);
-                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.ACCNT_CODE = '" + ACCNT_CODE + "'";
+                                            String queryFISCAL2 = "SELECT ISNULL(SUM(f.AMOUNT),0) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] x on x.folioFiscal = f.FOLIO_FISCAL INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] s on s.JRNAL_NO = f.JRNAL_NO and s.JRNAL_LINE = f.JRNAL_LINE WHERE s.D_C = 'D' AND s.ACCNT_CODE = '" + ACCNT_CODE + "' AND s.PERIOD = '" + periodoParaQuery + "'";
                                          
                                             using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
                                             {
@@ -792,7 +793,7 @@ namespace AdministradorXML
                                                         foreach (Dictionary<string, object> dic in listaFinalEgresosSunPlus)
                                                         {
                                                             if (dic["ACCNT_CODE"].Equals(ACCNT_CODE))
-                                                            {
+                                                            {                                               
                                                                 dic["enlazado"] = Convert.ToString(Convert.ToDouble(dic["enlazado"]) + amount);
                                                                 break;
                                                             }
