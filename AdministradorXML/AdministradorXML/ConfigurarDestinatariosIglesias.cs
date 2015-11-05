@@ -36,7 +36,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     String queryXML = "";
-                    queryXML = "SELECT ANL_CODE,NAME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ANL_CODE] WHERE ANL_CAT_ID= '07' AND SUBSTRING( ANL_CODE,1,1) = 'T' order by ANL_CODE asc";
+                    queryXML = "SELECT ANL_CODE,NAME FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ANL_CODE] WHERE ANL_CAT_ID= '06' AND SUBSTRING( ANL_CODE,1,1) = 'T' order by ANL_CODE asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();

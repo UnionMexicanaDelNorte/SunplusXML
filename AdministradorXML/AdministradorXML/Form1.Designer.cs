@@ -75,6 +75,7 @@
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
             this.actualizarButton = new System.Windows.Forms.Button();
+            this.facturasPorProveedorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,7 +115,8 @@
             // 
             this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impuestosDelMesToolStripMenuItem,
-            this.facturasCanceladasToolStripMenuItem});
+            this.facturasCanceladasToolStripMenuItem,
+            this.facturasPorProveedorToolStripMenuItem});
             this.verToolStripMenuItem.Name = "verToolStripMenuItem";
             this.verToolStripMenuItem.Size = new System.Drawing.Size(65, 39);
             this.verToolStripMenuItem.Text = "Ver";
@@ -470,6 +472,13 @@
             this.actualizarButton.UseVisualStyleBackColor = true;
             this.actualizarButton.Click += new System.EventHandler(this.actualizarButton_Click);
             // 
+            // facturasPorProveedorToolStripMenuItem
+            // 
+            this.facturasPorProveedorToolStripMenuItem.Name = "facturasPorProveedorToolStripMenuItem";
+            this.facturasPorProveedorToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
+            this.facturasPorProveedorToolStripMenuItem.Text = "Facturas por RFC";
+            this.facturasPorProveedorToolStripMenuItem.Click += new System.EventHandler(this.facturasPorProveedorToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -552,6 +561,7 @@
         private System.Windows.Forms.ToolStripMenuItem ligarDiarioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mandarReciboDeCajaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configurarDestinatariosDeIglesiaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem facturasPorProveedorToolStripMenuItem;
     }
 }
 

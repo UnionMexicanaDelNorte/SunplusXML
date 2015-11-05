@@ -131,7 +131,15 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT c.codigoAgrupador, a.ACNT_CODE , a.DESCR, b.ANL_CODE as sub, bb.ANL_CODE as natur FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT] a INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT_ANL_CAT] b on b.ACNT_CODE = a.ACNT_CODE INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] c on c.ACNT_CODE COLLATE SQL_Latin1_General_CP1_CI_AS  = a.ACNT_CODE INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT_ANL_CAT] bb on bb.ACNT_CODE = a.ACNT_CODE WHERE b.ANL_CAT_ID = 12 AND bb.ANL_CAT_ID = 14";
+                    String queryXML = "";
+                    if(statutoryRadio.Checked)
+                    {
+                        queryXML = "SELECT c.ANL_CODE as codigoAgrupador, a.ACNT_CODE , a.DESCR, b.ANL_CODE as sub, bb.ANL_CODE as natur FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT] a INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT_ANL_CAT] b on b.ACNT_CODE = a.ACNT_CODE INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT_ANL_CAT] c on c.ACNT_CODE = a.ACNT_CODE INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT_ANL_CAT] bb on bb.ACNT_CODE = a.ACNT_CODE WHERE b.ANL_CAT_ID = 12 AND bb.ANL_CAT_ID = 14  AND c.ANL_CAT_ID = '11'";
+                    }
+                    else
+                    {//sunplusito
+                        queryXML = "SELECT c.codigoAgrupador, a.ACNT_CODE , a.DESCR, b.ANL_CODE as sub, bb.ANL_CODE as natur FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT] a INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT_ANL_CAT] b on b.ACNT_CODE = a.ACNT_CODE INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] c on c.ACNT_CODE COLLATE SQL_Latin1_General_CP1_CI_AS  = a.ACNT_CODE INNER JOIN  [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal+ "_ACNT_ANL_CAT] bb on bb.ACNT_CODE = a.ACNT_CODE WHERE b.ANL_CAT_ID = 12 AND bb.ANL_CAT_ID = 14";
+                    }
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();

@@ -1079,5 +1079,10 @@ namespace AdministradorXML
             MandarReciboDeCaja form = new MandarReciboDeCaja();
             form.ShowDialog();
         }
+
+        private void facturasPorProveedorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

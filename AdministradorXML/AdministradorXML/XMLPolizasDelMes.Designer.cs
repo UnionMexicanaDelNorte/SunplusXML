@@ -39,6 +39,7 @@
             this.NumTramiteLalbe = new System.Windows.Forms.Label();
             this.NumTramite = new System.Windows.Forms.TextBox();
             this.generarButton = new System.Windows.Forms.Button();
+            this.guardarButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // polizasTree
@@ -128,12 +129,23 @@
             // generarButton
             // 
             this.generarButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.generarButton.Location = new System.Drawing.Point(1343, 85);
+            this.generarButton.Location = new System.Drawing.Point(1223, 33);
             this.generarButton.Name = "generarButton";
             this.generarButton.Size = new System.Drawing.Size(223, 79);
             this.generarButton.TabIndex = 9;
             this.generarButton.Text = "Generar";
             this.generarButton.UseVisualStyleBackColor = true;
+            this.generarButton.Click += new System.EventHandler(this.generarButton_Click);
+            // 
+            // guardarButton
+            // 
+            this.guardarButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guardarButton.Location = new System.Drawing.Point(1462, 134);
+            this.guardarButton.Name = "guardarButton";
+            this.guardarButton.Size = new System.Drawing.Size(225, 79);
+            this.guardarButton.TabIndex = 10;
+            this.guardarButton.Text = "Guardar";
+            this.guardarButton.UseVisualStyleBackColor = true;
             // 
             // XMLPolizasDelMes
             // 
@@ -142,6 +154,7 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1745, 1112);
+            this.Controls.Add(this.guardarButton);
             this.Controls.Add(this.generarButton);
             this.Controls.Add(this.NumTramite);
             this.Controls.Add(this.NumTramiteLalbe);
@@ -175,5 +188,6 @@
         private System.Windows.Forms.Label NumTramiteLalbe;
         private System.Windows.Forms.TextBox NumTramite;
         private System.Windows.Forms.Button generarButton;
+        private System.Windows.Forms.Button guardarButton;
     }
 }
