@@ -150,7 +150,8 @@ namespace AdministradorXML
                                 String codigoAgrupador = reader.GetString(0).Trim();
                                 String ACNT_CODE = reader.GetString(1).Trim();
                                 //hardcode
-                                if(ACNT_CODE.Length<6)
+                                int cuantos = ACNT_CODE.Length;
+                                if(cuantos<6)
                                 {
                                     nivel = 1;
                                 }

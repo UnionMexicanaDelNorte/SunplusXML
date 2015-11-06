@@ -40,6 +40,7 @@
             this.NumTramite = new System.Windows.Forms.TextBox();
             this.generarButton = new System.Windows.Forms.Button();
             this.guardarButton = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // polizasTree
@@ -146,6 +147,7 @@
             this.guardarButton.TabIndex = 10;
             this.guardarButton.Text = "Guardar";
             this.guardarButton.UseVisualStyleBackColor = true;
+            this.guardarButton.Click += new System.EventHandler(this.guardarButton_Click);
             // 
             // XMLPolizasDelMes
             // 
@@ -189,5 +191,6 @@
         private System.Windows.Forms.TextBox NumTramite;
         private System.Windows.Forms.Button generarButton;
         private System.Windows.Forms.Button guardarButton;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

@@ -10,11 +10,14 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.IO;
 using System.Xml;
+using System.IO.Compression;
 namespace AdministradorXML
 {
     public partial class XMLPolizasDelMes : Form
     {
-
+        public StringBuilder cad { get; set; }
+        public XmlDocument doc { get; set; }
+       
         private class Item
         {
             public string Name;
@@ -43,13 +46,44 @@ namespace AdministradorXML
 
         private void XMLPolizasDelMes_Load(object sender, EventArgs e)
         {
-
+            doc = new XmlDocument();
+          
             tipoSolicitudCombo.Items.Add(new Item("Acto de Fiscalización", 0,"AF"));
             tipoSolicitudCombo.Items.Add(new Item("Fiscalización Compulsa", 1, "FC"));
             tipoSolicitudCombo.Items.Add(new Item("Devolución", 2, "DE"));
             tipoSolicitudCombo.Items.Add(new Item("Compensación", 3, "CO"));
             tipoSolicitudCombo.SelectedIndex = 0;
-     
+            String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+            String queryPeriodos = "SELECT DISTINCT PERIOD FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] order by PERIOD asc";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+                    SqlCommand cmdCheck = new SqlCommand(queryPeriodos, connection);
+                    SqlDataReader reader = cmdCheck.ExecuteReader();
+                    int empiezo = 1;
+                    if (reader.HasRows)
+                    {
+                       while (reader.Read())
+                        {
+                            String periodo = Convert.ToString(reader.GetInt32(0));
+                            periodosCombo.Items.Add(new Item(periodo, empiezo));
+                            empiezo++;
+                        }
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("No existen Periodos, primero descarga xml del buzon tributario.", "SunPlusXML", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            periodosCombo.SelectedIndex = periodosCombo.Items.Count - 2;
+/*
                          
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML]";
@@ -81,77 +115,11 @@ namespace AdministradorXML
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             periodosCombo.SelectedIndex = periodosCombo.Items.Count - 1;
+ * */
         }
         private void actualiza()
         {
-            XmlDocument doc = new XmlDocument();
-         /*   XmlElement el = (XmlElement)doc.AppendChild(doc.CreateElement("Foo"));
-            el.SetAttribute("Bar", "some & value");
-            el.AppendChild(doc.CreateElement("Nested")).InnerText = "data";
-            Console.WriteLine(doc.OuterXml);
-            */
-            Item itm = (Item)periodosCombo.SelectedItem;
-             Item itm2 = (Item)tipoSolicitudCombo.SelectedItem;
-           
-            String periodo = itm.Name;
-            String tipoDeSolicitud = itm2.Extra;
-            String NumOrdenT="",NumTramiteT="";
-            String year = periodo.Substring(0, 4);
-            String month = periodo.Substring(5, 2);
-            String periodoParaQuery = year + "0" + month;
-           
-            StringBuilder cad = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Polizas " +
-            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
-            "xsi:noNamespaceSchemaLocation=\"http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo/PolizasPeriodo_1_1.xsd\"" +
-            " version=\"1.1\"  RFC=\"" + Properties.Settings.Default.rfcGlobal + "\" Mes = \"" + month + "\" Anio=\"" + year + "\" TipoSolicitud=\"" + tipoDeSolicitud + "\" " +
-            "");
-            if(tipoDeSolicitud.Equals("AF") || tipoDeSolicitud.Equals("FC") )
-            {
-                NumOrdenT = NumOrden.Text.Trim();
-                if(NumOrdenT.Length!=13)
-                {
-                    System.Windows.Forms.MessageBox.Show("Debes de escribir el numero de orden y este debe de tener 13 caracteres", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-                else
-                {
-                    cad.Append("NumOrden=\"" + NumOrdenT + "\"");
-                }
-            }
-            if (tipoDeSolicitud.Equals("DE") || tipoDeSolicitud.Equals("CO"))
-            {
-                NumTramiteT = NumTramite.Text.Trim();
-                if (NumOrdenT.Length != 10)
-                {
-                    System.Windows.Forms.MessageBox.Show("Debes de escribir el numero de tramite y este debe de tener 10 caracteres", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-                else
-                {
-                    cad.Append("NumTramite=\"" + NumTramiteT + "\"");
-                }
-            }
-
-            cad.Append(">");
-
-
-
-
-            cad.Append("</Polizas>");
-
-            
-            
-            try
-            {
-                doc.LoadXml("<books><A property='a'><B>text</B><C>textg</C><D>99999</D></A></books>");
-                //doc.Load("");
-            }
-            catch (Exception err)
-            {
-
-                MessageBox.Show(err.Message);
-                return;
-            }
+ 
         }
         private void periodosCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -200,166 +168,252 @@ namespace AdministradorXML
 
         private void generarButton_Click(object sender, EventArgs e)
         {
-            /*
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             Item itm = (Item)periodosCombo.SelectedItem;
-            String periodo = itm.Name;
-           
-
-           
-
-            String anio = periodo.Substring(0, 4);
-            String mes = periodo.Substring(5, 2);
             Item itm2 = (Item)tipoSolicitudCombo.SelectedItem;
-            String tipo = itm2.Extra;
-            String fecha = "";
-            if (tipo.Equals("C"))
-            {
-                fecha = dateTime1.Value.Date.ToShortDateString().Substring(0, 10);
-            }
-            doc = new XmlDocument();
+
+            String periodo = itm.Name;
+            String tipoDeSolicitud = itm2.Extra;
+            String NumOrdenT = "", NumTramiteT = "";
+            String year = periodo.Substring(0, 4);
+            String month = periodo.Substring(5, 2);
+            String periodoParaQuery = year + "0" + month;
+
+
+
             cad = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<BCE:Balanza xsi:schemaLocation=\"www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion/BalanzaComprobacion_1_1.xsd\"" +
-               "  Version=\"1.1\" RFC=\"" + Properties.Settings.Default.rfcGlobal + "\"" +
-                    " Mes=\"" + mes + "\" Anio=\"" + anio + "\" TipoEnvio=\"" + tipo + "\" ");
-            if (tipo.Equals("C"))
+               "<PLZ:Polizas xsi:schemaLocation=\"www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo/PolizasPeriodo_1_1.xsd\"" +
+              "  Version=\"1.1\" RFC=\"" + Properties.Settings.Default.rfcGlobal + "\"" +
+                   " Mes=\"" + month + "\" Anio=\"" + year + "\" TipoSolicitud=\"" + tipoDeSolicitud + "\" ");
+
+
+
+
+            cad.Append(" xmlns:PLZ=\"http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
+        
+            if (tipoDeSolicitud.Equals("AF") || tipoDeSolicitud.Equals("FC"))
             {
-                cad.Append(" FechaModBal = \"" + fecha + "\" ");
+                NumOrdenT = NumOrden.Text.Trim();
+                if (NumOrdenT.Length != 13)
+                {
+                    this.Cursor = System.Windows.Forms.Cursors.Arrow;
+           
+                    System.Windows.Forms.MessageBox.Show("Debes de escribir el numero de orden y este debe de tener 13 caracteres", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                else
+                {
+                    cad.Append("NumOrden=\"" + NumOrdenT + "\"");
+                }
             }
-            cad.Append(" xmlns:BCE=\"http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+            if (tipoDeSolicitud.Equals("DE") || tipoDeSolicitud.Equals("CO"))
+            {
+                NumTramiteT = NumTramite.Text.Trim();
+                if (NumTramiteT.Length != 10)
+                {
+                    this.Cursor = System.Windows.Forms.Cursors.Arrow;
+           
+                    System.Windows.Forms.MessageBox.Show("Debes de escribir el numero de tramite y este debe de tener 10 caracteres", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                else
+                {
+                    cad.Append("NumTramite=\"" + NumTramiteT + "\"");
+                }
+            }
+
+            cad.Append(">");
+            //seleciono todas las polizas de sunplus ordenadas por numero de diario, inner join fiscal_xml, inner join nombre cuenta
             String connString = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT ACNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] order by ACNT_CODE asc";
+                    String queryXML = "SELECT c.ACCNT_CODE, a.DESCR, c.JRNAL_NO, c.JRNAL_LINE, c.TRANS_DATETIME,c.TREFERENCE, c.DESCRIPTN, f.FOLIO_FISCAL, f.CONCEPTO, f.AMOUNT, ff.rfc, f.BUNIT, c.D_C, c.AMOUNT FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f on f.JRNAL_NO = c.JRNAL_NO AND f.JRNAL_LINE = c.JRNAL_LINE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on ff.folioFiscal = f.FOLIO_FISCAL WHERE c.PERIOD = '" + periodo + "' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
                         if (reader.HasRows)
                         {
+                            bool first = true;
+                            double debe = 0, haber = 0;
+                            int diarioActual = 0, diarioAnterior = 0;
                             while (reader.Read())
                             {
                                 String ACNT_CODE = reader.GetString(0).Trim();
-                                String saldoInicial = "0";
-                                String saldoFinal = "0";
-                                String saldoDebe = "0";
-                                String saldoHaber = "0";
-                                //saldo inicial
-                                String queryFISCAL = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND ALLOCATION != 'C' AND PERIOD in (" + periodosAnteriores.ToString() + ")";
-                                using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
-                                {
-                                    SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
-                                    if (readerFISCAL.HasRows)
-                                    {
-                                        if (readerFISCAL.Read())
-                                        {
-                                            int cuantos = readerFISCAL.GetInt32(0);
-                                            if (cuantos > 0)
-                                            {
-                                                saldoInicial = Convert.ToString(Math.Round(Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(1))), 2));
-                                            }
-                                        }
-                                    }
-                                }
+                                String DESCR_ACNT_CODE = reader.GetString(1).Trim();
+                                DESCR_ACNT_CODE = DESCR_ACNT_CODE.Replace("&", "&amp;");
+                                DESCR_ACNT_CODE = DESCR_ACNT_CODE.Replace("\"", "");
+                                 
+                                
+                                String JRNAL_NO = Convert.ToString(reader.GetInt32(2)).Trim();
+                                String JRNAL_LINE = Convert.ToString(reader.GetInt32(3)).Trim();
+                                String TRANS_DATETIME = reader.GetDateTime(4).ToString().Substring(0, 10);
+                                String ano = TRANS_DATETIME.Substring(6, 4);
+                                String dia = TRANS_DATETIME.Substring(0, 2);
+                                String mes = TRANS_DATETIME.Substring(3, 2);
+                                TRANS_DATETIME = ano + "-" + mes + "-" + dia;
+                                //TRANS_DATETIME = TRANS_DATETIME.Replace("/", "-");
 
-                                //saldo final
-                                String queryFISCAL1 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND ALLOCATION != 'C' AND PERIOD in (" + hastaAlPeriodoActual + ")";
-                                using (SqlCommand cmdCheckFISCAL1 = new SqlCommand(queryFISCAL1, connection))
+                               
+                                String DESCRIPTN = reader.GetString(6).Trim();
+                                String TREFERENCE = "";
+                                if (!reader.IsDBNull(5))
                                 {
-                                    SqlDataReader readerFISCAL1 = cmdCheckFISCAL1.ExecuteReader();
-                                    if (readerFISCAL1.HasRows)
-                                    {
-                                        if (readerFISCAL1.Read())
-                                        {
-                                            int cuantos = readerFISCAL1.GetInt32(0);
-                                            if (cuantos > 0)
-                                            {
-                                                saldoFinal = Convert.ToString(Math.Round(Convert.ToDouble(Math.Abs(readerFISCAL1.GetDecimal(1))), 2));
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //saldo debe
-                                String queryFISCAL2 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND D_C='D'  AND ALLOCATION != 'C' AND PERIOD in ('" + periodo + "')";
-                                using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
-                                {
-                                    SqlDataReader readerFISCAL2 = cmdCheckFISCAL2.ExecuteReader();
-                                    if (readerFISCAL2.HasRows)
-                                    {
-                                        if (readerFISCAL2.Read())
-                                        {
-                                            int cuantos = readerFISCAL2.GetInt32(0);
-                                            if (cuantos > 0)
-                                            {
-                                                saldoDebe = Convert.ToString(Math.Round(Convert.ToDouble(Math.Abs(readerFISCAL2.GetDecimal(1))), 2));
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //saldo haber
-                                String queryFISCAL3 = " SELECT COUNT(*) as cuantos, SUM(AMOUNT) as suma FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + ACNT_CODE + "' AND D_C='C'  AND ALLOCATION != 'C' AND PERIOD in ('" + periodo + "')";
-                                using (SqlCommand cmdCheckFISCAL3 = new SqlCommand(queryFISCAL3, connection))
-                                {
-                                    SqlDataReader readerFISCAL3 = cmdCheckFISCAL3.ExecuteReader();
-                                    if (readerFISCAL3.HasRows)
-                                    {
-                                        if (readerFISCAL3.Read())
-                                        {
-                                            int cuantos = readerFISCAL3.GetInt32(0);
-                                            if (cuantos > 0)
-                                            {
-                                                saldoHaber = Convert.ToString(Math.Round(Convert.ToDouble(Math.Abs(readerFISCAL3.GetDecimal(1))), 2));
-                                            }
-                                        }
-                                    }
-                                }
-                                if (saldoInicial.Equals("0") && saldoFinal.Equals("0") && saldoDebe.Equals("0") && saldoHaber.Equals("0"))
-                                {
-
+                                    TREFERENCE = reader.GetString(5).Trim();
                                 }
                                 else
                                 {
-                                    cad.Append("<BCE:Ctas NumCta=\"" + ACNT_CODE + "\" SaldoIni=\"" + saldoInicial + "\" Debe=\"" + saldoDebe + "\" Haber=\"" + saldoHaber + "\" SaldoFin=\"" + saldoFinal + "\" />");
+                                    TREFERENCE = DESCRIPTN;
                                 }
-                            }
+                                DESCRIPTN = DESCRIPTN.Replace("&", "&amp;");
+                                TREFERENCE = TREFERENCE.Replace("&", "&amp;");
+                                DESCRIPTN = DESCRIPTN.Replace("\"", "");
+                                TREFERENCE = TREFERENCE.Replace("\"", "");
+                                
+                                String FOLIO_FISCAL = "";
+                                String CONCEPTO = "";
+                                String rfc = "";
+                                String BUNIT = "";
+                                String AMOUNT_FISCAL = "";
+                                if (!reader.IsDBNull(7))
+                                {
+                                     FOLIO_FISCAL = reader.GetString(7).Trim();
+                                     CONCEPTO = reader.GetString(8).Trim();
+                                     rfc = reader.GetString(10).Trim();
+                                     BUNIT = reader.GetString(11).Trim();
+                                     AMOUNT_FISCAL = Convert.ToString(reader.GetDecimal(9));
+                                } 
+
+                                String D_C = reader.GetString(12).Trim();
+                                String AMOUNT_SUNPLUS = Convert.ToString(reader.GetDecimal(13)).Trim();
+                                if (first)
+                                {
+                                    first = false;
+                                    diarioAnterior = Convert.ToInt32(JRNAL_NO);
+                                    diarioActual = diarioAnterior;
+                                    //primer diario
+                                    String cualConceptoTomo = "";
+                                    if (CONCEPTO == null || CONCEPTO.Equals(""))
+                                    {
+                                        cualConceptoTomo = TREFERENCE;
+                                    }
+                                    else
+                                    {
+                                        cualConceptoTomo = CONCEPTO;
+                                    }
+                                    cualConceptoTomo = cualConceptoTomo.Replace("&", "&amp;");
+                                    cualConceptoTomo = cualConceptoTomo.Replace("\"", "");
+                                
+                                    cad.Append("<PLZ:Poliza NumUnIdenPol=\"" + JRNAL_NO + "\" Fecha=\"" + TRANS_DATETIME + "\"  Concepto=\"" + cualConceptoTomo + "\" >");
+                                }
+                                else
+                                {
+                                    diarioActual = Convert.ToInt32(JRNAL_NO);
+                                }
+
+                                if (diarioActual != diarioAnterior)
+                                {
+                                    //diario nuevo!!
+                                    //cierro diario anterior y abro uno nuevo
+                                    String cualConceptoTomo = "";
+                                    if (CONCEPTO == null || CONCEPTO.Equals(""))
+                                    {
+                                        cualConceptoTomo = TREFERENCE;
+                                    }
+                                    else
+                                    {
+                                        cualConceptoTomo = CONCEPTO;
+                                    }
+                                    cualConceptoTomo = cualConceptoTomo.Replace("&", "&amp;");
+                                    cualConceptoTomo = cualConceptoTomo.Replace("\"", "");
+                                
+                                    cad.Append("</PLZ:Poliza><PLZ:Poliza NumUnIdenPol=\"" + JRNAL_NO + "\" Fecha=\"" + TRANS_DATETIME + "\"  Concepto=\"" + cualConceptoTomo + "\" >");
+
+                                }
+
+
+
+
+                                diarioAnterior = diarioActual;
+                                //agregar lineas!
+                                debe = 0.0;
+                                haber = 0.0;
+                                if (D_C.Equals("D"))//debito
+                                {
+                                    debe = Math.Abs(Convert.ToDouble(AMOUNT_SUNPLUS));
+                                }
+                                else
+                                {
+                                    haber = Math.Abs(Convert.ToDouble(AMOUNT_SUNPLUS));
+                                }
+                                cad.Append("<PLZ:Transaccion NumCta=\"" + ACNT_CODE + "\" DesCta=\"" + DESCR_ACNT_CODE + "\" Concepto=\"" + DESCRIPTN + "\" Debe=\"" + debe + "\" Haber=\"" + haber + "\"  >");
+                                //comprobantes
+                                if (FOLIO_FISCAL != null && !FOLIO_FISCAL.Equals(""))
+                                {
+                                    cad.Append("<PLZ:CompNal UUID_CFDI=\"" + FOLIO_FISCAL + "\" RFC=\"" + rfc + "\" MontoTotal=\"" + AMOUNT_FISCAL + "\" ></PLZ:CompNal>");
+                                }
+                                cad.Append("</PLZ:Transaccion>");
+                            }//while
+                            cad.Append("</PLZ:Poliza>");
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                ex.ToString();
+                this.Cursor = System.Windows.Forms.Cursors.Arrow;
+           
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
 
-            cad.Append("</BCE:Balanza>");
 
+            cad.Append("</PLZ:Polizas>");
+
+            String aver = cad.ToString();
 
             try
             {
                 doc.LoadXml(cad.ToString());
-
-                //doc.Load("");
             }
             catch (Exception err)
             {
-
+                this.Cursor = System.Windows.Forms.Cursors.Arrow;
+           
                 MessageBox.Show(err.Message);
                 return;
             }
-
-            if (!noGenerarPreview.Checked)
-            {
-                ConvertXmlNodeToTreeNode(doc, previewTree.Nodes);
-            }
-            //previewTree.Nodes[0].ExpandAll();
             guardarButton.Visible = true;
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
-              */
+              
+        }
+
+        private void guardarButton_Click(object sender, EventArgs e)
+        {
+            Item itm = (Item)periodosCombo.SelectedItem;
+            String periodo = itm.Name;
+            String anio = periodo.Substring(0, 4);
+            String mes = periodo.Substring(5, 2);
+
+            saveFileDialog1.Filter = "Zip File|*.zip";
+            saveFileDialog1.Title = "Guarda el xml del catalogo de cuentas";
+            saveFileDialog1.FileName = Properties.Settings.Default.rfcGlobal + anio + mes + "PL.zip";
+            saveFileDialog1.ShowDialog();
+
+
+            String path = System.IO.Path.GetDirectoryName(saveFileDialog1.FileName) + (object)Path.DirectorySeparatorChar;
+            doc.Save(path + Properties.Settings.Default.rfcGlobal + anio + mes + "PL.xml");
+            using (ZipArchive archive = ZipFile.Open(path + Properties.Settings.Default.rfcGlobal + anio + mes + "PL.zip", ZipArchiveMode.Create))
+            {
+
+                archive.CreateEntryFromFile(path + Properties.Settings.Default.rfcGlobal + anio + mes + "PL.xml", Properties.Settings.Default.rfcGlobal + anio + mes + "PL.xml");
+            }
+            File.Delete(path + Properties.Settings.Default.rfcGlobal + anio + mes + "PL.xml");
+            System.Windows.Forms.MessageBox.Show("Se ha generado el archivo de polizas del periodo: " + path + Properties.Settings.Default.rfcGlobal + anio + mes + "PL.zip  recuerde que unicamente las cuentas que tienen movimientos estan en el XML.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            System.Diagnostics.Process.Start(System.IO.Path.GetDirectoryName(saveFileDialog1.FileName));
+            this.Close();
         }
     }
 }

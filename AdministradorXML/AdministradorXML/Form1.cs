@@ -58,8 +58,8 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-            AdministradorXML.Login.sourceGlobal = "ERROR";//borrar
-            AdministradorXML.Login.unidadDeNegocioGlobal = "ERROR";
+            AdministradorXML.Login.sourceGlobal = "AOK";//borrar
+            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
         }
 
         public Form1(String s, String bunit)
@@ -924,10 +924,10 @@ namespace AdministradorXML
 
         private void xMLDePolizasDelMesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Próximamente... cuando se necesite, esperemos que nunca se necesite", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            //System.Windows.Forms.MessageBox.Show("Próximamente... cuando se necesite, esperemos que nunca se necesite", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
           
-            //XMLPolizasDelMes xmlPL = new XMLPolizasDelMes();
-            //xmlPL.ShowDialog();
+            XMLPolizasDelMes xmlPL = new XMLPolizasDelMes();
+            xmlPL.ShowDialog();
         }
 
         private void asociarCódigoAgrupadorDelSATConCuentaSunplusToolStripMenuItem_Click(object sender, EventArgs e)
