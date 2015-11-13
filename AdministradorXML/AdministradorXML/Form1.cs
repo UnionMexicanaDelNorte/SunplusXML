@@ -58,8 +58,8 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-            AdministradorXML.Login.sourceGlobal = "AOK";//borrar
-            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
+            AdministradorXML.Login.sourceGlobal = "ERROR";//borrar
+            AdministradorXML.Login.unidadDeNegocioGlobal = "ERROR";
         }
 
         public Form1(String s, String bunit)
@@ -1083,6 +1083,12 @@ namespace AdministradorXML
         private void facturasPorProveedorToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void xMLDeFacturasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            XMLFacturas fac = new XMLFacturas();
+            fac.ShowDialog();
         }
     }
 }

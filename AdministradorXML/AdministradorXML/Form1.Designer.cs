@@ -35,6 +35,7 @@
             this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.impuestosDelMesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.facturasCanceladasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.facturasPorProveedorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ligarDiarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurarDestinatariosDeIglesiaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,7 +76,7 @@
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
             this.actualizarButton = new System.Windows.Forms.Button();
-            this.facturasPorProveedorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xMLDeFacturasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,6 +136,13 @@
             this.facturasCanceladasToolStripMenuItem.Text = "Facturas Canceladas";
             this.facturasCanceladasToolStripMenuItem.Click += new System.EventHandler(this.facturasCanceladasToolStripMenuItem_Click);
             // 
+            // facturasPorProveedorToolStripMenuItem
+            // 
+            this.facturasPorProveedorToolStripMenuItem.Name = "facturasPorProveedorToolStripMenuItem";
+            this.facturasPorProveedorToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
+            this.facturasPorProveedorToolStripMenuItem.Text = "Facturas por RFC";
+            this.facturasPorProveedorToolStripMenuItem.Click += new System.EventHandler(this.facturasPorProveedorToolStripMenuItem_Click);
+            // 
             // accionesToolStripMenuItem
             // 
             this.accionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -171,7 +179,8 @@
             this.generarToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xMLDeCuentasToolStripMenuItem,
             this.xMLDeBalanzaToolStripMenuItem,
-            this.xMLDePolizasDelMesToolStripMenuItem});
+            this.xMLDePolizasDelMesToolStripMenuItem,
+            this.xMLDeFacturasToolStripMenuItem});
             this.generarToolStripMenuItem.Name = "generarToolStripMenuItem";
             this.generarToolStripMenuItem.Size = new System.Drawing.Size(115, 39);
             this.generarToolStripMenuItem.Text = "Generar";
@@ -472,12 +481,12 @@
             this.actualizarButton.UseVisualStyleBackColor = true;
             this.actualizarButton.Click += new System.EventHandler(this.actualizarButton_Click);
             // 
-            // facturasPorProveedorToolStripMenuItem
+            // xMLDeFacturasToolStripMenuItem
             // 
-            this.facturasPorProveedorToolStripMenuItem.Name = "facturasPorProveedorToolStripMenuItem";
-            this.facturasPorProveedorToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
-            this.facturasPorProveedorToolStripMenuItem.Text = "Facturas por RFC";
-            this.facturasPorProveedorToolStripMenuItem.Click += new System.EventHandler(this.facturasPorProveedorToolStripMenuItem_Click);
+            this.xMLDeFacturasToolStripMenuItem.Name = "xMLDeFacturasToolStripMenuItem";
+            this.xMLDeFacturasToolStripMenuItem.Size = new System.Drawing.Size(351, 40);
+            this.xMLDeFacturasToolStripMenuItem.Text = "XML de Facturas";
+            this.xMLDeFacturasToolStripMenuItem.Click += new System.EventHandler(this.xMLDeFacturasToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -562,6 +571,7 @@
         private System.Windows.Forms.ToolStripMenuItem mandarReciboDeCajaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configurarDestinatariosDeIglesiaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem facturasPorProveedorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xMLDeFacturasToolStripMenuItem;
     }
 }
 

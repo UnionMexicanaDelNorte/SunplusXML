@@ -37,7 +37,7 @@ namespace AdministradorXML.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BCSUR")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NTETAMAULIPAS")]
         public string datasource {
             get {
                 return ((string)(this["datasource"]));

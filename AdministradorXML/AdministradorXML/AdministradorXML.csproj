@@ -260,6 +260,12 @@
     <Compile Include="XMLCuentas.Designer.cs">
       <DependentUpon>XMLCuentas.cs</DependentUpon>
     </Compile>
+    <Compile Include="XMLFacturas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XMLFacturas.Designer.cs">
+      <DependentUpon>XMLFacturas.cs</DependentUpon>
+    </Compile>
     <Compile Include="XMLPolizasDelMes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -370,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="XMLCuentas.resx">
       <DependentUpon>XMLCuentas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XMLFacturas.resx">
+      <DependentUpon>XMLFacturas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="XMLPolizasDelMes.resx">
       <DependentUpon>XMLPolizasDelMes.cs</DependentUpon>
