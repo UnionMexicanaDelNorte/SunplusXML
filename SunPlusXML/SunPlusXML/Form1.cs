@@ -1996,7 +1996,7 @@ namespace SunPlusXML
                                         conceptosString = conceptosString + "\n" + cantidadc + " " + descripcionc + " $" + importec;
                                     }
                                     String impuestosString = "";
-
+                                    double totalDeRetenciones = 0;
                                     XmlNodeList retencionesLocales = doc.GetElementsByTagName("implocal:RetencionesLocales");
                                     if (retencionesLocales.Count == 0)
                                     {
@@ -2011,6 +2011,7 @@ namespace SunPlusXML
                                         bool isCantidad = objn.Attributes["Importe"] != null;
                                         if (isCantidad)
                                         {
+                                            totalDeRetenciones += Convert.ToDouble(objn.Attributes["Importe"].InnerText);
                                             cantidad = objn.Attributes["Importe"].InnerText;
                                             impuesto = objn.Attributes["ImpLocRetenido"].InnerText;
                                             tasa = float.Parse(objn.Attributes["TasadeRetencion"].InnerText);
@@ -2049,6 +2050,7 @@ namespace SunPlusXML
                                         bool isCantidad = objn.Attributes["importe"] != null;
                                         if (isCantidad)
                                         {
+                                            totalDeRetenciones += Convert.ToDouble(objn.Attributes["importe"].InnerText);
                                             cantidad = objn.Attributes["importe"].InnerText;
                                             impuesto = objn.Attributes["impuesto"].InnerText;
                                             tasa = 0;
@@ -2071,6 +2073,24 @@ namespace SunPlusXML
                                         }
                                         iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
                                     }
+
+                                    if(totalDeRetenciones>0.0)
+                                    {
+                                        double nuevoTotal = Math.Round(totalDeRetenciones + Convert.ToDouble(total),2);
+                                        String query2 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set total = "+nuevoTotal+"  WHERE folioFiscal = '" + folio_fiscal+"'";
+                                        try
+                                        {
+                                            using (SqlCommand cmdx = new SqlCommand(query2, connection))
+                                            {
+                                                cmd.ExecuteNonQuery();
+                                            }
+                                        }
+                                        catch(Exception ex3)
+                                        {
+                                            ex3.ToString();
+                                        }
+                                    }
+                                    
 
                                     XmlNodeList trasladosLocales = doc.GetElementsByTagName("implocal:TrasladosLocales");
                                     if (trasladosLocales.Count == 0)
@@ -2357,6 +2377,15 @@ namespace SunPlusXML
                                     }
                                     else//modo pesado
                                     {
+                                       /* diaActual++;
+                                        if (estoyEnElMesAnterior)
+                                        {
+                                            tmrDecimo.Start();
+                                        }
+                                        else
+                                        {
+                                            tmrQuinto.Start();
+                                        }*/
                                         empiezaConElMesAnterior();
                                     }
                                 }
@@ -2470,7 +2499,7 @@ namespace SunPlusXML
                         }
                         else
                         {
-                            if(modoGlobal==2)//ultra pesado
+                            if(modoGlobal==2 )//ultra pesado o pesado
                             {//saltate ese día
                                  DateTime now = DateTime.Now;
                                 int year = now.Year;

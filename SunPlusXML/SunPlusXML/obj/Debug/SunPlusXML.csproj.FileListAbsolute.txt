@@ -13,7 +13,6 @@ C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\bin\
 C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\bin\Debug\EPPlus.xml
 C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\bin\Debug\HtmlAgilityPack.xml
-C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.csprojResolveAssemblyReference.cache
 C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.csproj.ResolveComReference.cache
 C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.Form1.resources
 C:\Users\Cuacua\Documents\Visual Studio 2013\Projects\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.Ligar.resources
