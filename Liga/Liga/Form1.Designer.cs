@@ -56,6 +56,15 @@
             this.detectLabel = new System.Windows.Forms.Label();
             this.debitCreditLabel = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.presupuestoMensual = new System.Windows.Forms.Label();
+            this.mensualGastado = new System.Windows.Forms.Label();
+            this.presupuestoAnual = new System.Windows.Forms.Label();
+            this.anualGastado = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,7 +129,7 @@
             this.bDToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1669, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(1639, 43);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -310,13 +319,99 @@
             this.label10.TabIndex = 24;
             this.label10.Text = ".";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(1578, 1231);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(18, 26);
+            this.label11.TabIndex = 25;
+            this.label11.Text = ".";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(1395, 243);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(228, 26);
+            this.label12.TabIndex = 26;
+            this.label12.Text = "Presupuesto Mensual:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(1399, 372);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(183, 26);
+            this.label13.TabIndex = 27;
+            this.label13.Text = "Mensual gastado:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(1399, 507);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(202, 26);
+            this.label14.TabIndex = 28;
+            this.label14.Text = "Presupuesto Anual:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(1395, 641);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(157, 26);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "Anual gastado:";
+            // 
+            // presupuestoMensual
+            // 
+            this.presupuestoMensual.AutoSize = true;
+            this.presupuestoMensual.Location = new System.Drawing.Point(1404, 298);
+            this.presupuestoMensual.Name = "presupuestoMensual";
+            this.presupuestoMensual.Size = new System.Drawing.Size(0, 26);
+            this.presupuestoMensual.TabIndex = 30;
+            // 
+            // mensualGastado
+            // 
+            this.mensualGastado.AutoSize = true;
+            this.mensualGastado.Location = new System.Drawing.Point(1404, 445);
+            this.mensualGastado.Name = "mensualGastado";
+            this.mensualGastado.Size = new System.Drawing.Size(0, 26);
+            this.mensualGastado.TabIndex = 31;
+            // 
+            // presupuestoAnual
+            // 
+            this.presupuestoAnual.AutoSize = true;
+            this.presupuestoAnual.Location = new System.Drawing.Point(1400, 567);
+            this.presupuestoAnual.Name = "presupuestoAnual";
+            this.presupuestoAnual.Size = new System.Drawing.Size(0, 26);
+            this.presupuestoAnual.TabIndex = 32;
+            // 
+            // anualGastado
+            // 
+            this.anualGastado.AutoSize = true;
+            this.anualGastado.Location = new System.Drawing.Point(1400, 704);
+            this.anualGastado.Name = "anualGastado";
+            this.anualGastado.Size = new System.Drawing.Size(0, 26);
+            this.anualGastado.TabIndex = 33;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1669, 1297);
+            this.ClientSize = new System.Drawing.Size(1673, 1243);
+            this.Controls.Add(this.anualGastado);
+            this.Controls.Add(this.presupuestoAnual);
+            this.Controls.Add(this.mensualGastado);
+            this.Controls.Add(this.presupuestoMensual);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.debitCreditLabel);
             this.Controls.Add(this.detectLabel);
@@ -386,6 +481,15 @@
         private System.Windows.Forms.Label detectLabel;
         private System.Windows.Forms.Label debitCreditLabel;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label presupuestoMensual;
+        private System.Windows.Forms.Label mensualGastado;
+        private System.Windows.Forms.Label presupuestoAnual;
+        private System.Windows.Forms.Label anualGastado;
     }
 }
 

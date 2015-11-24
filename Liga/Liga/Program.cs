@@ -16,9 +16,9 @@ namespace Liga
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if(args.Length==8)
+            if(args.Length==9)
             {
-                Application.Run(new Form1(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]));
+                Application.Run(new Form1(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]));
             }
             else
             {

@@ -6,7 +6,7 @@
       <Value Profile="(Default)">SUNPLUSADV</Value>
     </Setting>
     <Setting Name="sunDatasource" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SUNPLUSSVR</Value>
+      <Value Profile="(Default)">SONORA</Value>
     </Setting>
     <Setting Name="user" Type="System.String" Scope="User">
       <Value Profile="(Default)">sa</Value>
@@ -28,6 +28,9 @@
     </Setting>
     <Setting Name="predefinidoTodaLaCantidad" Type="System.String" Scope="User">
       <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="presupuesto" Type="System.String" Scope="User">
+      <Value Profile="(Default)">B</Value>
     </Setting>
   </Settings>
 </SettingsFile>

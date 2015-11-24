@@ -37,7 +37,7 @@ namespace Liga.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SUNPLUSSVR")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SONORA")]
         public string sunDatasource {
             get {
                 return ((string)(this["sunDatasource"]));
@@ -128,6 +128,18 @@ namespace Liga.Properties {
             }
             set {
                 this["predefinidoTodaLaCantidad"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("B")]
+        public string presupuesto {
+            get {
+                return ((string)(this["presupuesto"]));
+            }
+            set {
+                this["presupuesto"] = value;
             }
         }
     }

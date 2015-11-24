@@ -22,6 +22,7 @@ namespace Liga
         public String debitCreditGlobal { get; set; }
         public String tipoDeDiarioGlobal { get; set; }
         public String referenciaGlobal { get; set; }
+        public String periodoGlobal { get; set; }
     
         public String nombreArchivoXMLSun { get; set; }
         private double cantidadQueFalta { get; set; }
@@ -52,6 +53,7 @@ namespace Liga
             cuentaGlobal = "ERROR";
             debitCreditGlobal="ERROR";
             tipoDeDiarioGlobal = "ERROR";
+            periodoGlobal = "ERROR";
             referenciaGlobal = "ERROR";
         }
 
@@ -65,11 +67,12 @@ namespace Liga
             cuentaGlobal = args[4];
             debitCreditGlobal = args[5];
             tipoDeDiarioGlobal = args[6];
+            periodoGlobal = args[7];
             int i;
             referenciaGlobal = "";
-            for (i = 7; i < args.Length;i++ )
+            for (i = 8; i < args.Length;i++ )
             {
-                if (i == 7)
+                if (i == 8)
                 {
                     referenciaGlobal = args[i];
                 }
@@ -80,7 +83,7 @@ namespace Liga
             }
         }
 
-        public Form1(String linea, String source, String cantidad, String unidadDeNegocio, String ACCNT_CODE, String debitCredit, String tipoDeDiario, String referencia)
+        public Form1(String linea, String source, String cantidad, String unidadDeNegocio, String ACCNT_CODE, String debitCredit, String tipoDeDiario, String periodo, String referencia)
         {
             InitializeComponent();
             lineaGlobal = linea;
@@ -90,6 +93,7 @@ namespace Liga
             cuentaGlobal = ACCNT_CODE;
             debitCreditGlobal = debitCredit;
             tipoDeDiarioGlobal = tipoDeDiario;
+            periodoGlobal = periodo;
             referenciaGlobal = referencia;
                          
         }
@@ -549,7 +553,9 @@ namespace Liga
             }
             catch (Exception)
             {
-                System.Windows.Forms.MessageBox.Show("Sin conexión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                config form = new config();
+                form.ShowDialog();
+                //System.Windows.Forms.MessageBox.Show("Sin conexión", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             /*
             try
@@ -748,6 +754,110 @@ namespace Liga
                 razonSocialText.AutoCompleteSource = AutoCompleteSource.CustomSource;
 
             //    rfcTextBox.KeyPress += rfcTextBox_KeyPress;
+
+
+                //presupuesto
+                String connString3 = "Database=" + Properties.Settings.Default.sunDatabase + ";Data Source=" + Properties.Settings.Default.sunDatasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 10";
+                try
+                {
+                    using (SqlConnection connection1 = new SqlConnection(connString3))
+                    {
+                        connection1.Open();
+
+                        String queryXML = "SELECT SUM(AMOUNT) as amount FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + unidadDeNegociosGlobal + "_" + Properties.Settings.Default.presupuesto + "_SALFLDG] WHERE ACCNT_CODE = '" + cuentaGlobal + "' AND PERIOD = " + periodoGlobal + "";
+                       
+                        using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection1))
+                        {
+                            SqlDataReader reader = cmdCheck.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    if (!reader.IsDBNull(0))
+                                    {
+                                        presupuestoMensual.Text = "$" + String.Format("{0:n}", Convert.ToDouble(Math.Abs(reader.GetDecimal(0))));
+                                    }
+                                    else
+                                    {
+                                        presupuestoMensual.Text = "sin info";
+                                    }
+                                }
+                            }
+                            reader.Close();
+                        }
+
+                        String queryXML2 = "SELECT SUM(AMOUNT) as amount FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + unidadDeNegociosGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + cuentaGlobal + "' AND PERIOD = " + periodoGlobal + "";
+                        using (SqlCommand cmdCheck2 = new SqlCommand(queryXML2, connection1))
+                        {
+                            SqlDataReader reader2 = cmdCheck2.ExecuteReader();
+                            if (reader2.HasRows)
+                            {
+                                while (reader2.Read())
+                                {
+                                    if (!reader2.IsDBNull(0))
+                                    {
+                                         mensualGastado.Text = "$" + String.Format("{0:n}", Convert.ToDouble(Math.Abs(reader2.GetDecimal(0))));
+                                    }
+                                    else
+                                    {
+                                        mensualGastado.Text = "sin info";
+                                    }
+                                 }
+                                reader2.Close();
+                            }
+                        }
+
+                        String queryXML3 = "SELECT SUM(AMOUNT) as amount FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + unidadDeNegociosGlobal + "_" + Properties.Settings.Default.presupuesto + "_SALFLDG] WHERE ACCNT_CODE = '" + cuentaGlobal + "' AND SUBSTRING( CAST(PERIOD AS NVARCHAR(7)),1,4)  = '" + periodoGlobal.ToString().Substring(0, 4) + "'";
+                        using (SqlCommand cmdCheck3 = new SqlCommand(queryXML3, connection1))
+                        {
+                            SqlDataReader reader3 = cmdCheck3.ExecuteReader();
+                            if (reader3.HasRows)
+                            {
+                                while (reader3.Read())
+                                {
+                                    if (!reader3.IsDBNull(0))
+                                    {
+                                        presupuestoAnual.Text = "$" + String.Format("{0:n}", Convert.ToDouble(Math.Abs(reader3.GetDecimal(0))));
+                                    }
+                                    else
+                                    {
+                                        presupuestoAnual.Text = "sin info";
+                                    }
+                                }
+                                reader3.Close();
+                            }
+                        }
+
+                        String queryXML4 = "SELECT SUM(AMOUNT) as amount FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + unidadDeNegociosGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ACCNT_CODE = '" + cuentaGlobal + "' AND SUBSTRING( CAST(PERIOD AS NVARCHAR(7)),1,4)  = '" + periodoGlobal.ToString().Substring(0, 4) + "'";
+                        using (SqlCommand cmdCheck4 = new SqlCommand(queryXML4, connection1))
+                        {
+                            SqlDataReader reader4 = cmdCheck4.ExecuteReader();
+                            if (reader4.HasRows)
+                            {
+                                while (reader4.Read())
+                                {
+                                    if (!reader4.IsDBNull(0))
+                                    {
+                                        anualGastado.Text = "$" + String.Format("{0:n}", Convert.ToDouble(Math.Abs(reader4.GetDecimal(0))));
+                                    }
+                                    else
+                                    {
+                                        anualGastado.Text = "sin info";
+                                    }
+                                }
+                                reader4.Close();
+                            }
+                        }
+
+
+
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                                
                
             }
            
@@ -993,7 +1103,7 @@ namespace Liga
             }
             catch (SqlException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Error Title", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
         private void rfcTextBox_KeyPress(object sender, KeyPressEventArgs e)
