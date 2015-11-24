@@ -58,8 +58,8 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-            AdministradorXML.Login.sourceGlobal = "ERROR";//borrar
-            AdministradorXML.Login.unidadDeNegocioGlobal = "ERROR";
+            AdministradorXML.Login.sourceGlobal = "AOK";//borrar
+            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
         }
 
         public Form1(String s, String bunit)
@@ -104,7 +104,42 @@ namespace AdministradorXML
             Asociar_TipoDiario_CuentaSunplus_CuentaBancaria form = new Asociar_TipoDiario_CuentaSunplus_CuentaBancaria();
             form.Show();
         }
+        private void arreglaAlgunosProblemillas()
+        {
+            String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+                    String query = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '1' WHERE fechaCancelacion = '1900-01-01' AND STATUS = '0'";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }  
 
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+                    String query = "WITH cte AS (SELECT folioFiscal, row_number() OVER(PARTITION BY folioFiscal ORDER BY idXml) AS [rn] FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML]) DELETE cte WHERE [rn] > 1";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }  
+
+             
+
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -163,6 +198,8 @@ namespace AdministradorXML
             {
                 ex.ToString();
             }*/
+
+            arreglaAlgunosProblemillas();
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
             int posX = 50;
@@ -1089,6 +1126,32 @@ namespace AdministradorXML
         {
             XMLFacturas fac = new XMLFacturas();
             fac.ShowDialog();
+        }
+
+        private void estadoDeCuentaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EstadoDeCuenta estado = new EstadoDeCuenta();
+            estado.ShowDialog();
+        }
+
+        private void arreglarError30OctToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+                    String query = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '1' WHERE fechaCancelacion = '1900-01-01' AND STATUS = '0'";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+                    System.Windows.Forms.MessageBox.Show("Facturas arregladas... disculpe las molestias, estamos trabajando para usted.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }   
         }
     }
 }

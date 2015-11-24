@@ -41,6 +41,10 @@
             this.generarButton = new System.Windows.Forms.Button();
             this.guardarButton = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.paraElSAT = new System.Windows.Forms.RadioButton();
+            this.paraSatsito = new System.Windows.Forms.RadioButton();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // polizasTree
@@ -141,13 +145,47 @@
             // guardarButton
             // 
             this.guardarButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.guardarButton.Location = new System.Drawing.Point(1462, 134);
+            this.guardarButton.Location = new System.Drawing.Point(1488, 33);
             this.guardarButton.Name = "guardarButton";
             this.guardarButton.Size = new System.Drawing.Size(225, 79);
             this.guardarButton.TabIndex = 10;
             this.guardarButton.Text = "Guardar";
             this.guardarButton.UseVisualStyleBackColor = true;
             this.guardarButton.Click += new System.EventHandler(this.guardarButton_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.paraSatsito);
+            this.groupBox1.Controls.Add(this.paraElSAT);
+            this.groupBox1.Location = new System.Drawing.Point(1223, 132);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(440, 91);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Tipo de archivo";
+            // 
+            // paraElSAT
+            // 
+            this.paraElSAT.AutoSize = true;
+            this.paraElSAT.Checked = true;
+            this.paraElSAT.Location = new System.Drawing.Point(16, 42);
+            this.paraElSAT.Name = "paraElSAT";
+            this.paraElSAT.Size = new System.Drawing.Size(154, 30);
+            this.paraElSAT.TabIndex = 0;
+            this.paraElSAT.TabStop = true;
+            this.paraElSAT.Text = "Para el SAT";
+            this.paraElSAT.UseVisualStyleBackColor = true;
+            // 
+            // paraSatsito
+            // 
+            this.paraSatsito.AutoSize = true;
+            this.paraSatsito.Location = new System.Drawing.Point(212, 42);
+            this.paraSatsito.Name = "paraSatsito";
+            this.paraSatsito.Size = new System.Drawing.Size(156, 30);
+            this.paraSatsito.TabIndex = 1;
+            this.paraSatsito.TabStop = true;
+            this.paraSatsito.Text = "Para Satsito";
+            this.paraSatsito.UseVisualStyleBackColor = true;
             // 
             // XMLPolizasDelMes
             // 
@@ -156,6 +194,7 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1745, 1112);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.guardarButton);
             this.Controls.Add(this.generarButton);
             this.Controls.Add(this.NumTramite);
@@ -173,6 +212,8 @@
             this.Name = "XMLPolizasDelMes";
             this.Text = "XML Polizas del mes";
             this.Load += new System.EventHandler(this.XMLPolizasDelMes_Load);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,5 +233,8 @@
         private System.Windows.Forms.Button generarButton;
         private System.Windows.Forms.Button guardarButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton paraSatsito;
+        private System.Windows.Forms.RadioButton paraElSAT;
     }
 }

@@ -238,7 +238,7 @@ namespace AdministradorXML
                                     {
                                         while (reader1.Read())
                                         {
-                                            String impuesto = reader1.GetString(0);
+                                            String impuesto = reader1.GetString(0).Trim();
                                             double importe = reader1.GetDouble(1);
                                             contadoresImpuestos[impuesto] += importe;
                                         }

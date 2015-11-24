@@ -44,6 +44,7 @@
             this.xMLDeCuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeBalanzaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDePolizasDelMesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xMLDeFacturasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.misDatosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.permisosDeCuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,7 +77,8 @@
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
             this.actualizarButton = new System.Windows.Forms.Button();
-            this.xMLDeFacturasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.estadoDeCuentaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.arreglarError30OctToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,7 +119,8 @@
             this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impuestosDelMesToolStripMenuItem,
             this.facturasCanceladasToolStripMenuItem,
-            this.facturasPorProveedorToolStripMenuItem});
+            this.facturasPorProveedorToolStripMenuItem,
+            this.estadoDeCuentaToolStripMenuItem});
             this.verToolStripMenuItem.Name = "verToolStripMenuItem";
             this.verToolStripMenuItem.Size = new System.Drawing.Size(65, 39);
             this.verToolStripMenuItem.Text = "Ver";
@@ -205,6 +208,13 @@
             this.xMLDePolizasDelMesToolStripMenuItem.Size = new System.Drawing.Size(351, 40);
             this.xMLDePolizasDelMesToolStripMenuItem.Text = "XML de Polizas del Mes";
             this.xMLDePolizasDelMesToolStripMenuItem.Click += new System.EventHandler(this.xMLDePolizasDelMesToolStripMenuItem_Click);
+            // 
+            // xMLDeFacturasToolStripMenuItem
+            // 
+            this.xMLDeFacturasToolStripMenuItem.Name = "xMLDeFacturasToolStripMenuItem";
+            this.xMLDeFacturasToolStripMenuItem.Size = new System.Drawing.Size(351, 40);
+            this.xMLDeFacturasToolStripMenuItem.Text = "XML de Facturas";
+            this.xMLDeFacturasToolStripMenuItem.Click += new System.EventHandler(this.xMLDeFacturasToolStripMenuItem_Click);
             // 
             // administrarToolStripMenuItem
             // 
@@ -321,6 +331,7 @@
             // 
             this.ayudaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.borrarMisTemporalesToolStripMenuItem,
+            this.arreglarError30OctToolStripMenuItem,
             this.xMLDeCuentasToolStripMenuItem1,
             this.xMLDeBalanzaToolStripMenuItem1,
             this.acercaDeToolStripMenuItem});
@@ -481,12 +492,19 @@
             this.actualizarButton.UseVisualStyleBackColor = true;
             this.actualizarButton.Click += new System.EventHandler(this.actualizarButton_Click);
             // 
-            // xMLDeFacturasToolStripMenuItem
+            // estadoDeCuentaToolStripMenuItem
             // 
-            this.xMLDeFacturasToolStripMenuItem.Name = "xMLDeFacturasToolStripMenuItem";
-            this.xMLDeFacturasToolStripMenuItem.Size = new System.Drawing.Size(351, 40);
-            this.xMLDeFacturasToolStripMenuItem.Text = "XML de Facturas";
-            this.xMLDeFacturasToolStripMenuItem.Click += new System.EventHandler(this.xMLDeFacturasToolStripMenuItem_Click);
+            this.estadoDeCuentaToolStripMenuItem.Name = "estadoDeCuentaToolStripMenuItem";
+            this.estadoDeCuentaToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
+            this.estadoDeCuentaToolStripMenuItem.Text = "Estado de cuenta";
+            this.estadoDeCuentaToolStripMenuItem.Click += new System.EventHandler(this.estadoDeCuentaToolStripMenuItem_Click);
+            // 
+            // arreglarError30OctToolStripMenuItem
+            // 
+            this.arreglarError30OctToolStripMenuItem.Name = "arreglarError30OctToolStripMenuItem";
+            this.arreglarError30OctToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
+            this.arreglarError30OctToolStripMenuItem.Text = "Arreglar error 30 oct";
+            this.arreglarError30OctToolStripMenuItem.Click += new System.EventHandler(this.arreglarError30OctToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -572,6 +590,8 @@
         private System.Windows.Forms.ToolStripMenuItem configurarDestinatariosDeIglesiaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem facturasPorProveedorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem xMLDeFacturasToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem estadoDeCuentaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem arreglarError30OctToolStripMenuItem;
     }
 }
 

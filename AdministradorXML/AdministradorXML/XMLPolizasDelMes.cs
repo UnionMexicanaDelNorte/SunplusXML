@@ -230,7 +230,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT c.ACCNT_CODE, a.DESCR, c.JRNAL_NO, c.JRNAL_LINE, c.TRANS_DATETIME,c.TREFERENCE, c.DESCRIPTN, f.FOLIO_FISCAL, f.CONCEPTO, f.AMOUNT, ff.rfc, f.BUNIT, c.D_C, c.AMOUNT FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f on f.JRNAL_NO = c.JRNAL_NO AND f.JRNAL_LINE = c.JRNAL_LINE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on ff.folioFiscal = f.FOLIO_FISCAL WHERE c.PERIOD = '" + periodo + "' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
+                    String queryXML = "SELECT c.ACCNT_CODE, a.DESCR, c.JRNAL_NO, c.JRNAL_LINE, c.TRANS_DATETIME,c.TREFERENCE, c.DESCRIPTN, f.FOLIO_FISCAL, f.CONCEPTO, f.AMOUNT, ff.rfc, f.BUNIT, c.D_C, c.AMOUNT, c.ANAL_T0, c.ANAL_T1, c.ANAL_T2, c.ANAL_T3, c.ANAL_T4, c.ANAL_T5, c.ANAL_T6, c.ANAL_T7, c.ANAL_T8, c.ANAL_T9 FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f on f.JRNAL_NO = c.JRNAL_NO AND f.JRNAL_LINE = c.JRNAL_LINE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on ff.folioFiscal = f.FOLIO_FISCAL WHERE c.PERIOD = '" + periodo + "' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -288,6 +288,17 @@ namespace AdministradorXML
 
                                 String D_C = reader.GetString(12).Trim();
                                 String AMOUNT_SUNPLUS = Convert.ToString(reader.GetDecimal(13)).Trim();
+                                String ANAL_T0 = reader.GetString(14).Trim();
+                                String ANAL_T1 = reader.GetString(15).Trim();
+                                String ANAL_T2 = reader.GetString(16).Trim();
+                                String ANAL_T3 = reader.GetString(17).Trim();
+                                String ANAL_T4 = reader.GetString(18).Trim();
+                                String ANAL_T5 = reader.GetString(19).Trim();
+                                String ANAL_T6 = reader.GetString(20).Trim();
+                                String ANAL_T7 = reader.GetString(21).Trim();
+                                String ANAL_T8 = reader.GetString(22).Trim();
+                                String ANAL_T9 = reader.GetString(23).Trim();
+                                
                                 if (first)
                                 {
                                     first = false;
@@ -348,7 +359,15 @@ namespace AdministradorXML
                                 {
                                     haber = Math.Abs(Convert.ToDouble(AMOUNT_SUNPLUS));
                                 }
-                                cad.Append("<PLZ:Transaccion NumCta=\"" + ACNT_CODE + "\" DesCta=\"" + DESCR_ACNT_CODE + "\" Concepto=\"" + DESCRIPTN + "\" Debe=\"" + debe + "\" Haber=\"" + haber + "\"  >");
+                                if(paraSatsito.Checked)
+                                {
+                                    cad.Append("<PLZ:Transaccion NumCta=\"" + ACNT_CODE + "\" DesCta=\"" + DESCR_ACNT_CODE + "\" Concepto=\"" + DESCRIPTN + "\" Debe=\"" + debe + "\" Haber=\"" + haber + "\" ANAL_T0=\"" + ANAL_T0 + "\" ANAL_T1=\"" + ANAL_T1 + "\" ANAL_T2=\"" + ANAL_T2 + "\" ANAL_T3=\"" + ANAL_T3 + "\" ANAL_T4=\"" + ANAL_T4 + "\" ANAL_T5=\"" + ANAL_T5 + "\"  ANAL_T6=\"" + ANAL_T6 + "\" ANAL_T7=\"" + ANAL_T7 + "\" ANAL_T8=\"" + ANAL_T8 + "\" ANAL_T9=\"" + ANAL_T9 + "\" >");
+                                }
+                                else
+                                {
+                                    cad.Append("<PLZ:Transaccion NumCta=\"" + ACNT_CODE + "\" DesCta=\"" + DESCR_ACNT_CODE + "\" Concepto=\"" + DESCRIPTN + "\" Debe=\"" + debe + "\" Haber=\"" + haber + "\"  >");
+                                }
+                                
                                 //comprobantes
                                 if (FOLIO_FISCAL != null && !FOLIO_FISCAL.Equals(""))
                                 {
