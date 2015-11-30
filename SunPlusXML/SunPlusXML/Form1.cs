@@ -101,7 +101,7 @@ namespace SunPlusXML
            
            
             this.timer1 = new Timer();
-            this.timer1.Interval = 1000;
+            this.timer1.Interval = 2000;
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
 
         }
