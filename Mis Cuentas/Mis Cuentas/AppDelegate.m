@@ -21,10 +21,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    splitViewController.delegate = self;
+   // UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+   // UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+    //navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    //splitViewController.delegate = self;
     
     self.internetReachability = [Reachability reachabilityForInternetConnection];
     [self.internetReachability startNotifier];
@@ -62,17 +62,7 @@
     
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    if (self.firstRun)
-    {
-        
-        UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                        UIUserNotificationTypeBadge |
-                                                        UIUserNotificationTypeSound);
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
-                                                                                 categories:nil];
-        [application registerUserNotificationSettings:settings];
-        [application registerForRemoteNotifications];
-    }
+   
     
     return YES;
 }
@@ -87,19 +77,21 @@
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-        NSString *WHO =[[NSUserDefaults standardUserDefaults] valueForKey:@"WHO"];
-        NSString *urlYpuerto =[[NSUserDefaults standardUserDefaults] valueForKey:@"URLyPUERTO"];
         
-        NSString *urlString =[NSString stringWithFormat:@"http://%@/?accion=4&argumento1=%@&argumento2=%@&argumento3=1",urlYpuerto,WHO,deviceToken];//iOS
+        NSUserDefaults *defaults =[NSUserDefaults standardUserDefaults];
         
-        
-        NSString* encodedUrl = [urlString stringByAddingPercentEscapesUsingEncoding:
-                                NSUTF8StringEncoding];
+        NSString *urlString = [NSString stringWithFormat:@"%@&accion=4&argumento1=%@&argumento2=%@&argumento3=1",[defaults valueForKey:@"url"],[defaults valueForKey:@"ER"],deviceToken];
+        NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+        NSString* encodedUrl = [urlString stringByAddingPercentEncodingWithAllowedCharacters:
+                                set];
         NSURL * url = [NSURL URLWithString:encodedUrl];
         NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
-        [urlRequest setHTTPMethod:@"POST"];//GET
+        [urlRequest setHTTPMethod:@"GET"];//GET
+        
+        
+        
+        
         NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest                                                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            NSLog(@"%@",[error description]);
             if(error == nil)
             {
                 NSError* error;

@@ -7,7 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		09C176181BCC5FAB00C7B7A7 /* PresupuestoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C176171BCC5FAB00C7B7A7 /* PresupuestoTableViewController.m */; settings = {ASSET_TAGS = (); }; };
+		09758D841C6256E7005FABC9 /* FechaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09758D831C6256E7005FABC9 /* FechaViewController.m */; };
+		09758D871C62A49B005FABC9 /* TarjetaTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09758D861C62A49A005FABC9 /* TarjetaTableViewController.m */; };
+		09C176181BCC5FAB00C7B7A7 /* PresupuestoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C176171BCC5FAB00C7B7A7 /* PresupuestoTableViewController.m */; };
+		09C603FC1C4E897900A67328 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C603FB1C4E897900A67328 /* LoginViewController.m */; };
+		09C603FF1C4EE7B900A67328 /* PeriodosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C603FE1C4EE7B900A67328 /* PeriodosViewController.m */; };
+		09C604021C4EE7E200A67328 /* PeriodosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C604011C4EE7E200A67328 /* PeriodosTableViewController.m */; };
+		09DD99F81C57DFE900E854AF /* UnidadesDeNegocioTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DD99F71C57DFE900E854AF /* UnidadesDeNegocioTableViewController.m */; };
+		09DD99FB1C5AC9AC00E854AF /* SolicitudTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DD99FA1C5AC9AC00E854AF /* SolicitudTableViewController.m */; };
+		09DD99FE1C5AD0B800E854AF /* BeneficiarioTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DD99FD1C5AD0B800E854AF /* BeneficiarioTableViewController.m */; };
 		09E967411BC356B3009BFAE2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E967401BC356B3009BFAE2 /* main.m */; };
 		09E967441BC356B3009BFAE2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E967431BC356B3009BFAE2 /* AppDelegate.m */; };
 		09E967471BC356B3009BFAE2 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E967461BC356B3009BFAE2 /* MasterViewController.m */; };
@@ -15,16 +23,32 @@
 		09E9674D1BC356B3009BFAE2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E9674B1BC356B3009BFAE2 /* Main.storyboard */; };
 		09E9674F1BC356B3009BFAE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09E9674E1BC356B3009BFAE2 /* Assets.xcassets */; };
 		09E967521BC356B3009BFAE2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E967501BC356B3009BFAE2 /* LaunchScreen.storyboard */; };
-		09E9675B1BC372C0009BFAE2 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E9675A1BC372C0009BFAE2 /* CameraViewController.m */; settings = {ASSET_TAGS = (); }; };
+		09E9675B1BC372C0009BFAE2 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E9675A1BC372C0009BFAE2 /* CameraViewController.m */; };
 		09E9675D1BC3736E009BFAE2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09E9675C1BC3736D009BFAE2 /* AVFoundation.framework */; };
-		09E967601BC37784009BFAE2 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E9675F1BC37784009BFAE2 /* LoadingView.m */; settings = {ASSET_TAGS = (); }; };
-		09E967631BC471D9009BFAE2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E967621BC471D9009BFAE2 /* Reachability.m */; settings = {ASSET_TAGS = (); }; };
+		09E967601BC37784009BFAE2 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E9675F1BC37784009BFAE2 /* LoadingView.m */; };
+		09E967631BC471D9009BFAE2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E967621BC471D9009BFAE2 /* Reachability.m */; };
 		09E967651BC56433009BFAE2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09E967641BC56433009BFAE2 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		09758D821C6256E7005FABC9 /* FechaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FechaViewController.h; sourceTree = "<group>"; };
+		09758D831C6256E7005FABC9 /* FechaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FechaViewController.m; sourceTree = "<group>"; };
+		09758D851C62A49A005FABC9 /* TarjetaTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TarjetaTableViewController.h; sourceTree = "<group>"; };
+		09758D861C62A49A005FABC9 /* TarjetaTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarjetaTableViewController.m; sourceTree = "<group>"; };
 		09C176161BCC5FAB00C7B7A7 /* PresupuestoTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PresupuestoTableViewController.h; sourceTree = "<group>"; };
 		09C176171BCC5FAB00C7B7A7 /* PresupuestoTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PresupuestoTableViewController.m; sourceTree = "<group>"; };
+		09C603FA1C4E897900A67328 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		09C603FB1C4E897900A67328 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		09C603FD1C4EE7B900A67328 /* PeriodosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeriodosViewController.h; sourceTree = "<group>"; };
+		09C603FE1C4EE7B900A67328 /* PeriodosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeriodosViewController.m; sourceTree = "<group>"; };
+		09C604001C4EE7E200A67328 /* PeriodosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeriodosTableViewController.h; sourceTree = "<group>"; };
+		09C604011C4EE7E200A67328 /* PeriodosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeriodosTableViewController.m; sourceTree = "<group>"; };
+		09DD99F61C57DFE900E854AF /* UnidadesDeNegocioTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnidadesDeNegocioTableViewController.h; sourceTree = "<group>"; };
+		09DD99F71C57DFE900E854AF /* UnidadesDeNegocioTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnidadesDeNegocioTableViewController.m; sourceTree = "<group>"; };
+		09DD99F91C5AC9AC00E854AF /* SolicitudTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SolicitudTableViewController.h; sourceTree = "<group>"; };
+		09DD99FA1C5AC9AC00E854AF /* SolicitudTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SolicitudTableViewController.m; sourceTree = "<group>"; };
+		09DD99FC1C5AD0B800E854AF /* BeneficiarioTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeneficiarioTableViewController.h; sourceTree = "<group>"; };
+		09DD99FD1C5AD0B800E854AF /* BeneficiarioTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeneficiarioTableViewController.m; sourceTree = "<group>"; };
 		09E9673C1BC356B3009BFAE2 /* Mis Cuentas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mis Cuentas.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		09E967401BC356B3009BFAE2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		09E967421BC356B3009BFAE2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -63,6 +87,22 @@
 		09E967331BC356B3009BFAE2 = {
 			isa = PBXGroup;
 			children = (
+				09758D851C62A49A005FABC9 /* TarjetaTableViewController.h */,
+				09758D861C62A49A005FABC9 /* TarjetaTableViewController.m */,
+				09758D821C6256E7005FABC9 /* FechaViewController.h */,
+				09758D831C6256E7005FABC9 /* FechaViewController.m */,
+				09DD99FC1C5AD0B800E854AF /* BeneficiarioTableViewController.h */,
+				09DD99FD1C5AD0B800E854AF /* BeneficiarioTableViewController.m */,
+				09DD99F91C5AC9AC00E854AF /* SolicitudTableViewController.h */,
+				09DD99FA1C5AC9AC00E854AF /* SolicitudTableViewController.m */,
+				09C604001C4EE7E200A67328 /* PeriodosTableViewController.h */,
+				09C604011C4EE7E200A67328 /* PeriodosTableViewController.m */,
+				09C603FD1C4EE7B900A67328 /* PeriodosViewController.h */,
+				09C603FE1C4EE7B900A67328 /* PeriodosViewController.m */,
+				09C603FA1C4E897900A67328 /* LoginViewController.h */,
+				09C603FB1C4E897900A67328 /* LoginViewController.m */,
+				09DD99F61C57DFE900E854AF /* UnidadesDeNegocioTableViewController.h */,
+				09DD99F71C57DFE900E854AF /* UnidadesDeNegocioTableViewController.m */,
 				09E967641BC56433009BFAE2 /* SystemConfiguration.framework */,
 				09E9675C1BC3736D009BFAE2 /* AVFoundation.framework */,
 				09E9673E1BC356B3009BFAE2 /* Mis Cuentas */,
@@ -143,6 +183,7 @@
 				TargetAttributes = {
 					09E9673B1BC356B3009BFAE2 = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = 5X5K552XB8;
 					};
 				};
 			};
@@ -185,11 +226,19 @@
 				09E9675B1BC372C0009BFAE2 /* CameraViewController.m in Sources */,
 				09E967601BC37784009BFAE2 /* LoadingView.m in Sources */,
 				09C176181BCC5FAB00C7B7A7 /* PresupuestoTableViewController.m in Sources */,
+				09758D841C6256E7005FABC9 /* FechaViewController.m in Sources */,
+				09C603FF1C4EE7B900A67328 /* PeriodosViewController.m in Sources */,
+				09C604021C4EE7E200A67328 /* PeriodosTableViewController.m in Sources */,
 				09E967441BC356B3009BFAE2 /* AppDelegate.m in Sources */,
 				09E967631BC471D9009BFAE2 /* Reachability.m in Sources */,
+				09C603FC1C4E897900A67328 /* LoginViewController.m in Sources */,
+				09758D871C62A49B005FABC9 /* TarjetaTableViewController.m in Sources */,
 				09E967471BC356B3009BFAE2 /* MasterViewController.m in Sources */,
 				09E967411BC356B3009BFAE2 /* main.m in Sources */,
+				09DD99F81C57DFE900E854AF /* UnidadesDeNegocioTableViewController.m in Sources */,
+				09DD99FB1C5AC9AC00E854AF /* SolicitudTableViewController.m in Sources */,
 				09E9674A1BC356B3009BFAE2 /* DetailViewController.m in Sources */,
+				09DD99FE1C5AD0B800E854AF /* BeneficiarioTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,8 +281,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development IOS Push Services: umn.mis.cuentas";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development IOS Push Services: umn.mis.cuentas";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Union Mexicana del Norte (5X5K552XB8)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Union Mexicana del Norte (5X5K552XB8)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -255,7 +304,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "baedca5a-1709-46e9-a140-17d72e1e5b80";
+				PROVISIONING_PROFILE = "dbff2322-8de8-4510-bf60-b733db38dc41";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -278,8 +327,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development IOS Push Services: umn.mis.cuentas";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development IOS Push Services: umn.mis.cuentas";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Union Mexicana del Norte (5X5K552XB8)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Union Mexicana del Norte (5X5K552XB8)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -294,7 +343,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "baedca5a-1709-46e9-a140-17d72e1e5b80";
+				PROVISIONING_PROFILE = "dbff2322-8de8-4510-bf60-b733db38dc41";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -305,11 +354,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Mis Cuentas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = umn.mis.cuentas;
+				PRODUCT_BUNDLE_IDENTIFIER = mis.cuentas.umn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -317,11 +369,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Mis Cuentas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = umn.mis.cuentas;
+				PRODUCT_BUNDLE_IDENTIFIER = mis.cuentas.umn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

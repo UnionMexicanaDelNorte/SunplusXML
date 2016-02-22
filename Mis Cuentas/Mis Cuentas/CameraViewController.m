@@ -8,6 +8,7 @@
 
 #import "CameraViewController.h"
 #import "AppDelegate.h"
+#import "LoadingView.h"
 @interface CameraViewController ()
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
@@ -16,11 +17,114 @@
 
 -(BOOL)startReading;
 -(void)stopReading;
+-(void)noEncontre;
 
 @end
 
 @implementation CameraViewController
-@synthesize viewPreview=_viewPreview,lblStatus=_lblStatus;
+@synthesize viewPreview=_viewPreview,lblStatus=_lblStatus,deboPonerCamara=_deboPonerCamara,diario=_diario,linea=_linea,informar=_informar,lblFactura=_lblFactura,descripcion=_descripcion,fechaSeleccionada=_fechaSeleccionada,etiqueta=_etiqueta;
+-(void)leeMetodosDePago
+{
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (app.hasInternet)
+    {
+        if(load==nil)
+        {
+            load=[LoadingView loadingViewInView:self.view];
+        }
+        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+            NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+            
+            
+            NSString *urlString = @"http://myreport.unionnorte.org/myreport.php";
+            
+            NSUserDefaults *defaults =[NSUserDefaults standardUserDefaults];
+            
+            NSString *post = [NSString stringWithFormat:@"servicio=app&accion=obtieneMetodosDePagoDeUnaPersona&idPersona=%@", [defaults valueForKey:@"idPersona"] ];
+            
+            NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+            
+            NSString *postLength = [NSString stringWithFormat:@"%d", (int)[postData length]];
+            
+            
+            
+            NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+            
+            NSString* encodedUrl = [urlString stringByAddingPercentEncodingWithAllowedCharacters:
+                                    set];
+            
+            NSURL * url = [NSURL URLWithString:encodedUrl];
+            NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];//GET
+            [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            [urlRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [urlRequest setHTTPBody:postData];
+            NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
+                                                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if(error == nil)
+            {
+                NSError* error;
+                NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                int success = [[json objectForKey:@"success"] intValue];
+                if(success==1)
+                {
+                    NSArray *recursosAux =[json objectForKey:@"metodosDePago"];
+                    int i;
+                    for(i=0;i<[recursosAux count];i++)
+                    {
+                        NSString *s=[[recursosAux objectAtIndex:i] valueForKey:@"nombre"];
+                        [recursos addObject:s];
+                        NSString *idCs=[[recursosAux objectAtIndex:i] valueForKey:@"idMetodoDePago"];
+                        [idconceptoRecursos addObject:idCs];
+                    }
+                    [_pickerRecurso reloadAllComponents];
+                    [_informar setEnabled:YES];
+                }
+                else
+                {
+                    UIAlertController * view=   [UIAlertController alertControllerWithTitle:@"Mis Cuentas"
+                        message:@"Error, no se encontraron metodos de pago"
+                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Aceptar"
+                                                                                                    style:UIAlertActionStyleDefault
+                                                                                                    handler:^(UIAlertAction * action)
+                                                                                                    {
+                                                                                                        [view dismissViewControllerAnimated:YES completion:nil];
+                                                                                                    }];
+                                                                           [view addAction:cancel];
+                                                                           [self presentViewController:view animated:YES completion:nil];
+                                                                       }
+                                                                   }
+                                                                   if(load!=nil)
+                                                                   {
+                                                                       [load removeView];
+                                                                   }
+                                                                   
+                                                               }];
+            
+            [dataTask resume];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Code to update the UI/send notifications based on the results of the background processing
+                //            [_message show];
+                
+                
+            });
+            
+        });
+    }
+    else
+    {
+        [self showNoHayInternet];
+    }
+
+}
+
+-(void)lee
+{
+    
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     _captureSession = nil;
@@ -29,19 +133,36 @@
     _isReading = NO;
     gastos = [[NSMutableArray alloc] init];
     recursos = [[NSMutableArray alloc] init];
-    idConceptoGastos = [[NSMutableArray alloc] init];
     idconceptoRecursos = [[NSMutableArray alloc] init];
+    
+    
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
+    
+    
+    
+    
+    
 
     
+    if(_deboPonerCamara)
+    {
+        [self startReading];
+    }
+    else
+    {
+        load=nil;
+        maximo=99999999.99;
+        UUID=@"";
+        _lblFactura.text=@"Cantidad sin factura a informar:";
+        [self leeMetodosDePago];
+    }
     
-    
-    [self startReading];
+
     // Do any additional setup after loading the view.
 }
 
@@ -51,6 +172,7 @@
 }
 -(void)dismissKeyboard {
     [_cantidadText resignFirstResponder];
+    [_descripcion resignFirstResponder];
 }
 -(BOOL)textFieldShouldReturn:(UITextField*)textField
 {
@@ -68,10 +190,10 @@
 
 -(IBAction)guardaMovimiento:(id)sender
 {
+    
     double cantidad = [_cantidadText.text doubleValue];
-    int indexGasto = (int)[_pickerGastos selectedRowInComponent:0];
-    int idConceptoGastoInt = [[idConceptoGastos objectAtIndex:indexGasto] intValue];
-
+    
+    
     int indexRecurso = (int)[_pickerRecurso selectedRowInComponent:0];
     int idConceptoRecursoInt = [[idconceptoRecursos objectAtIndex:indexRecurso] intValue];
 
@@ -94,98 +216,134 @@
         [self presentViewController:view animated:YES completion:nil];
         return;
     }
+    if(cantidad==0.0)
+    {
+        UIAlertController * view=   [UIAlertController
+                                     alertControllerWithTitle:@"Mis cuentas"
+                                     message:@"La cantidad no puede ser 0"
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* cancel = [UIAlertAction
+                                 actionWithTitle:@"Aceptar"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     [view dismissViewControllerAnimated:YES completion:nil];
+                                 }];
+        [view addAction:cancel];
+        [self presentViewController:view animated:YES completion:nil];
+        return;
+    }
+    if([_descripcion.text isEqualToString:@""])
+    {
+        
+        UIAlertController * view=   [UIAlertController
+                                     alertControllerWithTitle:@"Mis cuentas"
+                                     message:@"La descripción no puede estar vacía"
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* cancel = [UIAlertAction
+                                 actionWithTitle:@"Aceptar"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     [view dismissViewControllerAnimated:YES completion:nil];
+                                 }];
+        [view addAction:cancel];
+        [self presentViewController:view animated:YES completion:nil];
+        return;
+    }
+    
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if (app.hasInternet)
     {
-        load = [LoadingView loadingViewInView:self.view];
+        load = [LoadingView loadingViewInView:self.view]; 
         dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
             NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-            NSString *WHO =[[NSUserDefaults standardUserDefaults] valueForKey:@"WHO"];
-            NSString *urlYpuerto =[[NSUserDefaults standardUserDefaults] valueForKey:@"URLyPUERTO"];
-            
-            NSString *urlString =[NSString stringWithFormat:@"http://%@/?accion=3&argumento1=%@&argumento2=%@&argumento3=%.02f&argumento4=%d&argumento5=%d",urlYpuerto,WHO,UUID,cantidad,idConceptoGastoInt,idConceptoRecursoInt];
             
             
-            NSString* encodedUrl = [urlString stringByAddingPercentEscapesUsingEncoding:
-                                    NSUTF8StringEncoding];
+            NSString *urlString = @"http://myreport.unionnorte.org/myreport.php";
+            
+            NSUserDefaults *defaults =[NSUserDefaults standardUserDefaults];
+            
+            NSString *post = [NSString stringWithFormat:@"servicio=polizas&accion=insertaUnaPoliza&idPersona=%@&idMetodoDePago=%d&unidadDeNegocio=%@&JRNAL_NO=%@&JRNAL_LINE=%@&cantidad=%f&UUID=%@&PERIOD=%@&descripcion=%@&fechaSinComprobante=%@&etiqueta=%@", [defaults valueForKey:@"idPersona"],idConceptoRecursoInt,[defaults valueForKey:@"unidadSeleccionada"],_diario,_linea,cantidad,UUID,[defaults valueForKey:@"PERIOD"],_descripcion.text,_fechaSeleccionada,_etiqueta];
+            
+            NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+            
+            NSString *postLength = [NSString stringWithFormat:@"%d", (int)[postData length]];
+            
+            
+            
+            NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+            
+            NSString* encodedUrl = [urlString stringByAddingPercentEncodingWithAllowedCharacters:
+                                    set];
+            
             NSURL * url = [NSURL URLWithString:encodedUrl];
             NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
             [urlRequest setHTTPMethod:@"POST"];//GET
-            NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest                                                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                NSLog(@"%@",[error description]);
-                if(error == nil)
+            [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            [urlRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [urlRequest setHTTPBody:postData];
+            NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
+                                                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if(error == nil)
+            {
+                NSError* error;
+                NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                int success = [[json objectForKey:@"success"] intValue];
+                if(success==1)
                 {
-                    NSError* error;
-                    NSDictionary* json = [NSJSONSerialization
-                                          JSONObjectWithData:data
-                                          options:kNilOptions
-                                          error:&error];
-                    int success = [[json objectForKey:@"success"] intValue];
-                    if(success==1)
-                    {
-                       //me regreso
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            UIAlertController * view=   [UIAlertController
-                                                         alertControllerWithTitle:@"Mis cuentas"
-                                                         message:@"Factura informada"
-                                                         preferredStyle:UIAlertControllerStyleAlert];
-                            UIAlertAction* cancel = [UIAlertAction
-                                                     actionWithTitle:@"Aceptar"
-                                                     style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction * action)
-                                                     {
-                                                         [view dismissViewControllerAnimated:YES completion:nil];
-                                                         [self.navigationController popToRootViewControllerAnimated:YES];
-                                                         
-                                                         
-                                                         
-                                                     }];
-                            [view addAction:cancel];
-                            [self presentViewController:view animated:YES completion:nil];
-                            
-                        });
-                        
-                        
-                    }
-                    else
-                    {
-                        
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                UIAlertController * view=   [UIAlertController
-                                                             alertControllerWithTitle:@"Mis cuentas"
-                                                             message:@"Hubo un error"
-                                                             preferredStyle:UIAlertControllerStyleAlert];
-                                UIAlertAction* cancel = [UIAlertAction
-                                                         actionWithTitle:@"Aceptar"
-                                                         style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction * action)
-                                                         {
-                                                             [view dismissViewControllerAnimated:YES completion:nil];
-                                                         }];
-                                [view addAction:cancel];
-                                [self presentViewController:view animated:YES completion:nil];
-                                
-                            });
-                    }
-                    
-                    
+                    UIAlertController * view=   [UIAlertController alertControllerWithTitle:@"Mis Cuentas"
+                                                                                    message:@"Factura informada"
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Aceptar"
+                                                                     style:UIAlertActionStyleDefault
+                                                                   handler:^(UIAlertAction * action)
+                                             {
+                                                [view dismissViewControllerAnimated:YES completion:nil];
+                                                 [self.navigationController popViewControllerAnimated:NO];
+
+                                             }];
+                    [view addAction:cancel];
+                    [self presentViewController:view animated:YES completion:nil];
+
                 }
+                else
+                {
+                    UIAlertController * view=   [UIAlertController alertControllerWithTitle:@"Mis Cuentas"
+                        message:@"Error, no se pudo informar"
+                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Aceptar"
+                        style:UIAlertActionStyleDefault
+                        handler:^(UIAlertAction * action)
+                        {
+                            [view dismissViewControllerAnimated:YES completion:nil];
+                        }];
+                    [view addAction:cancel];
+                    [self presentViewController:view animated:YES completion:nil];
+                }
+            }
+            if(load!=nil)
+            {
                 [load removeView];
-            }];
+            }
+        }];
             
             [dataTask resume];
             
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Code to update the UI/send notifications based on the results of the background processing
+                //            [_message show];
+                
+                
+            });
             
         });
-        
     }
     else
     {
         [self showNoHayInternet];
     }
-    
-    
 }
 #pragma mark - Private method implementation
 
@@ -201,8 +359,7 @@
     
     if (!input) {
         // If any error occurs, simply log the description of it and don't continue any more.
-        NSLog(@"%@", [error localizedDescription]);
-        return NO;
+         return NO;
     }
     
     // Initialize the captureSession object.
@@ -242,19 +399,11 @@
 - (NSInteger)pickerView:(UIPickerView *)pickerView
 numberOfRowsInComponent:(NSInteger)component
 {
-    if(pickerView==_pickerGastos)
-    {
-       return gastos.count;
-    }
     return recursos.count;
 }
 - (NSInteger)numberOfComponentsInPickerView:
 (UIPickerView *)pickerView
 {
-    if(gastos.count==0)
-    {
-        return 0;
-    }
     return 1;
 }
 
@@ -262,40 +411,29 @@ numberOfRowsInComponent:(NSInteger)component
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component
 {
-    if(pickerView==_pickerGastos)
-    {
-        return [gastos objectAtIndex:row];
-    }
     return [recursos objectAtIndex:row];
 }
-
--(void)stopReading{
-    // Stop video capture and make the capture session object nil.
-    [_captureSession stopRunning];
-    _captureSession = nil;
-    
-    // Remove the video preview layer from the viewPreview view's layer.
-    [_videoPreviewLayer removeFromSuperlayer];
+-(void)revisaEnNodeJS
+{
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if (app.hasInternet)
     {
-        load = [LoadingView loadingViewInView:self.view];
+        if(load==nil)
+        {
+            load = [LoadingView loadingViewInView:self.view];
+        }
         dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
             NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-             NSString *WHO =[[NSUserDefaults standardUserDefaults] valueForKey:@"WHO"];
-            NSString *urlYpuerto =[[NSUserDefaults standardUserDefaults] valueForKey:@"URLyPUERTO"];
-            
-            NSString *urlString =[NSString stringWithFormat:@"http://%@/?accion=2&argumento1=%@&argumento2=%@",urlYpuerto,UUID,WHO];
-            
-            
-            NSString* encodedUrl = [urlString stringByAddingPercentEscapesUsingEncoding:
-                                    NSUTF8StringEncoding];
+            NSUserDefaults *defaults =[NSUserDefaults standardUserDefaults];
+            NSString *urlString = [NSString stringWithFormat:@"%@&accion=2&argumento1=%@&argumento2=%@&argumento3=%@",[defaults valueForKey:@"url"], UUID,[defaults valueForKey:@"ER"],[defaults valueForKey:@"unidadSeleccionada"]];
+            NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+            NSString* encodedUrl = [urlString stringByAddingPercentEncodingWithAllowedCharacters:
+                                    set];
             NSURL * url = [NSURL URLWithString:encodedUrl];
             NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
-            [urlRequest setHTTPMethod:@"POST"];//GET
+            [urlRequest setHTTPMethod:@"GET"];//GET
             NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest                                                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                NSLog(@"%@",[error description]);
                 if(error == nil)
                 {
                     NSError* error;
@@ -304,39 +442,15 @@ numberOfRowsInComponent:(NSInteger)component
                                           JSONObjectWithData:data
                                           options:NSJSONReadingMutableContainers
                                           error:&error];
-                    NSLog(@"%@",[error description]);
                     
                     int success = [[json objectForKey:@"success"] intValue];
                     if(success==1)
                     {
-                        double cantidad = [[json objectForKey:@"cantidad"] doubleValue];
+                        //la cantidad que manda SQL SERVER menos la cantidad que esta en mysql
+                        double cantidad = [[json objectForKey:@"cantidad"] doubleValue]-cantidadEnLosTemporales;
                         maximo = cantidad;
                         _cantidadText.text = [NSString stringWithFormat:@"%.02f",cantidad];
-                        NSArray *gastosAux =[json objectForKey:@"gastos"];
-                        int i=0;
-                        for(i=0;i<[gastosAux count];i++)
-                        {
-                            NSString *s=[[gastosAux objectAtIndex:i] valueForKey:@"nombre"];
-                            [gastos addObject:s];
-                            NSString *idCs=[[gastosAux objectAtIndex:i] valueForKey:@"idConcepto"];
-                            [idConceptoGastos addObject:idCs];
-                        }
-                            
-                        
-                        NSArray *recursosAux =[json objectForKey:@"recursos"];
-                        for(i=0;i<[recursosAux count];i++)
-                        {
-                            NSString *s=[[recursosAux objectAtIndex:i] valueForKey:@"nombre"];
-                            [recursos addObject:s];
-                            NSString *idCs=[[recursosAux objectAtIndex:i] valueForKey:@"idConcepto"];
-                            [idconceptoRecursos addObject:idCs];
-                        }
-                        [_pickerGastos reloadAllComponents];
-                        [_pickerRecurso reloadAllComponents];
-
-                        
-                        
-                        
+                        [self leeMetodosDePago];
                     }
                     else
                     {
@@ -353,7 +467,7 @@ numberOfRowsInComponent:(NSInteger)component
                                                          handler:^(UIAlertAction * action)
                                                          {
                                                              [view dismissViewControllerAnimated:YES completion:nil];
-                                                             [self.navigationController popToRootViewControllerAnimated:YES];
+                                                             [self.navigationController popViewControllerAnimated:NO];
                                                          }];
                                 [view addAction:cancel];
                                 [self presentViewController:view animated:YES completion:nil];
@@ -375,7 +489,7 @@ numberOfRowsInComponent:(NSInteger)component
                                                              handler:^(UIAlertAction * action)
                                                              {
                                                                  [view dismissViewControllerAnimated:YES completion:nil];
-                                                                 [self.navigationController popToRootViewControllerAnimated:YES];
+                                                                [self.navigationController popViewControllerAnimated:NO];
                                                              }];
                                     [view addAction:cancel];
                                     [self presentViewController:view animated:YES completion:nil];
@@ -397,35 +511,146 @@ numberOfRowsInComponent:(NSInteger)component
                                                                  handler:^(UIAlertAction * action)
                                                                  {
                                                                      [view dismissViewControllerAnimated:YES completion:nil];
-                                                                     [self.navigationController popToRootViewControllerAnimated:YES];
+                                                                    [self.navigationController popViewControllerAnimated:NO];
                                                                  }];
                                         [view addAction:cancel];
                                         [self presentViewController:view animated:YES completion:nil];
-                                        
                                     });
                                 }
                             }
                         }
                     }
-                    
-                    
                 }
-                [load removeView];
             }];
-            
             [dataTask resume];
-            
-           
         });
-        
     }
     else
     {
         [self showNoHayInternet];
     }
-
+}
+-(void)revisaEnLosTemporales
+{
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (app.hasInternet)
+    {
+        if(load==nil)
+        {
+            load=[LoadingView loadingViewInView:self.view];
+        }
+        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+            NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+            
+            
+            NSString *urlString = @"http://myreport.unionnorte.org/myreport.php";
+            
+            
+            NSString *post = [NSString stringWithFormat:@"servicio=app&accion=revisaTemporales&UUID=%@", UUID ];
+            
+            NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+            
+            NSString *postLength = [NSString stringWithFormat:@"%d", (int)[postData length]];
+            
+            
+            
+            NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+            
+            NSString* encodedUrl = [urlString stringByAddingPercentEncodingWithAllowedCharacters:
+                                    set];
+            
+            NSURL * url = [NSURL URLWithString:encodedUrl];
+            NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];//GET
+            [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            [urlRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [urlRequest setHTTPBody:postData];
+            NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
+                                                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                                   if(error == nil)
+                                                                   {
+                                                                       NSError* error;
+                                                                       NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                                                       int success = [[json objectForKey:@"success"] intValue];
+                                                                       if(success==1)
+                                                                       {
+                                                                           
+                                                                            cantidadEnLosTemporales= (int)[[json objectForKey:@"cantidad"] floatValue];
+                                                                           [self revisaEnNodeJS];
+                                                                           
+                                                                       }
+                                                                       else
+                                                                       {
+                                                                           UIAlertController * view=   [UIAlertController alertControllerWithTitle:@"Mis Cuentas"
+                                                                                                                                           message:@"Error, hubo un error al revisar si ya existia esa factura informada"
+                                                                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                                                                           UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Aceptar"
+                                                                                                                            style:UIAlertActionStyleDefault
+                                                                                                                          handler:^(UIAlertAction * action)
+                                                                                                    {
+                                                                                                        [view dismissViewControllerAnimated:YES completion:nil];
+                                                                                                    }];
+                                                                           [view addAction:cancel];
+                                                                           [self presentViewController:view animated:YES completion:nil];
+                                                                       }
+                                                                   }
+                                                                   if(load!=nil)
+                                                                   {
+                                                                       [load removeView];
+                                                                   }
+                                                                   
+                                                               }];
+            
+            [dataTask resume];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Code to update the UI/send notifications based on the results of the background processing
+                //            [_message show];
+                
+                
+            });
+            
+        });
+    }
+    else
+    {
+        [self showNoHayInternet];
+    }
+}
+-(void)stopReading{
+    // Stop video capture and make the capture session object nil.
+    [_captureSession stopRunning];
+    _captureSession = nil;
+    
+    // Remove the video preview layer from the viewPreview view's layer.
+    [_videoPreviewLayer removeFromSuperlayer];
+    //aqui en un futuro primero revisara en los temporales para bajar la cantidad y avisar al usuario!, cambiar maximo, pensar otra vez
     
     
+    load=nil;
+    
+    [self revisaEnLosTemporales];
+   
+    
+    
+}
+-(void)noEncontre
+{
+    
+    UIAlertController * view=   [UIAlertController
+                                 alertControllerWithTitle:@"Mis cuentas"
+                                 message:@"Eso no es un CFDI"
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* cancel = [UIAlertAction
+                             actionWithTitle:@"Aceptar"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 [view dismissViewControllerAnimated:YES completion:nil];
+                             }];
+    [view addAction:cancel];
+    [self presentViewController:view animated:YES completion:nil];
 }
 -(void)showNoHayInternet
 {
@@ -458,14 +683,23 @@ numberOfRowsInComponent:(NSInteger)component
             
             NSString *todo =[metadataObj stringValue];
             NSRange range = [todo rangeOfString:@"&id="];
-           UUID = [[todo substringFromIndex:range.location+range.length] uppercaseString];
+            if(range.location != NSNotFound)
+            {
+                UUID = [[todo substringFromIndex:range.location+range.length] uppercaseString];
+                [self performSelectorOnMainThread:@selector(stopReading) withObject:nil waitUntilDone:NO];
+                
+            }
+            else
+            {
+                [self performSelectorOnMainThread:@selector(noEncontre) withObject:nil waitUntilDone:NO];
+                
+            }
             
             
             
            /* [_lblStatus performSelectorOnMainThread:@selector(setText:) withObject:UUID waitUntilDone:NO];
             */
-            [self performSelectorOnMainThread:@selector(stopReading) withObject:nil waitUntilDone:NO];
-          //  [_bbitemStart performSelectorOnMainThread:@selector(setTitle:) withObject:@"Start!" waitUntilDone:NO];
+           //  [_bbitemStart performSelectorOnMainThread:@selector(setTitle:) withObject:@"Start!" waitUntilDone:NO];
             
             _isReading = NO;
             
