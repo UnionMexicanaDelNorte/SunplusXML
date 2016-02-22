@@ -188,8 +188,15 @@ namespace AdministradorXML
                                     {
                                         String anteriorDiarioLinea = "";
                                         int first = 1;
-                                        diarioLinea.Clear();
-                                        totalDiarioLinea.Clear();
+                                        if (modoFlojo.Checked)
+                                        {//se revisa otra vez con lo ligado
+                                            diarioLinea.Clear();
+                                            totalDiarioLinea.Clear();
+                                        }
+                                        else//dejamos en memoria lo ligado
+                                        {
+                                            
+                                        }
                                         for(j=0;j<rfcCuentas[rfcEnTurno].Count;j++)
                                         {
                                             String cuentaEnTurno = rfcCuentas[rfcEnTurno][j];
@@ -218,7 +225,7 @@ namespace AdministradorXML
                                                         totalDiarioLinea[diarioLineaString] = totalDelMovimiento;
                                                         String DESCRIPTN = reader1.GetString(0).Trim();
                                                         double ligadoDelMovimiento = Math.Abs(Math.Round(Convert.ToDouble(reader1.GetDecimal(4)), 2));
-                                                        diarioLinea[diarioLineaString] = diarioLinea[diarioLineaString] +ligadoDelMovimiento;
+                                                        diarioLinea[diarioLineaString] = Math.Round(diarioLinea[diarioLineaString],2) +Math.Round(ligadoDelMovimiento,2);
                                                         if (!diarioLineaString.Equals(anteriorDiarioLinea))
                                                         {
                                                             disponibleEnDiarios += Math.Round((totalDiarioLinea[anteriorDiarioLinea]- diarioLinea[anteriorDiarioLinea]),2);
@@ -236,8 +243,9 @@ namespace AdministradorXML
                                                     List<string> diariosLineasKeys = new List<string>(diarioLinea.Keys);
                                                     for (int l = 0; l < diariosLineasKeys.Count; l++)
                                                     {
-                                                        if(diponibleFactura==0)
+                                                        if(diponibleFactura<0.01)
                                                         {
+                                                            diponibleFactura = 0.000;
                                                             break;
                                                         }
                                                         String diarioLineaEnTurno = diariosLineasKeys[l];
@@ -254,41 +262,45 @@ namespace AdministradorXML
                                                         {
                                                             cuantoVoyALigarRealmente = diponibleFactura;
                                                         }
-                                                        if(modoFlojo.Checked)
+                                                        if (cuantoVoyALigarRealmente>0.009)
                                                         {
-                                                            int consecutivo = 0;
-                                                            String queryCheck = "SELECT consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE BUNIT = '" + Login.unidadDeNegocioGlobal + "' and JRNAL_NO = " + diario + " and JRNAL_LINE = " + linea + " order by consecutivo desc";
-                                                            SqlCommand cmdCheckX = new SqlCommand(queryCheck, connection);
-                                                            SqlDataReader readerX = cmdCheckX.ExecuteReader();
-                                                            if (readerX.HasRows)
+                                                            if (modoFlojo.Checked)
                                                             {
-                                                                if (readerX.Read())
+                                                                int consecutivo = 0;
+                                                                String queryCheck = "SELECT consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE BUNIT = '" + Login.unidadDeNegocioGlobal + "' and JRNAL_NO = " + diario + " and JRNAL_LINE = " + linea + " order by consecutivo desc";
+                                                                SqlCommand cmdCheckX = new SqlCommand(queryCheck, connection);
+                                                                SqlDataReader readerX = cmdCheckX.ExecuteReader();
+                                                                if (readerX.HasRows)
                                                                 {
-                                                                    consecutivo = readerX.GetInt32(0);
+                                                                    if (readerX.Read())
+                                                                    {
+                                                                        consecutivo = readerX.GetInt32(0);
+                                                                    }
+                                                                }
+                                                                consecutivo++;
+                                                                String queryInsert = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE,autoligado) VALUES ('" + Login.unidadDeNegocioGlobal + "', " + diario + ", " + linea + ", '" + folioFiscal + "', " + cuantoVoyALigarRealmente + ", '1', '' , " + consecutivo + ",  '" + Login.sourceGlobal + "', " + timestamp + ")";
+                                                                using (SqlCommand cmdInsert = new SqlCommand(queryInsert, connection))
+                                                                {
+                                                                    cmdInsert.ExecuteNonQuery();
+                                                                    cuantosLigue++;
+                                                                    diponibleFactura -= Math.Round(cuantoVoyALigarRealmente, 2);
                                                                 }
                                                             }
-                                                            consecutivo++;
-                                                            String queryInsert = "INSERT INTO [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] (BUNIT,JRNAL_NO,JRNAL_LINE,FOLIO_FISCAL,AMOUNT,STATUS,XML,consecutivo,JRNAL_SOURCE,autoligado) VALUES ('" + Login.unidadDeNegocioGlobal + "', " + diario + ", " + linea + ", '" + folioFiscal + "', " + cuantoVoyALigarRealmente + ", '1', '' , " + consecutivo + ",  '" + Login.sourceGlobal + "', " + timestamp + ")";
-                                                            using (SqlCommand cmdInsert = new SqlCommand(queryInsert, connection))
+                                                            else
                                                             {
-                                                                cmdInsert.ExecuteNonQuery();
+                                                                diarioLinea[diarioLineaEnTurno] += cuantoVoyALigarRealmente;
+                                                                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                                                                dictionary.Add("cuenta", cuentaEnTurno);
+                                                                dictionary.Add("diario", diario);
+                                                                dictionary.Add("linea", linea);
+                                                                dictionary.Add("folioFiscal", folioFiscal);
+                                                                dictionary.Add("cuantoVoyALigarRealmente", cuantoVoyALigarRealmente);
+                                                                dictionary.Add("timestamp", timestamp);
+                                                                dictionary.Add("rfc", rfcEnTurno);
+                                                                listaFinal.Add(dictionary);
                                                                 cuantosLigue++;
                                                                 diponibleFactura -= cuantoVoyALigarRealmente;
                                                             }
-                                                        }
-                                                        else
-                                                        {
-                                                            Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                                                            dictionary.Add("cuenta", cuentaEnTurno);
-                                                            dictionary.Add("diario", diario);
-                                                            dictionary.Add("linea", linea);
-                                                            dictionary.Add("folioFiscal", folioFiscal);
-                                                            dictionary.Add("cuantoVoyALigarRealmente", cuantoVoyALigarRealmente);
-                                                            dictionary.Add("timestamp", timestamp);
-                                                            dictionary.Add("rfc", rfcEnTurno);
-                                                            listaFinal.Add(dictionary);
-                                                            cuantosLigue++;
-                                                            diponibleFactura -= cuantoVoyALigarRealmente;
                                                         }
                                                         //despues de hacer este insert.. debo de volver a leer las facturas pendientes por ligar?
                                                         //aunque solo leo los mov pendientes por ligar, parece que esta bien... uhm...
@@ -311,7 +323,7 @@ namespace AdministradorXML
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             if(modoFlojo.Checked)
             {
-                System.Windows.Forms.MessageBox.Show("Ses realizaron " + cuantosLigue + " ligues. Si quiere deshacer algún ligue vaya al historial de preligues.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show("Se realizaron " + cuantosLigue + " ligues. Si quiere deshacer algún ligue vaya al historial de preligues.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
