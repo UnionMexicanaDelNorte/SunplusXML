@@ -105,7 +105,7 @@ namespace AdministradorXML
                   using (SqlConnection connection = new SqlConnection(connString))
                   {
                       connection.Open();
-                      String queryXML = "SELECT rfc, razonSocial, total, folioFiscal, fechaExpedicion,STATUS FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '"+periodo+"'";
+                      String queryXML = "SELECT rfc, razonSocial, total, folioFiscal, fechaExpedicion,STATUS,ISNULL(ruta,'') as ruta FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '"+periodo+"'";
                       using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                       {
                           SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -114,6 +114,10 @@ namespace AdministradorXML
                               while (reader.Read())
                               {
                                   String rfc = reader.GetString(0).Trim();
+                                  rfc = rfc.Replace(",", "");
+                                  rfc = rfc.Replace("&", "&amp;");
+                                  rfc = rfc.Replace("\"", "");
+                              
                                   String razonSocial = reader.GetString(1).Trim();
                                   razonSocial = razonSocial.Replace(",", "");
                                   razonSocial = razonSocial.Replace("&", "&amp;");
@@ -123,8 +127,45 @@ namespace AdministradorXML
                                   String folioFiscal = reader.GetString(3).Trim();
                                   String fecha = reader.GetDateTime(4).ToString().Substring(0, 10);
                                   String STATUS = reader.GetString(5).Trim();
+                                  String ruta = reader.GetString(6).Trim();
 
-                                  cad.Append("<FAC:Factura STATUS=\"" + STATUS + "\" rfc=\"" + rfc + "\" razonSocial=\"" + razonSocial + "\" total=\"" + total + "\" folioFiscal=\"" + folioFiscal + "\" fecha=\"" + fecha + "\" />");
+                                  int donativos = 0;
+                                  
+                                  if(!ruta.Equals(""))
+                                  {
+                                      XmlDocument doc1 = new XmlDocument();
+                                      String rutaArchivo = ruta + "\\" + folioFiscal + ".xml";
+                                      try
+                                      {
+                                          doc1.Load(rutaArchivo);
+                                      }
+                                      catch (Exception err)
+                                      {
+                                          Clipboard.SetText(rutaArchivo);
+                                          MessageBox.Show(err.Message);
+                                          return;
+                                      }
+                                      XmlNodeList titles = doc1.GetElementsByTagName("donat:Donatarias");
+                                      if (titles.Count > 0)
+                                      {
+                                          donativos = 1;
+                                          /* XmlNode obj = titles.Item(0);
+                                           String noCertificadoSAT = "";
+                                           bool isNoCertificado = obj.Attributes["noCertificadoSAT"] != null;
+                                           if (isNoCertificado)
+                                           {
+                                               noCertificadoSAT = obj.Attributes["noCertificadoSAT"].InnerText;
+                                           }*/
+                                      }
+                                  }
+
+
+                                  
+                                  
+
+
+
+                                  cad.Append("<FAC:Factura STATUS=\"" + STATUS + "\" donativos=\"" + donativos + "\"  rfc=\"" + rfc + "\" razonSocial=\"" + razonSocial + "\" total=\"" + total + "\" folioFiscal=\"" + folioFiscal + "\" fecha=\"" + fecha + "\" />");
                               }
                           }
                       }
@@ -132,6 +173,7 @@ namespace AdministradorXML
               }
               catch (Exception ex)
               {
+                  Clipboard.SetText(cad.ToString());
                   ex.ToString();
               }
              cad.Append("</FAC:Facturas>");
@@ -141,6 +183,7 @@ namespace AdministradorXML
              }
              catch (Exception err)
              {
+                 Clipboard.SetText(cad.ToString());
                  MessageBox.Show(err.Message);
                  return;
              }

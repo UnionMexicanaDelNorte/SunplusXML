@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PdfFileWriter">
-      <HintPath>C:\Users\Cuacua\Downloads\PdfFileWriter.dll</HintPath>
+      <HintPath>..\..\..\..\..\Downloads\PdfFileWriter\PdfFileWriter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -149,6 +149,12 @@
     <Compile Include="Detalle2.Designer.cs">
       <DependentUpon>Detalle2.cs</DependentUpon>
     </Compile>
+    <Compile Include="EjecutarPreligue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EjecutarPreligue.Designer.cs">
+      <DependentUpon>EjecutarPreligue.cs</DependentUpon>
+    </Compile>
     <Compile Include="eligeBanco.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +178,12 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HistorialPreligues.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HistorialPreligues.Designer.cs">
+      <DependentUpon>HistorialPreligues.cs</DependentUpon>
     </Compile>
     <Compile Include="ImpuestosDetalle1.cs">
       <SubType>Form</SubType>
@@ -209,6 +221,12 @@
     <Compile Include="LigarPorCuenta.Designer.cs">
       <DependentUpon>LigarPorCuenta.cs</DependentUpon>
     </Compile>
+    <Compile Include="LigarRFCACuenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LigarRFCACuenta.Designer.cs">
+      <DependentUpon>LigarRFCACuenta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs" />
     <Compile Include="mandarPush.cs">
       <SubType>Form</SubType>
@@ -240,6 +258,12 @@
     <Compile Include="polizasDeDepartamentales.Designer.cs">
       <DependentUpon>polizasDeDepartamentales.cs</DependentUpon>
     </Compile>
+    <Compile Include="PreligueResponsable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PreligueResponsable.Designer.cs">
+      <DependentUpon>PreligueResponsable.cs</DependentUpon>
+    </Compile>
     <Compile Include="presupuestoDeDepartamentales.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +277,18 @@
     </Compile>
     <Compile Include="VerImpuestos.Designer.cs">
       <DependentUpon>VerImpuestos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VerPolizas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VerPolizas.Designer.cs">
+      <DependentUpon>VerPolizas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VerRelacionRFCCuenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VerRelacionRFCCuenta.Designer.cs">
+      <DependentUpon>VerRelacionRFCCuenta.cs</DependentUpon>
     </Compile>
     <Compile Include="XMLBalanza.cs">
       <SubType>Form</SubType>
@@ -320,6 +356,9 @@
     <EmbeddedResource Include="Detalle2.resx">
       <DependentUpon>Detalle2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EjecutarPreligue.resx">
+      <DependentUpon>EjecutarPreligue.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="eligeBanco.resx">
       <DependentUpon>eligeBanco.cs</DependentUpon>
     </EmbeddedResource>
@@ -331,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistorialPreligues.resx">
+      <DependentUpon>HistorialPreligues.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImpuestosDetalle1.resx">
       <DependentUpon>ImpuestosDetalle1.cs</DependentUpon>
@@ -350,6 +392,9 @@
     <EmbeddedResource Include="LigarPorCuenta.resx">
       <DependentUpon>LigarPorCuenta.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LigarRFCACuenta.resx">
+      <DependentUpon>LigarRFCACuenta.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mandarPush.resx">
       <DependentUpon>mandarPush.cs</DependentUpon>
     </EmbeddedResource>
@@ -365,6 +410,9 @@
     <EmbeddedResource Include="polizasDeDepartamentales.resx">
       <DependentUpon>polizasDeDepartamentales.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PreligueResponsable.resx">
+      <DependentUpon>PreligueResponsable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="presupuestoDeDepartamentales.resx">
       <DependentUpon>presupuestoDeDepartamentales.cs</DependentUpon>
     </EmbeddedResource>
@@ -379,6 +427,12 @@
     </Compile>
     <EmbeddedResource Include="VerImpuestos.resx">
       <DependentUpon>VerImpuestos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerPolizas.resx">
+      <DependentUpon>VerPolizas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerRelacionRFCCuenta.resx">
+      <DependentUpon>VerRelacionRFCCuenta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="XMLBalanza.resx">
       <DependentUpon>XMLBalanza.cs</DependentUpon>

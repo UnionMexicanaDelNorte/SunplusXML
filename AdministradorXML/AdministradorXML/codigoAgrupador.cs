@@ -102,7 +102,7 @@ namespace AdministradorXML
                                 String DESCR = reader.GetString(1).Trim();
                                 String ENTER_ANL_10 = reader.GetString(2).Trim();
                                 //si esta enlazado de esa cuenta
-                                String queryFISCAL = "SELECT codigoAgrupador,ACNT_CODE, BUNIT FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] WHERE ACNT_CODE = '"+ACNT_CODE+"' AND BUNIT = '"+Login.unidadDeNegocioGlobal+"'";
+                                String queryFISCAL = "SELECT c.codigoAgrupador,c.ACNT_CODE, c.BUNIT, s.nombre FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorCuentaSunplus] c INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[codigoAgrupadorSAT] s on c.codigoAgrupador = s.codigoAgrupador WHERE c.ACNT_CODE = '" + ACNT_CODE + "' AND c.BUNIT = '" + Login.unidadDeNegocioGlobal + "'";
                                 using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
                                 {
                                     SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
@@ -113,9 +113,12 @@ namespace AdministradorXML
                                             String codigoAgrupador = readerFISCAL.GetString(0);
                                             String ACNT_CODE2 = readerFISCAL.GetString(1);
                                             String BUNIT = readerFISCAL.GetString(2);
+                                            String nombre1 = readerFISCAL.GetString(3);
                                             Dictionary<string, object> dictionary = new Dictionary<string, object>();
                                             dictionary.Add("codigoAgrupador", codigoAgrupador);
+                                            dictionary.Add("nombre1", nombre1);
                                             dictionary.Add("ACNT_CODE2", ACNT_CODE2);
+                                            dictionary.Add("DESCR", DESCR);
                                             dictionary.Add("BUNIT", BUNIT);
                                             listaEnlazados.Add(dictionary);
                                         }
@@ -137,8 +140,11 @@ namespace AdministradorXML
                             enlazadosList.View = View.Details;
                             enlazadosList.GridLines = true;
                             enlazadosList.FullRowSelect = true;
-                            enlazadosList.Columns.Add("Código Agrupador", 200);
-                            enlazadosList.Columns.Add("Cuenta Sunplus", 200);
+                            enlazadosList.Columns.Add("Código Agrupador", 80);
+                            enlazadosList.Columns.Add("Nombre", 120);
+                            enlazadosList.Columns.Add("Cuenta Sunplus", 80);
+                            enlazadosList.Columns.Add("Nombre", 120);
+                            
                             enlazadosList.Columns.Add("Unidad", 90);
 
 
@@ -147,12 +153,14 @@ namespace AdministradorXML
                             {
                                 if (dic.ContainsKey("codigoAgrupador"))
                                 {
-                                    string[] arr = new string[4];
+                                    string[] arr = new string[6];
                                     ListViewItem itm;
                                     //add items to ListView
                                     arr[0] = Convert.ToString(dic["codigoAgrupador"]);
-                                    arr[1] = Convert.ToString(dic["ACNT_CODE2"]);
-                                    arr[2] = Convert.ToString(dic["BUNIT"]);
+                                    arr[1] = Convert.ToString(dic["nombre1"]);
+                                    arr[2] = Convert.ToString(dic["ACNT_CODE2"]);
+                                    arr[3] = Convert.ToString(dic["DESCR"]);
+                                    arr[4] = Convert.ToString(dic["BUNIT"]);
                                  
                                     itm = new ListViewItem(arr);
                                     enlazadosList.Items.Add(itm);

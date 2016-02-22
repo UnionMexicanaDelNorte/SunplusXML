@@ -170,11 +170,7 @@ namespace AdministradorXML
             ArialBoldItalic = new PdfFont(Document, FontName1, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic, true);
             TimesNormal = new PdfFont(Document, FontName2, System.Drawing.FontStyle.Regular, true);
             Comic = new PdfFont(Document, "Comic Sans MS", System.Drawing.FontStyle.Bold, true);
-            ArialNormal.CharSubstitution(9679, 9679, 161);		// euro
-            ArialNormal.CharSubstitution(1488, 1514, 162);		// hebrew
-            ArialNormal.CharSubstitution(1040, 1045, 189);		// russian
-            ArialNormal.CharSubstitution(945, 950, 195);		// greek
-            return;
+               return;
         }
         private void mandarButton_Click(object sender, EventArgs e)
         {
@@ -222,14 +218,13 @@ namespace AdministradorXML
                              
                               String fileImage = "C:" + (object)Path.DirectorySeparatorChar + "recibos" + (object)Path.DirectorySeparatorChar + "logo.jpg";
                               Contents.Translate(0.1, 10.0);
-
-                              PdfImage Image = new PdfImage(Document, fileImage, 72.0, 50);
+                              PdfImage Image = null;// new PdfImage(Document, fileImage, 72.0, 50);
                               Contents.SaveGraphicsState();
                               int top = 0;
                               int left = 0;
                               int ancho = 1;
                               int largo = 1;
-                              Contents.DrawImage(Image, left, top, ancho, largo);
+                            //  Contents.DrawImage(Image, left, top, ancho, largo);
                               Contents.RestoreGraphicsState();
                               Contents.SaveGraphicsState();
                               Contents.Translate(0.0, -9.9);

@@ -91,10 +91,17 @@ namespace SunPlusXML
         public int start { get; set; }
         public String connString { get; set; }
         public int modoGlobal { get; set; }
+        public int anoAnterior { get; set; }
       
         public Form1(int modo)
         {
             modoGlobal = modo;
+            anoAnterior = 0;
+            if(modo==3)//ultrapesado del ano anterior
+                {
+                    modoGlobal = 2;//trabaja como todo el ano
+                    anoAnterior = 1;//pero descarga la del año anterior!
+                }
             InitializeComponent();
              this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='"+Properties.Settings.Default.Password+"';connect timeout = 60";
 
@@ -102,6 +109,23 @@ namespace SunPlusXML
            
             this.timer1 = new Timer();
             this.timer1.Interval = 2000;
+            this.timer1.Tick += new EventHandler(this.timer1_Tick);
+
+        }
+        public Form1(int modo, String rfcNuevo, String ciecNueva, String correoNuevo)
+        {
+            modoGlobal = modo;
+            InitializeComponent();
+            this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
+
+            Properties.Settings.Default.RFC = rfcNuevo;
+            Properties.Settings.Default.pass = ciecNueva;
+            Properties.Settings.Default.correoReceptor = correoNuevo;
+           // Properties.Settings.Default.deboGuardar = "0";
+            Properties.Settings.Default.Save();
+
+            this.timer1 = new Timer();
+            this.timer1.Interval = 3000;
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
 
         }
@@ -227,6 +251,7 @@ namespace SunPlusXML
               try
               {
                   RFC = ((HtmlNode[])enumerable1)[0].InnerText.Replace("RFC Autenticado: ", "");
+                  rfcLabel.Text = RFC;
               }
               catch (Exception ex)
               {
@@ -269,7 +294,9 @@ namespace SunPlusXML
                           }
                       }
                   }
-                  this.AnoSel = "Recibidos" + (object)Path.DirectorySeparatorChar + this.AnoSel;
+                  this.AnoSel = RFC + (object)Path.DirectorySeparatorChar + "Recibidos" + (object)Path.DirectorySeparatorChar + this.AnoSel;
+          
+                 // this.AnoSel = "Recibidos" + (object)Path.DirectorySeparatorChar + this.AnoSel;
               }
               else
               {
@@ -293,7 +320,9 @@ namespace SunPlusXML
                   }
                   int num2 = DateTime.DaysInMonth(startDate.Year, startDate.Month);
                   this.MesSel = startDate.Month.ToString("00") + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(startDate.Month).Substring(0, 3).ToUpper();
-                  this.AnoSel = "Emitidos" + Convert.ToString(Path.DirectorySeparatorChar) + Convert.ToString( startDate.Year);
+                  this.AnoSel = Properties.Settings.Default.RFC + (object)Path.DirectorySeparatorChar + "Emitidos" + Convert.ToString(Path.DirectorySeparatorChar) + Convert.ToString(startDate.Year);
+        
+        //          this.AnoSel = "Emitidos" + Convert.ToString(Path.DirectorySeparatorChar) + Convert.ToString( startDate.Year);
               }
               foreach (HtmlNode htmlNode in htmlNodeArray)
               {
@@ -308,7 +337,7 @@ namespace SunPlusXML
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (this.tiemporec.Elapsed.Minutes != 5)
+            if (this.tiemporec.Elapsed.Minutes != 50)//5 why?
                 return;
             this.tiemporec.Restart();
             this.webView3.EvalScript("\r\n                        var boton = document.getElementById('ctl00_MainContent_BtnBusqueda');\r\n                        boton.click();\r\n                        boton.onclick();");
@@ -443,7 +472,7 @@ namespace SunPlusXML
                             {
                                 statusDeCancelado = "3";//ingreso
                             }
-
+                          
                             String query1 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '" + statusDeCancelado + "' WHERE folioFiscal = '" + UUID + "'";
                             totalDeCancelados++;
                             try
@@ -490,7 +519,7 @@ namespace SunPlusXML
                                     else
                                     {
                                         //inserto el que no eexiste
-                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (fechaExpedicion, folioFiscal,STATUS,total,rfc,razonSocial, ocultaEnLigar) VALUES ('"+fechaExpedicion+"', '" + UUID + "', '" + statusDeCancelado + "', '" + cantidad + "','" + rfcEmisor + "', '" + razonSocialEmisor + "',0)";
+                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (fechaExpedicion, folioFiscal,STATUS,total,rfc,razonSocial, ocultaEnLigar,rfcRaiz) VALUES ('" + fechaExpedicion + "', '" + UUID + "', '" + statusDeCancelado + "', '" + cantidad + "','" + rfcEmisor + "', '" + razonSocialEmisor + "',0,,'" + Properties.Settings.Default.RFC + "')";
                                         String queryCheck2 = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + UUID + "'";
                                         try
                                         {
@@ -553,7 +582,7 @@ namespace SunPlusXML
                     primeraVez = 1;
                     tmrDecimoSexto.Stop();
                     DateTime now = DateTime.Now;
-                    int year = now.Year;
+                    int year = now.Year-anoAnterior;
                  
                     tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 16 STOP";
                     if(modoGlobal==2)//ultrapesado
@@ -662,7 +691,7 @@ namespace SunPlusXML
                     tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 14 STOP";
           
                     DateTime now = DateTime.Now;
-                    int year = now.Year;
+                    int year = now.Year-anoAnterior;
                     int month = now.Month;
                     int day = now.Day;
                     String mes = month.ToString();
@@ -1060,7 +1089,7 @@ namespace SunPlusXML
                                     else
                                     {
                                         //inserto el que no eexiste
-                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,STATUS,fechaCancelacion,total,fechaExpedicion,rfc,razonSocial, ocultaEnLigar) VALUES ('" + UUID + "', '" + statusDeCancelado + "', '" + fechaCancelacion + "', '" + cantidad + "', '" + fechaExpedicion + "','" + rfcEmisor + "', '" + razonSocialEmisor + "',0)";
+                                        String query2 = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,STATUS,fechaCancelacion,total,fechaExpedicion,rfc,razonSocial, ocultaEnLigar,rfcRaiz) VALUES ('" + UUID + "', '" + statusDeCancelado + "', '" + fechaCancelacion + "', '" + cantidad + "', '" + fechaExpedicion + "','" + rfcEmisor + "', '" + razonSocialEmisor + "',0,'" + Properties.Settings.Default.RFC + "')";
                                         String queryCheck2 = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + UUID + "'";
                                         try
                                         {
@@ -1249,6 +1278,11 @@ namespace SunPlusXML
                     {
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = "+mesActual.ToString()+";");
+                        if(anoAnterior>0)//ano anterior
+                        {
+                            int year = now.Year - 2012;
+                            this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
+                        }
                     }
                     else
                     {
@@ -1378,7 +1412,7 @@ namespace SunPlusXML
                 mail2.From = new MailAddress(Properties.Settings.Default.correoEmisor);
                 mail2.To.Add(Properties.Settings.Default.correoReceptor);
                 DateTime now = DateTime.Now;
-                int year = now.Year;
+                int year = now.Year-anoAnterior;
                 int month = now.Month;
                 int day = now.Day;
                 String mes = month.ToString();
@@ -1507,6 +1541,7 @@ namespace SunPlusXML
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            modoGlobal = 2;//borrar
             Timer tmrSegundosDeVida = new Timer();
             if(modoGlobal==1)
             {
@@ -1523,8 +1558,12 @@ namespace SunPlusXML
                 }
                 else
                 {
-                    modoLabel.Text = "Modo: Pesado (Facturas de todo el mes, y un poco del anterior)";
-                    tmrSegundosDeVida.Interval = 21600000;//6 horas
+                   
+
+                        modoLabel.Text = "Modo: Pesado (Facturas de todo el mes, y un poco del anterior)";
+                        tmrSegundosDeVida.Interval = 21600000;//6 horas
+                    
+
                 }
             }
             tmrSegundosDeVida.Tick += timerHandlerSegundosDeVida;
@@ -1906,11 +1945,11 @@ namespace SunPlusXML
                        {
                            if(tipoDeComprobante.Equals("INGRESO"))
                            {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0)";
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
                            }
                            else
                            {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
                            }
                            insertaProveedor(rfcReceptor, nombreReceptor);
                        }
@@ -1918,12 +1957,12 @@ namespace SunPlusXML
                        {
                            if (tipoDeComprobante.Equals("INGRESO"))
                            {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
                    
                            }
                            else
                            {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0)";
+                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
                            }
                            //query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
                            insertaProveedor(rfc, razon);
@@ -2023,7 +2062,7 @@ namespace SunPlusXML
                                             if (!readerImpuesto.HasRows)
                                             {
                                                 readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2)";
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2,'" + Properties.Settings.Default.RFC + "')";
                                                 SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
                                                 cmdImpuesto.ExecuteNonQuery();
                                             }
@@ -2062,7 +2101,7 @@ namespace SunPlusXML
                                             if (!readerImpuesto.HasRows)
                                             {
                                                 readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2)";
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2,'" + Properties.Settings.Default.RFC + "')";
                                                 SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
                                                 cmdImpuesto.ExecuteNonQuery();
                                             }
@@ -2117,7 +2156,7 @@ namespace SunPlusXML
                                             if (!readerImpuesto.HasRows)
                                             {
                                                 readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1)";
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1,'" + Properties.Settings.Default.RFC + "')";
                                                 SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
                                                 cmdImpuesto.ExecuteNonQuery();
                                             }
@@ -2154,7 +2193,7 @@ namespace SunPlusXML
                                             if (!readerImpuesto.HasRows)
                                             {
                                                 readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1)";
+                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1,'" + Properties.Settings.Default.RFC + "')";
                                                 SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
                                                 cmdImpuesto.ExecuteNonQuery();
                                             }
@@ -2227,7 +2266,7 @@ namespace SunPlusXML
                         if(modoGlobal==2 && estoyEnEmitidos)
                         {
                              DateTime now = DateTime.Now;
-                            int year = now.Year;
+                            int year = now.Year-anoAnterior;
                             int month = now.Month;
                             if(modoGlobal==2)//ultrapesado
                             {
@@ -2310,7 +2349,7 @@ namespace SunPlusXML
                                 return;
                             }
                             DateTime now = DateTime.Now;
-                            int year = now.Year;
+                            int year = now.Year-anoAnterior;
                             int month = now.Month;
                             if(modoGlobal==2)//ultrapesado
                             {
@@ -2444,7 +2483,7 @@ namespace SunPlusXML
                         if(modoGlobal==2 && estoyEnEmitidos)//ultrapesado
                         {
                             DateTime now = DateTime.Now;
-                            int year = now.Year;
+                            int year = now.Year-anoAnterior;
                             int month = now.Month;
                             int diaFinal = 28;
                             if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
@@ -2502,7 +2541,7 @@ namespace SunPlusXML
                             if(modoGlobal==2 )//ultra pesado o pesado
                             {//saltate ese día
                                  DateTime now = DateTime.Now;
-                                int year = now.Year;
+                                int year = now.Year-anoAnterior;
                                 int month = now.Month;
                                 int diaFinal = 28;
                                 if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
@@ -2660,8 +2699,7 @@ namespace SunPlusXML
         }
         private void soloDelBuzonTributarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SoloBuzon form3 = new SoloBuzon();
-            form3.Show();
+           
         }
         private void sUFISCALToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2675,13 +2713,10 @@ namespace SunPlusXML
         }
         private void ligarMovimientoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Ligar2 ligar = new Ligar2();
-            ligar.Show();
+          
         }
         private void polizasDelMesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            polizasDelMes polizasDelMes1 = new polizasDelMes();
-            polizasDelMes1.Show();
-        }     
+          }     
     }
 }

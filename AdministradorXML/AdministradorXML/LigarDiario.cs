@@ -80,7 +80,7 @@ namespace AdministradorXML
                                             String DESCRIPTN = readerFISCAL.GetString(10);
 
 
-                                            double amount = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(4)));
+                                            double amount = Math.Round(Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(4))),2);
 
 
 
@@ -88,6 +88,12 @@ namespace AdministradorXML
                                         }
 
                                     }
+
+                                    if(total<0.01)
+                                    {
+                                        total = 0.0;
+                                    }
+
                                     if (total > 0)
                                     {
 
@@ -406,7 +412,7 @@ namespace AdministradorXML
             }
             catch (SqlException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Error Title", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
         private void llenaRazonSocial()
@@ -451,7 +457,7 @@ namespace AdministradorXML
             }
             catch (SqlException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Error Title", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
         private bool checarSiLacuentaEsDeIngresoODeEgreso(String cuentaGlobal)

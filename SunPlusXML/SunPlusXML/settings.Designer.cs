@@ -50,6 +50,7 @@
             this.passSat = new System.Windows.Forms.TextBox();
             this.correoReceptor = new System.Windows.Forms.TextBox();
             this.correoEmisor = new System.Windows.Forms.TextBox();
+            this.grabarSQL = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // database
@@ -230,6 +231,16 @@
             this.correoEmisor.Size = new System.Drawing.Size(231, 31);
             this.correoEmisor.TabIndex = 20;
             // 
+            // grabarSQL
+            // 
+            this.grabarSQL.AutoSize = true;
+            this.grabarSQL.Location = new System.Drawing.Point(430, 529);
+            this.grabarSQL.Name = "grabarSQL";
+            this.grabarSQL.Size = new System.Drawing.Size(185, 30);
+            this.grabarSQL.TabIndex = 21;
+            this.grabarSQL.Text = "Grabar en SQL";
+            this.grabarSQL.UseVisualStyleBackColor = true;
+            // 
             // settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -237,6 +248,7 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(792, 599);
+            this.Controls.Add(this.grabarSQL);
             this.Controls.Add(this.correoEmisor);
             this.Controls.Add(this.correoReceptor);
             this.Controls.Add(this.passSat);
@@ -293,5 +305,6 @@
         private System.Windows.Forms.TextBox passSat;
         private System.Windows.Forms.TextBox correoReceptor;
         private System.Windows.Forms.TextBox correoEmisor;
+        private System.Windows.Forms.CheckBox grabarSQL;
     }
 }

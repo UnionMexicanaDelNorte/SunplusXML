@@ -36,10 +36,15 @@
             this.impuestosDelMesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.facturasCanceladasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.facturasPorProveedorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.estadoDeCuentaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ligarDiarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurarDestinatariosDeIglesiaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mandarReciboDeCajaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preligueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ligarRFCACuentaSunplusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.verRelacionRfccuentaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ejecutarPreligueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeCuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeBalanzaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +66,7 @@
             this.mandarMensajeCustomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.borrarMisTemporalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.arreglarError30OctToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeCuentasToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xMLDeBalanzaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,8 +83,7 @@
             this.totalIngresosSunplusLabel = new System.Windows.Forms.Label();
             this.totalEgresosSunplusLabel = new System.Windows.Forms.Label();
             this.actualizarButton = new System.Windows.Forms.Button();
-            this.estadoDeCuentaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.arreglarError30OctToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.historialDePreliguesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -89,6 +94,7 @@
             this.bDToolStripMenuItem,
             this.verToolStripMenuItem,
             this.accionesToolStripMenuItem,
+            this.preligueToolStripMenuItem,
             this.generarToolStripMenuItem,
             this.administrarToolStripMenuItem,
             this.ayudaToolStripMenuItem,
@@ -146,6 +152,13 @@
             this.facturasPorProveedorToolStripMenuItem.Text = "Facturas por RFC";
             this.facturasPorProveedorToolStripMenuItem.Click += new System.EventHandler(this.facturasPorProveedorToolStripMenuItem_Click);
             // 
+            // estadoDeCuentaToolStripMenuItem
+            // 
+            this.estadoDeCuentaToolStripMenuItem.Name = "estadoDeCuentaToolStripMenuItem";
+            this.estadoDeCuentaToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
+            this.estadoDeCuentaToolStripMenuItem.Text = "Estado de cuenta";
+            this.estadoDeCuentaToolStripMenuItem.Click += new System.EventHandler(this.estadoDeCuentaToolStripMenuItem_Click);
+            // 
             // accionesToolStripMenuItem
             // 
             this.accionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -176,6 +189,38 @@
             this.mandarReciboDeCajaToolStripMenuItem.Size = new System.Drawing.Size(469, 40);
             this.mandarReciboDeCajaToolStripMenuItem.Text = "Mandar recibo de caja";
             this.mandarReciboDeCajaToolStripMenuItem.Click += new System.EventHandler(this.mandarReciboDeCajaToolStripMenuItem_Click);
+            // 
+            // preligueToolStripMenuItem
+            // 
+            this.preligueToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ligarRFCACuentaSunplusToolStripMenuItem,
+            this.verRelacionRfccuentaToolStripMenuItem,
+            this.ejecutarPreligueToolStripMenuItem,
+            this.historialDePreliguesToolStripMenuItem});
+            this.preligueToolStripMenuItem.Name = "preligueToolStripMenuItem";
+            this.preligueToolStripMenuItem.Size = new System.Drawing.Size(117, 39);
+            this.preligueToolStripMenuItem.Text = "Preligue";
+            // 
+            // ligarRFCACuentaSunplusToolStripMenuItem
+            // 
+            this.ligarRFCACuentaSunplusToolStripMenuItem.Name = "ligarRFCACuentaSunplusToolStripMenuItem";
+            this.ligarRFCACuentaSunplusToolStripMenuItem.Size = new System.Drawing.Size(387, 40);
+            this.ligarRFCACuentaSunplusToolStripMenuItem.Text = "Ligar RFC a cuenta sunplus";
+            this.ligarRFCACuentaSunplusToolStripMenuItem.Click += new System.EventHandler(this.ligarRFCACuentaSunplusToolStripMenuItem_Click);
+            // 
+            // verRelacionRfccuentaToolStripMenuItem
+            // 
+            this.verRelacionRfccuentaToolStripMenuItem.Name = "verRelacionRfccuentaToolStripMenuItem";
+            this.verRelacionRfccuentaToolStripMenuItem.Size = new System.Drawing.Size(387, 40);
+            this.verRelacionRfccuentaToolStripMenuItem.Text = "Ver relacion rfc-cuenta";
+            this.verRelacionRfccuentaToolStripMenuItem.Click += new System.EventHandler(this.verRelacionRfccuentaToolStripMenuItem_Click);
+            // 
+            // ejecutarPreligueToolStripMenuItem
+            // 
+            this.ejecutarPreligueToolStripMenuItem.Name = "ejecutarPreligueToolStripMenuItem";
+            this.ejecutarPreligueToolStripMenuItem.Size = new System.Drawing.Size(387, 40);
+            this.ejecutarPreligueToolStripMenuItem.Text = "Ejecutar preligue";
+            this.ejecutarPreligueToolStripMenuItem.Click += new System.EventHandler(this.ejecutarPreligueToolStripMenuItem_Click);
             // 
             // generarToolStripMenuItem
             // 
@@ -346,6 +391,13 @@
             this.borrarMisTemporalesToolStripMenuItem.Text = "Borrar mis temporales";
             this.borrarMisTemporalesToolStripMenuItem.Click += new System.EventHandler(this.borrarMisTemporalesToolStripMenuItem_Click);
             // 
+            // arreglarError30OctToolStripMenuItem
+            // 
+            this.arreglarError30OctToolStripMenuItem.Name = "arreglarError30OctToolStripMenuItem";
+            this.arreglarError30OctToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
+            this.arreglarError30OctToolStripMenuItem.Text = "Arreglar error 30 oct";
+            this.arreglarError30OctToolStripMenuItem.Click += new System.EventHandler(this.arreglarError30OctToolStripMenuItem_Click);
+            // 
             // xMLDeCuentasToolStripMenuItem1
             // 
             this.xMLDeCuentasToolStripMenuItem1.Name = "xMLDeCuentasToolStripMenuItem1";
@@ -492,19 +544,12 @@
             this.actualizarButton.UseVisualStyleBackColor = true;
             this.actualizarButton.Click += new System.EventHandler(this.actualizarButton_Click);
             // 
-            // estadoDeCuentaToolStripMenuItem
+            // historialDePreliguesToolStripMenuItem
             // 
-            this.estadoDeCuentaToolStripMenuItem.Name = "estadoDeCuentaToolStripMenuItem";
-            this.estadoDeCuentaToolStripMenuItem.Size = new System.Drawing.Size(314, 40);
-            this.estadoDeCuentaToolStripMenuItem.Text = "Estado de cuenta";
-            this.estadoDeCuentaToolStripMenuItem.Click += new System.EventHandler(this.estadoDeCuentaToolStripMenuItem_Click);
-            // 
-            // arreglarError30OctToolStripMenuItem
-            // 
-            this.arreglarError30OctToolStripMenuItem.Name = "arreglarError30OctToolStripMenuItem";
-            this.arreglarError30OctToolStripMenuItem.Size = new System.Drawing.Size(337, 40);
-            this.arreglarError30OctToolStripMenuItem.Text = "Arreglar error 30 oct";
-            this.arreglarError30OctToolStripMenuItem.Click += new System.EventHandler(this.arreglarError30OctToolStripMenuItem_Click);
+            this.historialDePreliguesToolStripMenuItem.Name = "historialDePreliguesToolStripMenuItem";
+            this.historialDePreliguesToolStripMenuItem.Size = new System.Drawing.Size(387, 40);
+            this.historialDePreliguesToolStripMenuItem.Text = "Historial de preligues";
+            this.historialDePreliguesToolStripMenuItem.Click += new System.EventHandler(this.historialDePreliguesToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -592,6 +637,11 @@
         private System.Windows.Forms.ToolStripMenuItem xMLDeFacturasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem estadoDeCuentaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem arreglarError30OctToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem preligueToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ligarRFCACuentaSunplusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem verRelacionRfccuentaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ejecutarPreligueToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem historialDePreliguesToolStripMenuItem;
     }
 }
 

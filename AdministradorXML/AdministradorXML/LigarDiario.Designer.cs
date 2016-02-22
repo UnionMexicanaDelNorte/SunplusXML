@@ -187,7 +187,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1950, 1299);
+            this.ClientSize = new System.Drawing.Size(1984, 1245);
             this.Controls.Add(this.ligarButton);
             this.Controls.Add(this.cantidadDeLaLineaText);
             this.Controls.Add(this.label6);

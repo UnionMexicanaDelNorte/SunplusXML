@@ -373,7 +373,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(2429, 1188);
+            this.ClientSize = new System.Drawing.Size(2358, 1222);
             this.Controls.Add(this.modificarButton);
             this.Controls.Add(this.cuentaBox);
             this.Controls.Add(this.label5);

@@ -38,9 +38,9 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.desactivarPreview = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.statutoryRadio = new System.Windows.Forms.RadioButton();
             this.sunplusitoRadio = new System.Windows.Forms.RadioButton();
+            this.statutoryRadio = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -125,14 +125,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "De donde agarro el código agrupador";
             // 
-            // label2
+            // sunplusitoRadio
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1575, 1053);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(18, 26);
-            this.label2.TabIndex = 9;
-            this.label2.Text = ".";
+            this.sunplusitoRadio.AutoSize = true;
+            this.sunplusitoRadio.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sunplusitoRadio.Location = new System.Drawing.Point(382, 42);
+            this.sunplusitoRadio.Name = "sunplusitoRadio";
+            this.sunplusitoRadio.Size = new System.Drawing.Size(247, 42);
+            this.sunplusitoRadio.TabIndex = 1;
+            this.sunplusitoRadio.TabStop = true;
+            this.sunplusitoRadio.Text = "Del sunplusito";
+            this.sunplusitoRadio.UseVisualStyleBackColor = true;
             // 
             // statutoryRadio
             // 
@@ -147,17 +150,14 @@
             this.statutoryRadio.Text = "Del statutory";
             this.statutoryRadio.UseVisualStyleBackColor = true;
             // 
-            // sunplusitoRadio
+            // label2
             // 
-            this.sunplusitoRadio.AutoSize = true;
-            this.sunplusitoRadio.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.06283F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sunplusitoRadio.Location = new System.Drawing.Point(382, 42);
-            this.sunplusitoRadio.Name = "sunplusitoRadio";
-            this.sunplusitoRadio.Size = new System.Drawing.Size(247, 42);
-            this.sunplusitoRadio.TabIndex = 1;
-            this.sunplusitoRadio.TabStop = true;
-            this.sunplusitoRadio.Text = "Del sunplusito";
-            this.sunplusitoRadio.UseVisualStyleBackColor = true;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1575, 1053);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(18, 26);
+            this.label2.TabIndex = 9;
+            this.label2.Text = ".";
             // 
             // XMLCuentas
             // 

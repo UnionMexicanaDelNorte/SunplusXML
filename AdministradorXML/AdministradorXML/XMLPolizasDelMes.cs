@@ -230,7 +230,9 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT c.ACCNT_CODE, a.DESCR, c.JRNAL_NO, c.JRNAL_LINE, c.TRANS_DATETIME,c.TREFERENCE, c.DESCRIPTN, f.FOLIO_FISCAL, f.CONCEPTO, f.AMOUNT, ff.rfc, f.BUNIT, c.D_C, c.AMOUNT, c.ANAL_T0, c.ANAL_T1, c.ANAL_T2, c.ANAL_T3, c.ANAL_T4, c.ANAL_T5, c.ANAL_T6, c.ANAL_T7, c.ANAL_T8, c.ANAL_T9 FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f on f.JRNAL_NO = c.JRNAL_NO AND f.JRNAL_LINE = c.JRNAL_LINE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on ff.folioFiscal = f.FOLIO_FISCAL WHERE c.PERIOD = '" + periodo + "' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
+                    //String queryXML = "SELECT c.ACCNT_CODE, a.DESCR, c.JRNAL_NO, c.JRNAL_LINE, c.TRANS_DATETIME,c.TREFERENCE, c.DESCRIPTN, f.FOLIO_FISCAL, f.CONCEPTO, f.AMOUNT, ff.rfc, f.BUNIT, c.D_C, c.AMOUNT, c.ANAL_T0, c.ANAL_T1, c.ANAL_T2, c.ANAL_T3, c.ANAL_T4, c.ANAL_T5, c.ANAL_T6, c.ANAL_T7, c.ANAL_T8, c.ANAL_T9 FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f on f.JRNAL_NO = c.JRNAL_NO AND f.JRNAL_LINE = c.JRNAL_LINE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on ff.folioFiscal = f.FOLIO_FISCAL WHERE c.PERIOD = '" + periodo + "' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
+
+                    String queryXML = "SELECT c.ACCNT_CODE, a.DESCR, c.JRNAL_NO, c.JRNAL_LINE, c.TRANS_DATETIME,c.TREFERENCE, c.DESCRIPTN, f.FOLIO_FISCAL, f.CONCEPTO, f.AMOUNT, ff.rfc, f.BUNIT, c.D_C, c.AMOUNT, c.ANAL_T0, c.ANAL_T1, c.ANAL_T2, c.ANAL_T3, c.ANAL_T4, c.ANAL_T5, c.ANAL_T6, c.ANAL_T7, c.ANAL_T8, c.ANAL_T9, ISNULL(aa.tipoDeContabilidad,0) as tipoDeContabilidad FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] a on a.ACNT_CODE = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] aa on aa.ACNT_CODE COLLATE SQL_Latin1_General_CP1_CI_AS = c.ACCNT_CODE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f on f.JRNAL_NO = c.JRNAL_NO AND f.JRNAL_LINE = c.JRNAL_LINE LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on ff.folioFiscal = f.FOLIO_FISCAL WHERE c.PERIOD = '" + periodo + "' AND aa.unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -241,23 +243,51 @@ namespace AdministradorXML
                             int diarioActual = 0, diarioAnterior = 0;
                             while (reader.Read())
                             {
-                                String ACNT_CODE = reader.GetString(0).Trim();
-                                String DESCR_ACNT_CODE = reader.GetString(1).Trim();
+                                String ACNT_CODE = ""; 
+                                if (!reader.IsDBNull(0))
+                                {
+                                    ACNT_CODE = reader.GetString(0).Trim();
+                                }
+                                String DESCR_ACNT_CODE = "";
+                                if (!reader.IsDBNull(1))
+                                {
+                                    DESCR_ACNT_CODE = reader.GetString(1).Trim();
+                                }
                                 DESCR_ACNT_CODE = DESCR_ACNT_CODE.Replace("&", "&amp;");
                                 DESCR_ACNT_CODE = DESCR_ACNT_CODE.Replace("\"", "");
-                                 
-                                
-                                String JRNAL_NO = Convert.ToString(reader.GetInt32(2)).Trim();
-                                String JRNAL_LINE = Convert.ToString(reader.GetInt32(3)).Trim();
-                                String TRANS_DATETIME = reader.GetDateTime(4).ToString().Substring(0, 10);
+
+                                DESCR_ACNT_CODE = DESCR_ACNT_CODE.Replace("<", "");
+                                DESCR_ACNT_CODE = DESCR_ACNT_CODE.Replace(">", "");
+
+
+                                String JRNAL_NO = "";
+                                if (!reader.IsDBNull(2))
+                                {
+                                    JRNAL_NO = Convert.ToString(reader.GetInt32(2)).Trim();
+                                }
+
+                                String JRNAL_LINE = "";
+                                if (!reader.IsDBNull(3))
+                                {
+                                    JRNAL_LINE = Convert.ToString(reader.GetInt32(3)).Trim();
+                                }
+                                String TRANS_DATETIME = "";
+                                if (!reader.IsDBNull(4))
+                                {
+                                    TRANS_DATETIME = reader.GetDateTime(4).ToString().Substring(0, 10);
+                                }
                                 String ano = TRANS_DATETIME.Substring(6, 4);
                                 String dia = TRANS_DATETIME.Substring(0, 2);
                                 String mes = TRANS_DATETIME.Substring(3, 2);
                                 TRANS_DATETIME = ano + "-" + mes + "-" + dia;
                                 //TRANS_DATETIME = TRANS_DATETIME.Replace("/", "-");
 
-                               
-                                String DESCRIPTN = reader.GetString(6).Trim();
+
+                                String DESCRIPTN = "";
+                                if (!reader.IsDBNull(6))
+                                {
+                                    DESCRIPTN = reader.GetString(6).Trim();
+                                }
                                 String TREFERENCE = "";
                                 if (!reader.IsDBNull(5))
                                 {
@@ -267,11 +297,17 @@ namespace AdministradorXML
                                 {
                                     TREFERENCE = DESCRIPTN;
                                 }
+                                DESCRIPTN = DESCRIPTN.Replace("<", "");
+                                DESCRIPTN = DESCRIPTN.Replace(">", "");
+                              
                                 DESCRIPTN = DESCRIPTN.Replace("&", "&amp;");
                                 TREFERENCE = TREFERENCE.Replace("&", "&amp;");
                                 DESCRIPTN = DESCRIPTN.Replace("\"", "");
                                 TREFERENCE = TREFERENCE.Replace("\"", "");
-                                
+                                TREFERENCE = TREFERENCE.Replace("<", "");
+                                TREFERENCE = TREFERENCE.Replace(">", "");
+                              
+
                                 String FOLIO_FISCAL = "";
                                 String CONCEPTO = "";
                                 String rfc = "";
@@ -280,24 +316,94 @@ namespace AdministradorXML
                                 if (!reader.IsDBNull(7))
                                 {
                                      FOLIO_FISCAL = reader.GetString(7).Trim();
-                                     CONCEPTO = reader.GetString(8).Trim();
-                                     rfc = reader.GetString(10).Trim();
-                                     BUNIT = reader.GetString(11).Trim();
-                                     AMOUNT_FISCAL = Convert.ToString(reader.GetDecimal(9));
-                                } 
+                                     if (!reader.IsDBNull(8))
+                                     {
+                                         CONCEPTO = reader.GetString(8).Trim();
+                                     }
+                                     if (!reader.IsDBNull(10))
+                                     {
+                                         rfc = reader.GetString(10).Trim();
+                                     }
+                                     if (!reader.IsDBNull(11))
+                                     {
+                                         BUNIT = reader.GetString(11).Trim();
+                                     }
+                                     if (!reader.IsDBNull(9))
+                                     {
+                                         AMOUNT_FISCAL = Convert.ToString(reader.GetDecimal(9));
+                                     }
+                                }
 
-                                String D_C = reader.GetString(12).Trim();
-                                String AMOUNT_SUNPLUS = Convert.ToString(reader.GetDecimal(13)).Trim();
-                                String ANAL_T0 = reader.GetString(14).Trim();
-                                String ANAL_T1 = reader.GetString(15).Trim();
-                                String ANAL_T2 = reader.GetString(16).Trim();
-                                String ANAL_T3 = reader.GetString(17).Trim();
-                                String ANAL_T4 = reader.GetString(18).Trim();
-                                String ANAL_T5 = reader.GetString(19).Trim();
-                                String ANAL_T6 = reader.GetString(20).Trim();
-                                String ANAL_T7 = reader.GetString(21).Trim();
-                                String ANAL_T8 = reader.GetString(22).Trim();
-                                String ANAL_T9 = reader.GetString(23).Trim();
+                                String D_C = "";
+                                if (!reader.IsDBNull(12))
+                                {
+                                    D_C = reader.GetString(12).Trim();
+                                }
+                                String AMOUNT_SUNPLUS = "";
+                                if (!reader.IsDBNull(13))
+                                {
+                                    AMOUNT_SUNPLUS = Convert.ToString(reader.GetDecimal(13)).Trim();
+                                }
+                                String ANAL_T0 = "";
+                                String ANAL_T1 = "";
+                                String ANAL_T2 = "";
+                                String ANAL_T3 = "";
+                                String ANAL_T4 = "";
+                                String ANAL_T5 = "";
+                                String ANAL_T6 = "";
+                                String ANAL_T7 = "";
+                                String ANAL_T8 = "";
+                                String ANAL_T9 = "";
+                                String tipoDeContabilidad = "0";
+                               
+                                
+                                if (!reader.IsDBNull(14))
+                                {
+                                    ANAL_T0 = reader.GetString(14).Trim();
+                                }
+
+                                if (!reader.IsDBNull(15))
+                                {
+                                    ANAL_T1 = reader.GetString(15).Trim();
+                                }
+                                if (!reader.IsDBNull(16))
+                                {
+                                    ANAL_T2 = reader.GetString(16).Trim();
+                                }
+                                if (!reader.IsDBNull(17))
+                                {
+                                    ANAL_T3 = reader.GetString(17).Trim();
+                                }
+                                if (!reader.IsDBNull(18))
+                                {
+                                    ANAL_T4 = reader.GetString(18).Trim();
+                                }
+                                if (!reader.IsDBNull(19))
+                                {
+                                    ANAL_T5 = reader.GetString(19).Trim();
+                                }
+                                if (!reader.IsDBNull(20))
+                                {
+                                    ANAL_T6 = reader.GetString(20).Trim();
+                                }
+                                if (!reader.IsDBNull(21))
+                                {
+                                    ANAL_T7 = reader.GetString(21).Trim();
+                                }
+                                if (!reader.IsDBNull(22))
+                                {
+                                    ANAL_T8 = reader.GetString(22).Trim();
+                                }
+                                if (!reader.IsDBNull(23))
+                                {
+                                    ANAL_T9 = reader.GetString(23).Trim();
+                                }
+                                if (!reader.IsDBNull(24))
+                                {
+                                    tipoDeContabilidad = Convert.ToString( reader.GetInt32(24));
+                                }
+                                 
+                               
                                 
                                 if (first)
                                 {
@@ -316,6 +422,11 @@ namespace AdministradorXML
                                     }
                                     cualConceptoTomo = cualConceptoTomo.Replace("&", "&amp;");
                                     cualConceptoTomo = cualConceptoTomo.Replace("\"", "");
+
+                                    cualConceptoTomo = cualConceptoTomo.Replace("<", "");
+                                    cualConceptoTomo = cualConceptoTomo.Replace(">", "");
+                              
+
                                 
                                     cad.Append("<PLZ:Poliza NumUnIdenPol=\"" + JRNAL_NO + "\" Fecha=\"" + TRANS_DATETIME + "\"  Concepto=\"" + cualConceptoTomo + "\" >");
                                 }
@@ -339,7 +450,9 @@ namespace AdministradorXML
                                     }
                                     cualConceptoTomo = cualConceptoTomo.Replace("&", "&amp;");
                                     cualConceptoTomo = cualConceptoTomo.Replace("\"", "");
-                                
+                                    cualConceptoTomo = cualConceptoTomo.Replace("<", "");
+                                    cualConceptoTomo = cualConceptoTomo.Replace(">", "");
+                              
                                     cad.Append("</PLZ:Poliza><PLZ:Poliza NumUnIdenPol=\"" + JRNAL_NO + "\" Fecha=\"" + TRANS_DATETIME + "\"  Concepto=\"" + cualConceptoTomo + "\" >");
 
                                 }
@@ -361,7 +474,7 @@ namespace AdministradorXML
                                 }
                                 if(paraSatsito.Checked)
                                 {
-                                    cad.Append("<PLZ:Transaccion NumCta=\"" + ACNT_CODE + "\" DesCta=\"" + DESCR_ACNT_CODE + "\" Concepto=\"" + DESCRIPTN + "\" Debe=\"" + debe + "\" Haber=\"" + haber + "\" ANAL_T0=\"" + ANAL_T0 + "\" ANAL_T1=\"" + ANAL_T1 + "\" ANAL_T2=\"" + ANAL_T2 + "\" ANAL_T3=\"" + ANAL_T3 + "\" ANAL_T4=\"" + ANAL_T4 + "\" ANAL_T5=\"" + ANAL_T5 + "\"  ANAL_T6=\"" + ANAL_T6 + "\" ANAL_T7=\"" + ANAL_T7 + "\" ANAL_T8=\"" + ANAL_T8 + "\" ANAL_T9=\"" + ANAL_T9 + "\" >");
+                                    cad.Append("<PLZ:Transaccion NumCta=\"" + ACNT_CODE + "\" DesCta=\"" + DESCR_ACNT_CODE + "\" Concepto=\"" + DESCRIPTN + "\" Debe=\"" + debe + "\" Haber=\"" + haber + "\" ANAL_T0=\"" + ANAL_T0 + "\" ANAL_T1=\"" + ANAL_T1 + "\" ANAL_T2=\"" + ANAL_T2 + "\" ANAL_T3=\"" + ANAL_T3 + "\" ANAL_T4=\"" + ANAL_T4 + "\" ANAL_T5=\"" + ANAL_T5 + "\"  ANAL_T6=\"" + ANAL_T6 + "\" ANAL_T7=\"" + ANAL_T7 + "\" ANAL_T8=\"" + ANAL_T8 + "\" ANAL_T9=\"" + ANAL_T9 + "\"  tipoDeContabilidad=\"" + tipoDeContabilidad + "\" >");
                                 }
                                 else
                                 {
@@ -399,6 +512,7 @@ namespace AdministradorXML
             }
             catch (Exception err)
             {
+                Clipboard.SetText(cad.ToString());
                 this.Cursor = System.Windows.Forms.Cursors.Arrow;
            
                 MessageBox.Show(err.Message);

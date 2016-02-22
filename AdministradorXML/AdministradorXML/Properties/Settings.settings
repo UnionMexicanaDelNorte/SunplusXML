@@ -6,7 +6,7 @@
       <Value Profile="(Default)">SUNPLUSADV</Value>
     </Setting>
     <Setting Name="datasource" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SONORA</Value>
+      <Value Profile="(Default)">SUNPLUSNORESTE</Value>
     </Setting>
     <Setting Name="databaseFiscal" Type="System.String" Scope="User">
       <Value Profile="(Default)">SU_FISCAL</Value>

@@ -37,6 +37,14 @@ namespace SunPlusXML
             correoEmisor.Text = Properties.Settings.Default.correoEmisor;
             correoReceptor.Text = Properties.Settings.Default.correoReceptor;
             passCorreo.Text = Properties.Settings.Default.passEmisor;
+            if(Properties.Settings.Default.deboGuardar.Equals("1"))
+            {
+                grabarSQL.Checked = true;
+            }
+            else
+            {
+                grabarSQL.Checked = false;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,6 +63,12 @@ namespace SunPlusXML
             Properties.Settings.Default.correoEmisor = correoEmisor.Text;
             Properties.Settings.Default.correoReceptor = correoReceptor.Text;
             Properties.Settings.Default.passEmisor = passCorreo.Text;
+            String grabarSQLS = "0";
+            if(grabarSQL.Checked)
+            {
+                grabarSQLS = "1";
+            }
+            Properties.Settings.Default.deboGuardar = grabarSQLS;
             Properties.Settings.Default.Save();
         }
 
@@ -69,6 +83,12 @@ namespace SunPlusXML
             Properties.Settings.Default.correoEmisor = correoEmisor.Text;
             Properties.Settings.Default.correoReceptor = correoReceptor.Text;
             Properties.Settings.Default.passEmisor = passCorreo.Text;
+            String grabarSQLS = "0";
+            if (grabarSQL.Checked)
+            {
+                grabarSQLS = "1";
+            }
+            Properties.Settings.Default.deboGuardar = grabarSQLS;
             Properties.Settings.Default.Save();
             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
             String queryCheck = "USE [" + Properties.Settings.Default.Database + "] SELECT name FROM sys.tables";

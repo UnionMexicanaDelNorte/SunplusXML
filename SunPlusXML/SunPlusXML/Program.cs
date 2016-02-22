@@ -71,7 +71,15 @@ namespace SunPlusXML
 
             if (args.Length >0)
             {
-                Application.Run(new Form1(Convert.ToInt32(args[0])));//modo ligero = 1, modo ultrapesado=  2
+                if(args.Length==1)
+                {
+                    Application.Run(new Form1(Convert.ToInt32(args[0])));//modo ligero = 1, modo ultrapesado=  2, modo ultrapesado ano anterior = 3
+                }
+                else
+                {
+                    Application.Run(new Form1(Convert.ToInt32(args[0]), args[1], args[2], args[3]));
+                }
+                
             }
             else
             {

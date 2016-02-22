@@ -44,6 +44,7 @@
             this.tiempoHastaTrigger = new System.Windows.Forms.Label();
             this.modoLabel = new System.Windows.Forms.Label();
             this.segundosDeVidaLabel = new System.Windows.Forms.Label();
+            this.rfcLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,7 +103,7 @@
             this.ayudaToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2079, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(2113, 43);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -171,13 +172,22 @@
             this.segundosDeVidaLabel.Size = new System.Drawing.Size(0, 26);
             this.segundosDeVidaLabel.TabIndex = 9;
             // 
+            // rfcLabel
+            // 
+            this.rfcLabel.AutoSize = true;
+            this.rfcLabel.Location = new System.Drawing.Point(44, 70);
+            this.rfcLabel.Name = "rfcLabel";
+            this.rfcLabel.Size = new System.Drawing.Size(0, 26);
+            this.rfcLabel.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(2113, 1297);
+            this.ClientSize = new System.Drawing.Size(2147, 1243);
+            this.Controls.Add(this.rfcLabel);
             this.Controls.Add(this.segundosDeVidaLabel);
             this.Controls.Add(this.modoLabel);
             this.Controls.Add(this.tiempoHastaTrigger);
@@ -216,6 +226,7 @@
         private System.Windows.Forms.Label tiempoHastaTrigger;
         private System.Windows.Forms.Label modoLabel;
         private System.Windows.Forms.Label segundosDeVidaLabel;
+        private System.Windows.Forms.Label rfcLabel;
     }
 }
 

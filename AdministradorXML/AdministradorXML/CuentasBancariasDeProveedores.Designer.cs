@@ -91,7 +91,7 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.17801F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(44, 232);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(544, 32);
+            this.label3.Size = new System.Drawing.Size(524, 31);
             this.label3.TabIndex = 5;
             this.label3.Text = "Cuentas bancarias asociadas a este RFC:";
             // 

@@ -229,9 +229,10 @@ namespace AdministradorXML
 
             gastosSunplusList.Location = new Point((width / 2) + (posX / 2), posY + (height / 2) - (posY * 2) + posY);
             gastosSunplusList.Size = new Size((width / 2) - (posX * 2), (height / 2) - (posY * 2));
+            //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
+          
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL' order by SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) asc";
-            //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
            
             try
             {
@@ -423,7 +424,7 @@ namespace AdministradorXML
                                     {
                                         amount = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(1)));
                                         folioFiscal = readerFISCAL.GetString(0);
-                                        //ingresos
+                                        //gastos
                                         String queryFISCAL2 = "SELECT rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folioFiscal + "' AND SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7)  = '" + periodo + "' AND STATUS = '1'";
                                         using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
                                         {
@@ -1152,6 +1153,30 @@ namespace AdministradorXML
             {
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }   
+        }
+
+        private void ligarRFCACuentaSunplusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LigarRFCACuenta form = new LigarRFCACuenta();
+            form.Show();
+        }
+
+        private void ejecutarPreligueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EjecutarPreligue form = new EjecutarPreligue();
+            form.Show();
+        }
+
+        private void verRelacionRfccuentaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            VerRelacionRFCCuenta form = new VerRelacionRFCCuenta();
+            form.Show();
+        }
+
+        private void historialDePreliguesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HistorialPreligues form = new HistorialPreligues();
+            form.Show();
         }
     }
 }

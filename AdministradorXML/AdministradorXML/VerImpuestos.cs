@@ -207,7 +207,8 @@ namespace AdministradorXML
                             {
                                 while (reader.Read())
                                 {
-                                    contadoresImpuestos[reader.GetString(0)] = 0.0;
+                                    //Impuesto Sobre Hospedaje
+                                    contadoresImpuestos[reader.GetString(0).Trim().ToUpper()] = 0.0;
                                 }
                             }
                         }
@@ -238,9 +239,9 @@ namespace AdministradorXML
                                     {
                                         while (reader1.Read())
                                         {
-                                            String impuesto = reader1.GetString(0).Trim();
+                                            String impuesto = reader1.GetString(0).Trim().ToUpper();
                                             double importe = reader1.GetDouble(1);
-                                            contadoresImpuestos[impuesto] += importe;
+                                             contadoresImpuestos[impuesto] += importe;
                                         }
                                     }
                                 }  

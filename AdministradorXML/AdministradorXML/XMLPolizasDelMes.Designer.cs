@@ -42,8 +42,8 @@
             this.guardarButton = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.paraElSAT = new System.Windows.Forms.RadioButton();
             this.paraSatsito = new System.Windows.Forms.RadioButton();
+            this.paraElSAT = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -164,6 +164,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tipo de archivo";
             // 
+            // paraSatsito
+            // 
+            this.paraSatsito.AutoSize = true;
+            this.paraSatsito.Location = new System.Drawing.Point(212, 42);
+            this.paraSatsito.Name = "paraSatsito";
+            this.paraSatsito.Size = new System.Drawing.Size(156, 30);
+            this.paraSatsito.TabIndex = 1;
+            this.paraSatsito.TabStop = true;
+            this.paraSatsito.Text = "Para Satsito";
+            this.paraSatsito.UseVisualStyleBackColor = true;
+            // 
             // paraElSAT
             // 
             this.paraElSAT.AutoSize = true;
@@ -175,17 +186,6 @@
             this.paraElSAT.TabStop = true;
             this.paraElSAT.Text = "Para el SAT";
             this.paraElSAT.UseVisualStyleBackColor = true;
-            // 
-            // paraSatsito
-            // 
-            this.paraSatsito.AutoSize = true;
-            this.paraSatsito.Location = new System.Drawing.Point(212, 42);
-            this.paraSatsito.Name = "paraSatsito";
-            this.paraSatsito.Size = new System.Drawing.Size(156, 30);
-            this.paraSatsito.TabIndex = 1;
-            this.paraSatsito.TabStop = true;
-            this.paraSatsito.Text = "Para Satsito";
-            this.paraSatsito.UseVisualStyleBackColor = true;
             // 
             // XMLPolizasDelMes
             // 

@@ -79,7 +79,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1790, 1297);
+            this.ClientSize = new System.Drawing.Size(1824, 1245);
             this.Controls.Add(this.enlazadosList);
             this.Controls.Add(this.enlazadosLabel);
             this.Controls.Add(this.diariosList);

@@ -79,10 +79,6 @@ namespace AdministradorXML
             ArialBoldItalic = new PdfFont(Document, FontName1, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic, true);
             TimesNormal = new PdfFont(Document, FontName2, System.Drawing.FontStyle.Regular, true);
             Comic = new PdfFont(Document, "Comic Sans MS", System.Drawing.FontStyle.Bold, true);
-            ArialNormal.CharSubstitution(9679, 9679, 161);		// euro
-            ArialNormal.CharSubstitution(1488, 1514, 162);		// hebrew
-            ArialNormal.CharSubstitution(1040, 1045, 189);		// russian
-            ArialNormal.CharSubstitution(945, 950, 195);		// greek
             return;
         }
         public EstadoDeCuenta()

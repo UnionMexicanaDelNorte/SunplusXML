@@ -226,5 +226,17 @@ namespace SunPlusXML.Properties {
                 this["passEmisor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string deboGuardar {
+            get {
+                return ((string)(this["deboGuardar"]));
+            }
+            set {
+                this["deboGuardar"] = value;
+            }
+        }
     }
 }
