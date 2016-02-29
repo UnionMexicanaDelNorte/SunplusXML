@@ -133,7 +133,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT rfc, ACNT_CODE, prioridad FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[rfcCuentasPreferidas] WHERE BUNIT = '" + Login.unidadDeNegocioGlobal + "' order by rfc asc, prioridad asc";
+                    String queryXML = "SELECT rfc, ACNT_CODE, prioridad,ANAL_T0,ANAL_T1,ANAL_T2,ANAL_T3,ANAL_T4,ANAL_T5,ANAL_T6,ANAL_T7,ANAL_T8,ANAL_T9 FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[rfcCuentasPreferidas] WHERE BUNIT = '" + Login.unidadDeNegocioGlobal + "' order by rfc asc, prioridad asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -143,11 +143,23 @@ namespace AdministradorXML
                             {
                                 String rfc = reader.GetString(0).Trim().ToUpper();
                                 String cuenta = reader.GetString(1).Trim().ToUpper();
+
+                                String a0 = reader.GetString(3).Trim();
+                                String a1 = reader.GetString(4).Trim();
+                                String a2 = reader.GetString(5).Trim();
+                                String a3 = reader.GetString(6).Trim();
+                                String a4 = reader.GetString(7).Trim();
+                                String a5 = reader.GetString(8).Trim();
+                                String a6 = reader.GetString(9).Trim();
+                                String a7 = reader.GetString(10).Trim();
+                                String a8 = reader.GetString(11).Trim();
+                                String a9 = reader.GetString(12).Trim();
+                                String cosa = cuenta + "|" + a0 + "|" + a1 + "|" + a2 + "|" + a3 + "|" + a4 + "|" + a5 + "|" + a6 + "|" + a7 + "|" + a8 + "|" + a9;
                                 if(!rfcCuentas.ContainsKey(rfc))
                                 {
                                     rfcCuentas[rfc] = new List<string>();
                                 }
-                                rfcCuentas[rfc].Add(cuenta);
+                                rfcCuentas[rfc].Add(cosa);
                             }
                         }
                     }
@@ -199,9 +211,66 @@ namespace AdministradorXML
                                         }
                                         for(j=0;j<rfcCuentas[rfcEnTurno].Count;j++)
                                         {
-                                            String cuentaEnTurno = rfcCuentas[rfcEnTurno][j];
+                                            String cosaEnTurno = rfcCuentas[rfcEnTurno][j];
+                                            String[] arrayAuxX = cosaEnTurno.Split('|');
+                                            String cuentaEnTurno = arrayAuxX[0];
+                                            String aa0 = arrayAuxX[1];
+                                            String aa1 = arrayAuxX[2];
+                                            String aa2 = arrayAuxX[3];
+                                            String aa3 = arrayAuxX[4];
+                                            String aa4 = arrayAuxX[5];
+                                            String aa5 = arrayAuxX[6];
+                                            String aa6 = arrayAuxX[7];
+                                            String aa7 = arrayAuxX[8];
+                                            String aa8 = arrayAuxX[9];
+                                            String aa9 = arrayAuxX[10];
+
+
+                                            StringBuilder queryDimensiones = new StringBuilder("");
+                                            if (!aa0.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T0 = '" + aa0 + "'");
+                                            }
+                                            if (!aa1.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T1 = '" + aa1 + "'");
+                                            }
+                                            if (!aa2.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T2 = '" + aa2 + "'");
+                                            }
+                                            if (!aa3.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T3 = '" + aa3 + "'");
+                                            }
+                                            if (!aa4.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T4 = '" + aa4 + "'");
+                                            }
+                                            if (!aa5.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T5 = '" + aa5 + "'");
+                                            }
+                                            if (!aa6.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T6 = '" + aa6 + "'");
+                                            }
+                                            if (!aa7.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T7 = '" + aa7 + "'");
+                                            }
+                                            if (!aa8.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T8 = '" + aa8 + "'");
+                                            }
+                                            if (!aa9.Equals(""))
+                                            {
+                                                queryDimensiones.Append(" AND c.ANAL_T9 = '" + aa9 + "'");
+                                            }
+            
+                                                       
                                             //solo gastos D_C="debitos"
-                                            String queryXML1 = "SELECT c.DESCRIPTN, c.JRNAL_NO , c.JRNAL_LINE,c.AMOUNT, ISNULL(ff.AMOUNT,0)as ligado, ISNULL(ff.FOLIO_FISCAL,'0') as folioFiscal FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] ff on ff.JRNAL_NO = c.JRNAL_NO AND ff.JRNAL_LINE=c.JRNAL_LINE WHERE c.ACCNT_CODE = '" + cuentaEnTurno + "' AND SUBSTRING( CAST(c.PERIOD AS NVARCHAR(10)),1," + periodoParaElLibroA.Length + ") = '" + periodoParaElLibroA + "' AND c.D_C = 'D' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
+                                            String queryXML1 = "SELECT c.DESCRIPTN, c.JRNAL_NO , c.JRNAL_LINE,c.AMOUNT, ISNULL(ff.AMOUNT,0)as ligado, ISNULL(ff.FOLIO_FISCAL,'0') as folioFiscal FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] c LEFT JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] ff on ff.JRNAL_NO = c.JRNAL_NO AND ff.JRNAL_LINE=c.JRNAL_LINE WHERE c.ACCNT_CODE = '" + cuentaEnTurno + "' AND SUBSTRING( CAST(c.PERIOD AS NVARCHAR(10)),1," + periodoParaElLibroA.Length + ") = '" + periodoParaElLibroA + "' "+queryDimensiones.ToString()+" AND c.D_C = 'D' order by c.JRNAL_NO asc, c.JRNAL_LINE asc";
                                             using (SqlCommand cmdCheck1 = new SqlCommand(queryXML1, connection))
                                             {
                                                 SqlDataReader reader1 = cmdCheck1.ExecuteReader();

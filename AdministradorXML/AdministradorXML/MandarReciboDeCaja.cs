@@ -61,7 +61,14 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     String queryXML = "";
-                    queryXML = "SELECT DISTINCT JRNAL_NO FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ANAL_T5 = '"+iglesiaText.Text+"'";
+                    if(Login.unidadDeNegocioGlobal.Equals("FOP"))
+                    {
+                        queryXML = "SELECT DISTINCT JRNAL_NO FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ANAL_T9 = '" + iglesiaText.Text + "'";
+                    }
+                    else
+                    {
+                        queryXML = "SELECT DISTINCT JRNAL_NO FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE ANAL_T5 = '" + iglesiaText.Text + "'";
+                    }
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -89,6 +96,10 @@ namespace AdministradorXML
         }
         private void MandarReciboDeCaja_Load(object sender, EventArgs e)
         {
+            if(Login.unidadDeNegocioGlobal.Equals("FOP"))
+            {
+                label1.Text = "P:";
+            }
             var source = new AutoCompleteStringCollection();
            
             List<String> iglesias = new List<String>();
@@ -184,7 +195,14 @@ namespace AdministradorXML
                   {
                       connection.Open();
                       String queryXML = "";
-                      queryXML = "SELECT b.ADDR_LINE_1,b.ADDR_LINE_2,b.ADDR_LINE_3,b.ADDR_LINE_4,b.ADDR_LINE_5  , a.AMOUNT, a.TRANS_DATETIME,a.DESCRIPTN,a.JRNAL_SRCE, a.ANAL_T0,a.ACCNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_"+Properties.Settings.Default.sunLibro+"_SALFLDG] a INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].["+Login.unidadDeNegocioGlobal+"_ADDR] b on a.ANAL_T2 = b.ADDR_CODE WHERE a.JRNAL_NO = " + diarioText.Text + " AND a.ANAL_T5 = '" + iglesiaText.Text + "'";
+                      if(Login.unidadDeNegocioGlobal.Equals("FOP"))
+                      {
+                          queryXML = "SELECT b.ADDR_LINE_1,b.ADDR_LINE_2,b.ADDR_LINE_3,b.ADDR_LINE_4,b.ADDR_LINE_5  , a.AMOUNT, a.TRANS_DATETIME,a.DESCRIPTN,a.JRNAL_SRCE, a.ANAL_T0,a.ACCNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] a INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ADDR] b on a.ANAL_T2 = b.ADDR_CODE WHERE a.JRNAL_NO = " + diarioText.Text + " AND a.ANAL_T9 = '" + iglesiaText.Text + "'";
+                      }
+                      else
+                      {
+                          queryXML = "SELECT b.ADDR_LINE_1,b.ADDR_LINE_2,b.ADDR_LINE_3,b.ADDR_LINE_4,b.ADDR_LINE_5  , a.AMOUNT, a.TRANS_DATETIME,a.DESCRIPTN,a.JRNAL_SRCE, a.ANAL_T0,a.ACCNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] a INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ADDR] b on a.ANAL_T2 = b.ADDR_CODE WHERE a.JRNAL_NO = " + diarioText.Text + " AND a.ANAL_T5 = '" + iglesiaText.Text + "'";
+                      }
                       using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                       {
                           String saveANAL="";
@@ -218,13 +236,15 @@ namespace AdministradorXML
                              
                               String fileImage = "C:" + (object)Path.DirectorySeparatorChar + "recibos" + (object)Path.DirectorySeparatorChar + "logo.jpg";
                               Contents.Translate(0.1, 10.0);
-                              PdfImage Image = null;// new PdfImage(Document, fileImage, 72.0, 50);
+                              PdfImageControl ImageControl = new PdfImageControl();
+                              ImageControl.Resolution = 300.0;
+                              PdfImage Image = new PdfImage(Document, fileImage, ImageControl); //new PdfImage(Document, fileImage, 72.0, 50);
                               Contents.SaveGraphicsState();
                               int top = 0;
                               int left = 0;
                               int ancho = 1;
                               int largo = 1;
-                            //  Contents.DrawImage(Image, left, top, ancho, largo);
+                              Contents.DrawImage(Image, left, top, ancho, largo);
                               Contents.RestoreGraphicsState();
                               Contents.SaveGraphicsState();
                               Contents.Translate(0.0, -9.9);
@@ -267,10 +287,10 @@ namespace AdministradorXML
                                   {
                                       first = false;
                                       primeros.Append("                                          " + ADDR_LINE_1 + "\n" +
-                                        "                                                    "+ADDR_LINE_2 + "\n" +
-                                     "                                      "+ADDR_LINE_3 + "\n" +
-                                     "                                                    "+ADDR_LINE_4 + "\n" +
-                                     "                                          "+ADDR_LINE_5 + "\n\n");
+                                        "                                          " + ADDR_LINE_2 + "\n" +
+                                     "                                          " + ADDR_LINE_3 + "\n" +
+                                     "                                          " + ADDR_LINE_4 + "\n" +
+                                     "                                          " + ADDR_LINE_5 + "\n\n");
                                       cad.Append(" Fecha de recepción: " + fecha + "\n");
 
                                       letrasGrandes.Append(" Recibido de " + DESCR + "\n");
@@ -327,8 +347,18 @@ namespace AdministradorXML
                                     {
                                         dia = "0" + day;
                                     }
-                                    mail2.Subject = "Recibo de caja del dia: " + saveFecha + " de la iglesia " + iglesiaText.Text; ;
-                                    mail2.Body = "Hola " + nombreLabel.Text + ", por este medio le envio el recibo de caja de la iglesia " + iglesiaText.Text;
+                                    if(Login.unidadDeNegocioGlobal.Equals("FOP"))
+                                    {
+                                        mail2.Subject = "Recibo del dia: " + saveFecha + " del diario "+diarioText.Text+" de FORPOUMN " + iglesiaText.Text ;
+                                        mail2.Body = "Hola " + nombreLabel.Text + ", por este medio le envio el recibo de FOPROUMN correspondiente al diario "+diarioText.Text+". Dios lo bendiga. ";
+                                    }
+                                    else
+                                    {
+                                        mail2.Subject = "Recibo de caja del dia: " + saveFecha + " de la iglesia " + iglesiaText.Text; 
+                                        mail2.Body = "Hola " + nombreLabel.Text + ", por este medio le envio el recibo de caja de la iglesia " + iglesiaText.Text;
+                                    }
+                                    
+                                    
                                     Attachment pdf = new Attachment(FileName);
                                     mail2.Attachments.Add(pdf);
                                     SmtpServer.Port = 587;

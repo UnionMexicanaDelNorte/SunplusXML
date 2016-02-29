@@ -58,8 +58,8 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-            AdministradorXML.Login.sourceGlobal = "AOK";//borrar
-            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
+          //  AdministradorXML.Login.sourceGlobal = "AOK";//borrar
+           // AdministradorXML.Login.unidadDeNegocioGlobal = "FOP";
         }
 
         public Form1(String s, String bunit)
