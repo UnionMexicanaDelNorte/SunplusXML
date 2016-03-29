@@ -1769,591 +1769,602 @@ namespace SunPlusXML
                     DownloadItem archivoXML = e.Item;
                     
                     String full = archivoXML.FullPath;
-                   
-                    String []fullArray  = full.Split('\\');
-                    String nombreDelArchivo = fullArray.Last();
-                    
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(full);
-                    XmlNodeList titles = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
-                    XmlNode obj = titles.Item(0);
-
-                    String noCertificadoSAT = "";
-                    bool isNoCertificado = obj.Attributes["noCertificadoSAT"] != null;
-                    if (isNoCertificado)
+                    if (new FileInfo(full).Length == 0)
                     {
-                        noCertificadoSAT = obj.Attributes["noCertificadoSAT"].InnerText;
-                    }
-
-                    String selloCFD = "";
-                    bool isselloCFD = obj.Attributes["selloCFD"] != null;
-                    if (isselloCFD)
-                    {
-                        selloCFD = obj.Attributes["selloCFD"].InnerText;
-                    }
-
-                    String selloSAT = "";
-                    bool isselloSAT = obj.Attributes["selloSAT"] != null;
-                    if (isselloSAT)
-                    {
-                        selloSAT = obj.Attributes["selloSAT"].InnerText;
-                    }
-
-
-
-
-
-                    String folio_fiscal = obj.Attributes["UUID"].InnerText;
-                    folio_fiscal = folio_fiscal.ToUpper();
-                   
-                    XmlNodeList titlesx = doc.GetElementsByTagName("cfdi:Receptor");
-                    if(titlesx.Count==0)
-                    {
-                        titlesx = doc.GetElementsByTagName("Receptor");
-                    }
-
-                    XmlNode objx = titlesx.Item(0);
-                    String rfcReceptor = "";
-                    String nombreReceptor = "";
-                    bool isRFCrfcReceptor = objx.Attributes["rfc"] != null;
-                    if (isRFCrfcReceptor)
-                    {
-                        rfcReceptor = objx.Attributes["rfc"].InnerText.Trim();
-                    }
-                    bool isRFCNombreReceptor = objx.Attributes["nombre"] != null;
-                    if (isRFCNombreReceptor)
-                    {
-                        nombreReceptor = objx.Attributes["nombre"].InnerText;
-                    }
-
-                    XmlNodeList titles1 = doc.GetElementsByTagName("cfdi:Emisor");
-                    if (titles1.Count == 0)
-                    {
-                        titles1 = doc.GetElementsByTagName("Emisor");
-                    }
-
-                    XmlNode obj1 = titles1.Item(0);
-                    String rfc = "";
-                    bool isRFC = obj1.Attributes["rfc"] != null;
-                    if (isRFC)
-                    {
-                        rfc = obj1.Attributes["rfc"].InnerText.Trim();
-                    }
-                    //revisar que el RFC coincida , por lo menos uno de los 2
-                    if(!rfc.Equals(Properties.Settings.Default.RFC))
-                    {
-                        if (!rfcReceptor.Equals(Properties.Settings.Default.RFC))
-                        {
-                            return;//naranjas
-                        }
-                    }
-
-                    String razon = "";
-                    bool isRazon = obj1.Attributes["nombre"] != null;
-                    if(isRazon)
-                    {
-                        razon = obj1.Attributes["nombre"].InnerText;
-                    }
-                  
-                    XmlNodeList titles2 = doc.GetElementsByTagName("cfdi:Comprobante");
-                    if (titles2.Count == 0)
-                    {
-                        titles2 = doc.GetElementsByTagName("Comprobante");
-                    }
-
-
-                    XmlNode obj2 = titles2.Item(0);
-
-                    XmlNodeList titlesY = doc.GetElementsByTagName("cfdi:DomicilioFiscal");
-                    if (titlesY.Count == 0)
-                    {
-                        titlesY = doc.GetElementsByTagName("DomicilioFiscal");
-                    }
-                    String calle = "";
-                    String noExterior = "";
-                    String colonia = "";
-                    String municipio = "";
-                    String estado = "";
-                         
-                    if(titlesY.Count>0)
-                    {
-                        XmlNode objY = titlesY.Item(0);
-                        bool isCalle = objY.Attributes["calle"] != null;
-                        if (isCalle)
-                        {
-                            calle = objY.Attributes["calle"].InnerText;
-                        }
-
-                         bool isnoExterior = objY.Attributes["noExterior"] != null;
-                        if (isnoExterior)
-                        {
-                            noExterior = objY.Attributes["noExterior"].InnerText;
-                        }
-
-                         bool iscolonia = objY.Attributes["colonia"] != null;
-                        if (iscolonia)
-                        {
-                            colonia = objY.Attributes["colonia"].InnerText;
-                        }
-
-                        bool ismunicipio = objY.Attributes["municipio"] != null;
-                        if (ismunicipio)
-                        {
-                            municipio = objY.Attributes["municipio"].InnerText;
-                        }
-
-                        bool isestado = objY.Attributes["estado"] != null;
-                        if (isestado)
-                        {
-                            estado = objY.Attributes["estado"].InnerText;
-                        }
-                    }
-
-                   
-                    
-
-                    XmlNodeList titles4 = doc.GetElementsByTagName("cfdi:Impuestos");
-                    if (titles4.Count == 0)
-                    {
-                        titles4 = doc.GetElementsByTagName("Impuestos");
-                    }
-
-
-                    XmlNode obj4 = titles4.Item(0);
-                  
-                    String iva = "0";
-                    bool isIva = obj4.Attributes["totalImpuestosTrasladados"] != null;
-                    if(isIva)
-                    {
-                        iva = obj4.Attributes["totalImpuestosTrasladados"].InnerText;
+                        // empty
+                        this.cuantosNoSeInsertaron++;
+                        
                     }
                     else
                     {
-                        XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
-                        if (traslados.Count == 0)
+                        String[] fullArray = full.Split('\\');
+                        String nombreDelArchivo = fullArray.Last();
+
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(full);
+                        XmlNodeList titles = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
+                        XmlNode obj = titles.Item(0);
+
+                        String noCertificadoSAT = "";
+                        bool isNoCertificado = obj.Attributes["noCertificadoSAT"] != null;
+                        if (isNoCertificado)
                         {
-                            traslados = doc.GetElementsByTagName("Traslado");
+                            noCertificadoSAT = obj.Attributes["noCertificadoSAT"].InnerText;
                         }
-                        int i;
-                        for(i=0;i<traslados.Count;i++)
+
+                        String selloCFD = "";
+                        bool isselloCFD = obj.Attributes["selloCFD"] != null;
+                        if (isselloCFD)
                         {
-                            XmlNode objn = traslados.Item(i);
-                            String cantidad = "0";
-                            bool isCantidad = objn.Attributes["importe"] != null;
-                            if(isCantidad)
-                            {     
-                                 cantidad=objn.Attributes["importe"].InnerText;                     
-                            }
-                            iva = Convert.ToString( float.Parse(iva) + float.Parse(cantidad));
+                            selloCFD = obj.Attributes["selloCFD"].InnerText;
                         }
-                    }
 
-                   
-
-                    String subTotal = "";
-                    bool isSubTotal = obj2.Attributes["subTotal"] != null;
-                    if (isSubTotal)
-                    {
-                        subTotal = obj2.Attributes["subTotal"].InnerText;
-                    }
-
-                    String tipoDeComprobante = "INGRESO";
-                     bool istipoDeComprobante = obj2.Attributes["tipoDeComprobante"] != null;
-                    if (istipoDeComprobante)
-                    {
-                        tipoDeComprobante = obj2.Attributes["tipoDeComprobante"].InnerText.Trim().ToUpper();
-                    }
-                   
-                   
-
-
-                    String total = "";
-                    bool isTotal = obj2.Attributes["total"] != null;
-                    if(isTotal)
-                    {
-                        total = obj2.Attributes["total"].InnerText;
-                    }
-
-                    bool isFecha = obj2.Attributes["fecha"] != null;
-                    String fecha = "";
-                    if(isFecha)
-                    {
-                        fecha = obj2.Attributes["fecha"].InnerText;
-                    }
-                    bool isFolio = obj2.Attributes["folio"] != null;
-                    String folio = "";
-                    if(isFolio)
-                    {
-                        folio = obj2.Attributes["folio"].InnerText;
-                    }
-                    if(estoyEnCancelados)
-                    {
-                        String query1 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '0' WHERE folioFiscal = '" + folio_fiscal+"'";
-                        totalDeCancelados++;
-                        try
+                        String selloSAT = "";
+                        bool isselloSAT = obj.Attributes["selloSAT"] != null;
+                        if (isselloSAT)
                         {
-                            using (SqlConnection connection = new SqlConnection(connString))
+                            selloSAT = obj.Attributes["selloSAT"].InnerText;
+                        }
+
+
+
+
+
+                        String folio_fiscal = obj.Attributes["UUID"].InnerText;
+                        folio_fiscal = folio_fiscal.ToUpper();
+
+                        XmlNodeList titlesx = doc.GetElementsByTagName("cfdi:Receptor");
+                        if (titlesx.Count == 0)
+                        {
+                            titlesx = doc.GetElementsByTagName("Receptor");
+                        }
+
+                        XmlNode objx = titlesx.Item(0);
+                        String rfcReceptor = "";
+                        String nombreReceptor = "";
+                        bool isRFCrfcReceptor = objx.Attributes["rfc"] != null;
+                        if (isRFCrfcReceptor)
+                        {
+                            rfcReceptor = objx.Attributes["rfc"].InnerText.Trim();
+                        }
+                        bool isRFCNombreReceptor = objx.Attributes["nombre"] != null;
+                        if (isRFCNombreReceptor)
+                        {
+                            nombreReceptor = objx.Attributes["nombre"].InnerText;
+                        }
+
+                        XmlNodeList titles1 = doc.GetElementsByTagName("cfdi:Emisor");
+                        if (titles1.Count == 0)
+                        {
+                            titles1 = doc.GetElementsByTagName("Emisor");
+                        }
+
+                        XmlNode obj1 = titles1.Item(0);
+                        String rfc = "";
+                        bool isRFC = obj1.Attributes["rfc"] != null;
+                        if (isRFC)
+                        {
+                            rfc = obj1.Attributes["rfc"].InnerText.Trim();
+                        }
+                        //revisar que el RFC coincida , por lo menos uno de los 2
+                        if (!rfc.Equals(Properties.Settings.Default.RFC))
+                        {
+                            if (!rfcReceptor.Equals(Properties.Settings.Default.RFC))
                             {
-                                connection.Open();
-                                SqlCommand cmd = new SqlCommand(query1, connection);
-                                cmd.ExecuteNonQuery();
+                                return;//naranjas
+                            }
+                        }
 
-                                String queryCheck1 = "SELECT BUNIT, JRNAL_NO, JRNAL_LINE, CONCEPTO, FUNCION, PROJECT, descripcionLI, AMOUNT, Consecutivo, FOLIO_FISCAL FROM [" + Properties.Settings.Default.Database + "].[dbo].[FISCAL_xml] WHERE folioFiscal = '" + folio_fiscal + "'";
-                                SqlCommand cmdCheck = new SqlCommand(queryCheck1, connection);
-                                SqlDataReader reader = cmdCheck.ExecuteReader();
+                        String razon = "";
+                        bool isRazon = obj1.Attributes["nombre"] != null;
+                        if (isRazon)
+                        {
+                            razon = obj1.Attributes["nombre"].InnerText;
+                        }
+
+                        XmlNodeList titles2 = doc.GetElementsByTagName("cfdi:Comprobante");
+                        if (titles2.Count == 0)
+                        {
+                            titles2 = doc.GetElementsByTagName("Comprobante");
+                        }
 
 
-                                if (reader.HasRows)
+                        XmlNode obj2 = titles2.Item(0);
+
+                        XmlNodeList titlesY = doc.GetElementsByTagName("cfdi:DomicilioFiscal");
+                        if (titlesY.Count == 0)
+                        {
+                            titlesY = doc.GetElementsByTagName("DomicilioFiscal");
+                        }
+                        String calle = "";
+                        String noExterior = "";
+                        String colonia = "";
+                        String municipio = "";
+                        String estado = "";
+
+                        if (titlesY.Count > 0)
+                        {
+                            XmlNode objY = titlesY.Item(0);
+                            bool isCalle = objY.Attributes["calle"] != null;
+                            if (isCalle)
+                            {
+                                calle = objY.Attributes["calle"].InnerText;
+                            }
+
+                            bool isnoExterior = objY.Attributes["noExterior"] != null;
+                            if (isnoExterior)
+                            {
+                                noExterior = objY.Attributes["noExterior"].InnerText;
+                            }
+
+                            bool iscolonia = objY.Attributes["colonia"] != null;
+                            if (iscolonia)
+                            {
+                                colonia = objY.Attributes["colonia"].InnerText;
+                            }
+
+                            bool ismunicipio = objY.Attributes["municipio"] != null;
+                            if (ismunicipio)
+                            {
+                                municipio = objY.Attributes["municipio"].InnerText;
+                            }
+
+                            bool isestado = objY.Attributes["estado"] != null;
+                            if (isestado)
+                            {
+                                estado = objY.Attributes["estado"].InnerText;
+                            }
+                        }
+
+
+
+
+                        XmlNodeList titles4 = doc.GetElementsByTagName("cfdi:Impuestos");
+                        if (titles4.Count == 0)
+                        {
+                            titles4 = doc.GetElementsByTagName("Impuestos");
+                        }
+
+
+                        XmlNode obj4 = titles4.Item(0);
+
+                        String iva = "0";
+                        bool isIva = obj4.Attributes["totalImpuestosTrasladados"] != null;
+                        if (isIva)
+                        {
+                            iva = obj4.Attributes["totalImpuestosTrasladados"].InnerText;
+                        }
+                        else
+                        {
+                            XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
+                            if (traslados.Count == 0)
+                            {
+                                traslados = doc.GetElementsByTagName("Traslado");
+                            }
+                            int i;
+                            for (i = 0; i < traslados.Count; i++)
+                            {
+                                XmlNode objn = traslados.Item(i);
+                                String cantidad = "0";
+                                bool isCantidad = objn.Attributes["importe"] != null;
+                                if (isCantidad)
                                 {
-                                    String BUNIT = "";
-                                    String JRNAL_NO = "";
-                                    String JRNAL_LINE = "";
-                                    String CONCEPTO = "";
-                                    String FUNCION = "";
-                                    String PROJECT = "";
-                                    String descripcionLI = "";
-                                    String AMOUNT = "";
-                                    String Consecutivo = "";
-                                    String FOLIO_FISCAL = "";
-                                    mensajeParaElCorreo.Append(this.Enters+"Los cancelados estan ligados a los siguientes movimientos: ");
-                                    while (reader.Read())
+                                    cantidad = objn.Attributes["importe"].InnerText;
+                                }
+                                iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                            }
+                        }
+
+
+
+                        String subTotal = "";
+                        bool isSubTotal = obj2.Attributes["subTotal"] != null;
+                        if (isSubTotal)
+                        {
+                            subTotal = obj2.Attributes["subTotal"].InnerText;
+                        }
+
+                        String tipoDeComprobante = "INGRESO";
+                        bool istipoDeComprobante = obj2.Attributes["tipoDeComprobante"] != null;
+                        if (istipoDeComprobante)
+                        {
+                            tipoDeComprobante = obj2.Attributes["tipoDeComprobante"].InnerText.Trim().ToUpper();
+                        }
+
+
+
+
+                        String total = "";
+                        bool isTotal = obj2.Attributes["total"] != null;
+                        if (isTotal)
+                        {
+                            total = obj2.Attributes["total"].InnerText;
+                        }
+
+                        bool isFecha = obj2.Attributes["fecha"] != null;
+                        String fecha = "";
+                        if (isFecha)
+                        {
+                            fecha = obj2.Attributes["fecha"].InnerText;
+                        }
+                        bool isFolio = obj2.Attributes["folio"] != null;
+                        String folio = "";
+                        if (isFolio)
+                        {
+                            folio = obj2.Attributes["folio"].InnerText;
+                        }
+                        if (estoyEnCancelados)
+                        {
+                            String query1 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set STATUS = '0' WHERE folioFiscal = '" + folio_fiscal + "'";
+                            totalDeCancelados++;
+                            try
+                            {
+                                using (SqlConnection connection = new SqlConnection(connString))
+                                {
+                                    connection.Open();
+                                    SqlCommand cmd = new SqlCommand(query1, connection);
+                                    cmd.ExecuteNonQuery();
+
+                                    String queryCheck1 = "SELECT BUNIT, JRNAL_NO, JRNAL_LINE, CONCEPTO, FUNCION, PROJECT, descripcionLI, AMOUNT, Consecutivo, FOLIO_FISCAL FROM [" + Properties.Settings.Default.Database + "].[dbo].[FISCAL_xml] WHERE folioFiscal = '" + folio_fiscal + "'";
+                                    SqlCommand cmdCheck = new SqlCommand(queryCheck1, connection);
+                                    SqlDataReader reader = cmdCheck.ExecuteReader();
+
+
+                                    if (reader.HasRows)
                                     {
-                                        BUNIT = reader.GetString(0).Trim();
-                                        JRNAL_NO = Convert.ToString(reader.GetInt32(1));
-                                        JRNAL_LINE = Convert.ToString(reader.GetInt32(2));
-                                        CONCEPTO = reader.GetString(3).Trim();
-                                        FUNCION = reader.GetString(4).Trim();
-                                        PROJECT = reader.GetString(5).Trim();
-                                        descripcionLI = reader.GetString(6).Trim();
-                                        AMOUNT = Convert.ToString(reader.GetDecimal(7));
-                                        Consecutivo = reader.GetString(8).Trim();
-                                        FOLIO_FISCAL = reader.GetString(9).Trim();
+                                        String BUNIT = "";
+                                        String JRNAL_NO = "";
+                                        String JRNAL_LINE = "";
+                                        String CONCEPTO = "";
+                                        String FUNCION = "";
+                                        String PROJECT = "";
+                                        String descripcionLI = "";
+                                        String AMOUNT = "";
+                                        String Consecutivo = "";
+                                        String FOLIO_FISCAL = "";
+                                        mensajeParaElCorreo.Append(this.Enters + "Los cancelados estan ligados a los siguientes movimientos: ");
+                                        while (reader.Read())
+                                        {
+                                            BUNIT = reader.GetString(0).Trim();
+                                            JRNAL_NO = Convert.ToString(reader.GetInt32(1));
+                                            JRNAL_LINE = Convert.ToString(reader.GetInt32(2));
+                                            CONCEPTO = reader.GetString(3).Trim();
+                                            FUNCION = reader.GetString(4).Trim();
+                                            PROJECT = reader.GetString(5).Trim();
+                                            descripcionLI = reader.GetString(6).Trim();
+                                            AMOUNT = Convert.ToString(reader.GetDecimal(7));
+                                            Consecutivo = reader.GetString(8).Trim();
+                                            FOLIO_FISCAL = reader.GetString(9).Trim();
 
-                                        mensajeParaElCorreo.Append(this.Enters+BUNIT + " " + JRNAL_NO + " " + JRNAL_LINE + " " + CONCEPTO + " " + FUNCION + " " + PROJECT + " " + descripcionLI + " " + AMOUNT + " " + FOLIO_FISCAL + " " + Consecutivo);
+                                            mensajeParaElCorreo.Append(this.Enters + BUNIT + " " + JRNAL_NO + " " + JRNAL_LINE + " " + CONCEPTO + " " + FUNCION + " " + PROJECT + " " + descripcionLI + " " + AMOUNT + " " + FOLIO_FISCAL + " " + Consecutivo);
 
 
-                                       
+
+                                        }
                                     }
                                 }
                             }
-                        }
-                        catch (Exception ex1)
-                        {
-                            System.Windows.Forms.MessageBox.Show(ex1.ToString(), "Error Message1", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                            
-                    }
-                    else
-                    {
-
-
-
-                        String query = "";
-                       if( this.AnoSel.IndexOf("Emitidos")!=-1)
-                       {
-                           if(tipoDeComprobante.Equals("INGRESO"))
-                           {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
-                           }
-                           else
-                           {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
-                           }
-                           insertaProveedor(rfcReceptor, nombreReceptor);
-                       }
-                       else
-                       {
-                           if (tipoDeComprobante.Equals("INGRESO"))
-                           {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
-                   
-                           }
-                           else
-                           {
-                               query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
-                           }
-                           //query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
-                           insertaProveedor(rfc, razon);
-                       }
-                      
-                        String queryCheck = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folio_fiscal + "'";
-
-                        try
-                        {
-                            using (SqlConnection connection = new SqlConnection(connString))
+                            catch (Exception ex1)
                             {
-                                connection.Open();
-                                SqlCommand cmdCheck = new SqlCommand(queryCheck, connection);
-                                SqlDataReader reader = cmdCheck.ExecuteReader();
-                                if (!reader.Read())
+                                System.Windows.Forms.MessageBox.Show(ex1.ToString(), "Error Message1", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            }
+
+                        }
+                        else
+                        {
+
+
+
+                            String query = "";
+                            if (this.AnoSel.IndexOf("Emitidos") != -1)
+                            {
+                                if (tipoDeComprobante.Equals("INGRESO"))
                                 {
-                                    reader.Close();
-                                    connection.Close();
-                                    connection.Open();
-                                    SqlCommand cmd = new SqlCommand(query, connection);
-                                    cmd.ExecuteNonQuery();
-                                    PdfContents Contents = null;
-                                    PdfPage Page = null;
-                                    const Double Width = 5.15;
-                                    const Double Height = 10.65;
-                                    const Double FontSize = 9.0;
-                                    PdfFileWriter.TextBox Box = null;
-                                    if (cadaCuantasHorasGlobal == 0)//no estoy en modo de horas
-                                    {
-                                        String FileName = carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual.ToString() + (object)Path.DirectorySeparatorChar + folio_fiscal + ".pdf";
-                                        Document = new PdfDocument(PaperType.Letter, false, UnitOfMeasure.Inch, FileName);
-                                        DefineFontResources();
-                                        DefineTilingPatternResource();
-                                        Page = new PdfPage(Document);
-                                        Contents = new PdfContents(Page);
-                                        Contents.SaveGraphicsState();
-                                        Contents.Translate(0.1, 0.1);
-                                        Box = new PdfFileWriter.TextBox(Width, 0.25);
-                                    }
-                                    XmlNodeList conceptos = doc.GetElementsByTagName("cfdi:Concepto");
-                                    if (conceptos.Count == 0)
-                                    {
-                                        conceptos = doc.GetElementsByTagName("Concepto");
-                                    }
-
-                                    int i;
-                                    String conceptosString = "";
-                                    for (i = 0; i < conceptos.Count; i++)
-                                    {
-                                        XmlNode objy = conceptos.Item(i);
-                                        String cantidadc = "";
-                                        bool isCantidadc = objy.Attributes["cantidad"] != null;
-                                        if (isCantidadc)
-                                        {
-                                            cantidadc = objy.Attributes["cantidad"].InnerText;
-                                        }
-                                        String unidadc = "";
-                                        bool isUnidadc = objy.Attributes["unidad"] != null;
-                                        if (isUnidadc)
-                                        {
-                                            unidadc = objy.Attributes["unidad"].InnerText;
-                                        }
-                                        String descripcionc = "";
-                                        bool isdescripcionc = objy.Attributes["descripcion"] != null;
-                                        if (isdescripcionc)
-                                        {
-                                            descripcionc = objy.Attributes["descripcion"].InnerText;
-                                        }
-                                        String importec = "";
-                                        bool isimportec = objy.Attributes["importe"] != null;
-                                        if (isimportec)
-                                        {
-                                            importec = objy.Attributes["importe"].InnerText;
-                                        }
-                                        conceptosString = conceptosString + "\n" + cantidadc + " " + descripcionc + " $" + importec;
-                                    }
-                                    String impuestosString = "";
-                                    double totalDeRetenciones = 0;
-                                    XmlNodeList retencionesLocales = doc.GetElementsByTagName("implocal:RetencionesLocales");
-                                    if (retencionesLocales.Count == 0)
-                                    {
-                                        retencionesLocales = doc.GetElementsByTagName("RetencionesLocales");
-                                    }
-                                    for (i = 0; i < retencionesLocales.Count; i++)
-                                    {
-                                        XmlNode objn = retencionesLocales.Item(i);
-                                        String cantidad = "0";
-                                        String impuesto = "";
-                                        float tasa = 0;
-                                        bool isCantidad = objn.Attributes["Importe"] != null;
-                                        if (isCantidad)
-                                        {
-                                            totalDeRetenciones += Convert.ToDouble(objn.Attributes["Importe"].InnerText);
-                                            cantidad = objn.Attributes["Importe"].InnerText;
-                                            impuesto = objn.Attributes["ImpLocRetenido"].InnerText;
-                                            tasa = float.Parse(objn.Attributes["TasadeRetencion"].InnerText);
-                                            float importe = float.Parse(cantidad);
-                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
-                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
-                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
-                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
-                                            if (!readerImpuesto.HasRows)
-                                            {
-                                                readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2,'" + Properties.Settings.Default.RFC + "')";
-                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
-                                                cmdImpuesto.ExecuteNonQuery();
-                                            }
-                                            else
-                                            {
-                                                readerImpuesto.Close();
-                                            }
-                                        }
-                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
-                                    }
-
-                                    XmlNodeList retenciones = doc.GetElementsByTagName("cfdi:Retencion");
-                                    if (retenciones.Count == 0)
-                                    {
-                                        retenciones = doc.GetElementsByTagName("Retencion");
-                                    }
-                                  
-                                    for (i = 0; i < retenciones.Count; i++)
-                                    {
-                                        XmlNode objn = retenciones.Item(i);
-                                        String cantidad = "0";
-                                        String impuesto = "";
-                                        float tasa = 0;
-                                        bool isCantidad = objn.Attributes["importe"] != null;
-                                        if (isCantidad)
-                                        {
-                                            totalDeRetenciones += Convert.ToDouble(objn.Attributes["importe"].InnerText);
-                                            cantidad = objn.Attributes["importe"].InnerText;
-                                            impuesto = objn.Attributes["impuesto"].InnerText;
-                                            tasa = 0;
-                                            float importe = float.Parse(cantidad);
-                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
-                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
-                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
-                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nImporte: " + importe;
-                                            if (!readerImpuesto.HasRows)
-                                            {
-                                                readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2,'" + Properties.Settings.Default.RFC + "')";
-                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
-                                                cmdImpuesto.ExecuteNonQuery();
-                                            }
-                                            else
-                                            {
-                                                readerImpuesto.Close();
-                                            }
-                                        }
-                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
-                                    }
-
-                                    if(totalDeRetenciones>0.0)
-                                    {
-                                        double nuevoTotal = Math.Round(totalDeRetenciones + Convert.ToDouble(total),2);
-                                        String query2 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set total = "+nuevoTotal+"  WHERE folioFiscal = '" + folio_fiscal+"'";
-                                        try
-                                        {
-                                            using (SqlCommand cmdx = new SqlCommand(query2, connection))
-                                            {
-                                                cmd.ExecuteNonQuery();
-                                            }
-                                        }
-                                        catch(Exception ex3)
-                                        {
-                                            ex3.ToString();
-                                        }
-                                    }
-                                    
-
-                                    XmlNodeList trasladosLocales = doc.GetElementsByTagName("implocal:TrasladosLocales");
-                                    if (trasladosLocales.Count == 0)
-                                    {
-                                        trasladosLocales = doc.GetElementsByTagName("TrasladosLocales");
-                                    }
-                                    for (i = 0; i < trasladosLocales.Count; i++)
-                                    {
-                                        XmlNode objn = trasladosLocales.Item(i);
-                                        String cantidad = "0";
-                                        String impuesto = "";
-                                        float tasa = 0;
-                                        bool isCantidad = objn.Attributes["Importe"] != null;
-                                        if (isCantidad)
-                                        {
-                                            cantidad = objn.Attributes["Importe"].InnerText;
-                                            impuesto = objn.Attributes["ImpLocTrasladado"].InnerText;
-                                            tasa = float.Parse(objn.Attributes["TasadeTraslado"].InnerText);
-                                            float importe = float.Parse(cantidad);
-                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
-                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
-                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
-                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
-                                            if (!readerImpuesto.HasRows)
-                                            {
-                                                readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1,'" + Properties.Settings.Default.RFC + "')";
-                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
-                                                cmdImpuesto.ExecuteNonQuery();
-                                            }
-                                            else
-                                            {
-                                                readerImpuesto.Close();
-                                            }
-                                        }
-                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
-                                    }
-
-                                    XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
-                                    if (traslados.Count == 0)
-                                    {
-                                        traslados = doc.GetElementsByTagName("Traslado");
-                                    }
-                                    for (i = 0; i < traslados.Count; i++)
-                                    {
-                                        XmlNode objn = traslados.Item(i);
-                                        String cantidad = "0";
-                                        String impuesto = "";
-                                        float tasa = 0;
-                                        bool isCantidad = objn.Attributes["importe"] != null;
-                                        if (isCantidad)
-                                        {
-                                            cantidad = objn.Attributes["importe"].InnerText;
-                                            impuesto = objn.Attributes["impuesto"].InnerText;
-                                            tasa = float.Parse(objn.Attributes["tasa"].InnerText);
-                                            float importe = float.Parse(cantidad);
-                                            String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
-                                            SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
-                                            SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
-                                            impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
-                                            if (!readerImpuesto.HasRows)
-                                            {
-                                                readerImpuesto.Close();
-                                                String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1,'" + Properties.Settings.Default.RFC + "')";
-                                                SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
-                                                cmdImpuesto.ExecuteNonQuery();
-                                            }
-                                            else
-                                            {
-                                                readerImpuesto.Close();
-                                            }
-                                        }
-                                        iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
-                                    }
-                                    if(cadaCuantasHorasGlobal==0)//no estoy en modo de horas
-                                    {
-                                        Box.AddText(ArialNormal, FontSize,
-                                       "Cliente: " + nombreReceptor + "\n" +
-                                       "RFC: " + rfcReceptor + "\n" +
-                                       "Emisor: " + razon + "\n" +
-                                       "RFC: " + rfc + "\n" +
-                                       "Domicilio Fiscal: " + calle + " " + noExterior + " " + colonia + " " + municipio + " " + estado + "\n" +
-                                       "Folio: " + folio + "\nFolio Fiscal: " + folio_fiscal + "\nTotal: $" + total + "\nFecha de Expedicion: " + fecha + conceptosString + impuestosString + "\nNo de Serie del Certificado del SAT: " + noCertificadoSAT + "\nSello digital del CFDI:\n" + selloCFD + "\n\nSello del SAT:\n" + selloSAT + "\n\n\nEste documento es una representación impresa de un CFDI");
-                                        Box.AddText(ArialNormal, FontSize, "\n");
-                                        Double PosY = Height;
-                                        Contents.DrawText(0.0, ref PosY, 0.0, 0, 0.015, 0.05, TextBoxJustify.FitToWidth, Box);
-                                        Contents.RestoreGraphicsState();
-                                        Contents.SaveGraphicsState();
-                                        String DataString = "?re=" + rfc + "&rr=" + rfcReceptor + "&tt=" + total + "&id=" + folio_fiscal;
-                                        PdfQRCode QRCode = new PdfQRCode(Document, DataString, ErrorCorrection.M);
-                                        Contents.DrawQRCode(QRCode, 6.0, 6.8, 1.2);
-                                        Contents.RestoreGraphicsState();
-                                        Document.CreateFile();
-                                    }
-                                    totalDeDescargados++;
+                                    query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
                                 }
                                 else
                                 {
-                                    this.cuantosYaExistian++;
-                                    totalDeYaExistian++;
+                                    query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
                                 }
-
+                                insertaProveedor(rfcReceptor, nombreReceptor);
                             }
-                        }
-                        catch (Exception ex1)
-                        {
-                            ex1.ToString();
-                            this.cuantosNoSeInsertaron++;
-                         //   System.Windows.Forms.MessageBox.Show("Error Message", ex1.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                    }
+                            else
+                            {
+                                if (tipoDeComprobante.Equals("INGRESO"))
+                                {
+                                    query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
+
+                                }
+                                else
+                                {
+                                    query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
+                                }
+                                //query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
+                                insertaProveedor(rfc, razon);
+                            }
+
+                            String queryCheck = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folio_fiscal + "'";
+
+                            try
+                            {
+                                using (SqlConnection connection = new SqlConnection(connString))
+                                {
+                                    connection.Open();
+                                    SqlCommand cmdCheck = new SqlCommand(queryCheck, connection);
+                                    SqlDataReader reader = cmdCheck.ExecuteReader();
+                                    if (!reader.Read())
+                                    {
+                                        reader.Close();
+                                        connection.Close();
+                                        connection.Open();
+                                        SqlCommand cmd = new SqlCommand(query, connection);
+                                        cmd.ExecuteNonQuery();
+                                        PdfContents Contents = null;
+                                        PdfPage Page = null;
+                                        const Double Width = 5.15;
+                                        const Double Height = 10.65;
+                                        const Double FontSize = 9.0;
+                                        PdfFileWriter.TextBox Box = null;
+                                        if (cadaCuantasHorasGlobal == 0)//no estoy en modo de horas
+                                        {
+                                            String FileName = carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual.ToString() + (object)Path.DirectorySeparatorChar + folio_fiscal + ".pdf";
+                                            Document = new PdfDocument(PaperType.Letter, false, UnitOfMeasure.Inch, FileName);
+                                            DefineFontResources();
+                                            DefineTilingPatternResource();
+                                            Page = new PdfPage(Document);
+                                            Contents = new PdfContents(Page);
+                                            Contents.SaveGraphicsState();
+                                            Contents.Translate(0.1, 0.1);
+                                            Box = new PdfFileWriter.TextBox(Width, 0.25);
+                                        }
+                                        XmlNodeList conceptos = doc.GetElementsByTagName("cfdi:Concepto");
+                                        if (conceptos.Count == 0)
+                                        {
+                                            conceptos = doc.GetElementsByTagName("Concepto");
+                                        }
+
+                                        int i;
+                                        String conceptosString = "";
+                                        for (i = 0; i < conceptos.Count; i++)
+                                        {
+                                            XmlNode objy = conceptos.Item(i);
+                                            String cantidadc = "";
+                                            bool isCantidadc = objy.Attributes["cantidad"] != null;
+                                            if (isCantidadc)
+                                            {
+                                                cantidadc = objy.Attributes["cantidad"].InnerText;
+                                            }
+                                            String unidadc = "";
+                                            bool isUnidadc = objy.Attributes["unidad"] != null;
+                                            if (isUnidadc)
+                                            {
+                                                unidadc = objy.Attributes["unidad"].InnerText;
+                                            }
+                                            String descripcionc = "";
+                                            bool isdescripcionc = objy.Attributes["descripcion"] != null;
+                                            if (isdescripcionc)
+                                            {
+                                                descripcionc = objy.Attributes["descripcion"].InnerText;
+                                            }
+                                            String importec = "";
+                                            bool isimportec = objy.Attributes["importe"] != null;
+                                            if (isimportec)
+                                            {
+                                                importec = objy.Attributes["importe"].InnerText;
+                                            }
+                                            conceptosString = conceptosString + "\n" + cantidadc + " " + descripcionc + " $" + importec;
+                                        }
+                                        String impuestosString = "";
+                                        double totalDeRetenciones = 0;
+                                        XmlNodeList retencionesLocales = doc.GetElementsByTagName("implocal:RetencionesLocales");
+                                        if (retencionesLocales.Count == 0)
+                                        {
+                                            retencionesLocales = doc.GetElementsByTagName("RetencionesLocales");
+                                        }
+                                        for (i = 0; i < retencionesLocales.Count; i++)
+                                        {
+                                            XmlNode objn = retencionesLocales.Item(i);
+                                            String cantidad = "0";
+                                            String impuesto = "";
+                                            float tasa = 0;
+                                            bool isCantidad = objn.Attributes["Importe"] != null;
+                                            if (isCantidad)
+                                            {
+                                                totalDeRetenciones += Convert.ToDouble(objn.Attributes["Importe"].InnerText);
+                                                cantidad = objn.Attributes["Importe"].InnerText;
+                                                impuesto = objn.Attributes["ImpLocRetenido"].InnerText;
+                                                tasa = float.Parse(objn.Attributes["TasadeRetencion"].InnerText);
+                                                float importe = float.Parse(cantidad);
+                                                String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                                SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                                SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                                impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
+                                                if (!readerImpuesto.HasRows)
+                                                {
+                                                    readerImpuesto.Close();
+                                                    String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2,'" + Properties.Settings.Default.RFC + "')";
+                                                    SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                    cmdImpuesto.ExecuteNonQuery();
+                                                }
+                                                else
+                                                {
+                                                    readerImpuesto.Close();
+                                                }
+                                            }
+                                            iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                        }
+
+                                        XmlNodeList retenciones = doc.GetElementsByTagName("cfdi:Retencion");
+                                        if (retenciones.Count == 0)
+                                        {
+                                            retenciones = doc.GetElementsByTagName("Retencion");
+                                        }
+
+                                        for (i = 0; i < retenciones.Count; i++)
+                                        {
+                                            XmlNode objn = retenciones.Item(i);
+                                            String cantidad = "0";
+                                            String impuesto = "";
+                                            float tasa = 0;
+                                            bool isCantidad = objn.Attributes["importe"] != null;
+                                            if (isCantidad)
+                                            {
+                                                totalDeRetenciones += Convert.ToDouble(objn.Attributes["importe"].InnerText);
+                                                cantidad = objn.Attributes["importe"].InnerText;
+                                                impuesto = objn.Attributes["impuesto"].InnerText;
+                                                tasa = 0;
+                                                float importe = float.Parse(cantidad);
+                                                String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                                SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                                SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                                impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nImporte: " + importe;
+                                                if (!readerImpuesto.HasRows)
+                                                {
+                                                    readerImpuesto.Close();
+                                                    String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",2,'" + Properties.Settings.Default.RFC + "')";
+                                                    SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                    cmdImpuesto.ExecuteNonQuery();
+                                                }
+                                                else
+                                                {
+                                                    readerImpuesto.Close();
+                                                }
+                                            }
+                                            iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                        }
+
+                                        if (totalDeRetenciones > 0.0)
+                                        {
+                                            double nuevoTotal = Math.Round(totalDeRetenciones + Convert.ToDouble(total), 2);
+                                            String query2 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set total = " + nuevoTotal + "  WHERE folioFiscal = '" + folio_fiscal + "'";
+                                            try
+                                            {
+                                                using (SqlCommand cmdx = new SqlCommand(query2, connection))
+                                                {
+                                                    cmd.ExecuteNonQuery();
+                                                }
+                                            }
+                                            catch (Exception ex3)
+                                            {
+                                                ex3.ToString();
+                                            }
+                                        }
+
+
+                                        XmlNodeList trasladosLocales = doc.GetElementsByTagName("implocal:TrasladosLocales");
+                                        if (trasladosLocales.Count == 0)
+                                        {
+                                            trasladosLocales = doc.GetElementsByTagName("TrasladosLocales");
+                                        }
+                                        for (i = 0; i < trasladosLocales.Count; i++)
+                                        {
+                                            XmlNode objn = trasladosLocales.Item(i);
+                                            String cantidad = "0";
+                                            String impuesto = "";
+                                            float tasa = 0;
+                                            bool isCantidad = objn.Attributes["Importe"] != null;
+                                            if (isCantidad)
+                                            {
+                                                cantidad = objn.Attributes["Importe"].InnerText;
+                                                impuesto = objn.Attributes["ImpLocTrasladado"].InnerText;
+                                                tasa = float.Parse(objn.Attributes["TasadeTraslado"].InnerText);
+                                                float importe = float.Parse(cantidad);
+                                                String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                                SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                                SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                                impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
+                                                if (!readerImpuesto.HasRows)
+                                                {
+                                                    readerImpuesto.Close();
+                                                    String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1,'" + Properties.Settings.Default.RFC + "')";
+                                                    SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                    cmdImpuesto.ExecuteNonQuery();
+                                                }
+                                                else
+                                                {
+                                                    readerImpuesto.Close();
+                                                }
+                                            }
+                                            iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                        }
+
+                                        XmlNodeList traslados = doc.GetElementsByTagName("cfdi:Traslado");
+                                        if (traslados.Count == 0)
+                                        {
+                                            traslados = doc.GetElementsByTagName("Traslado");
+                                        }
+                                        for (i = 0; i < traslados.Count; i++)
+                                        {
+                                            XmlNode objn = traslados.Item(i);
+                                            String cantidad = "0";
+                                            String impuesto = "";
+                                            float tasa = 0;
+                                            bool isCantidad = objn.Attributes["importe"] != null;
+                                            if (isCantidad)
+                                            {
+                                                cantidad = objn.Attributes["importe"].InnerText;
+                                                impuesto = objn.Attributes["impuesto"].InnerText;
+                                                tasa = float.Parse(objn.Attributes["tasa"].InnerText);
+                                                float importe = float.Parse(cantidad);
+                                                String queryCheckImpuesto = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] WHERE folioFiscal = '" + folio_fiscal + "' and impuesto = '" + impuesto + "' and tasa = " + tasa + " and importe = " + importe;
+                                                SqlCommand cmdCheckImpuesto = new SqlCommand(queryCheckImpuesto, connection);
+                                                SqlDataReader readerImpuesto = cmdCheckImpuesto.ExecuteReader();
+                                                impuestosString = impuestosString + "\nImpuesto: " + impuesto + "\nTasa: " + tasa + "\nImporte: " + importe;
+                                                if (!readerImpuesto.HasRows)
+                                                {
+                                                    readerImpuesto.Close();
+                                                    String queryImpuesto = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[impuestos] (folioFiscal,impuesto,tasa,importe,tipo,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + impuesto + "', " + tasa + ", " + importe + ",1,'" + Properties.Settings.Default.RFC + "')";
+                                                    SqlCommand cmdImpuesto = new SqlCommand(queryImpuesto, connection);
+                                                    cmdImpuesto.ExecuteNonQuery();
+                                                }
+                                                else
+                                                {
+                                                    readerImpuesto.Close();
+                                                }
+                                            }
+                                            iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
+                                        }
+                                        if (cadaCuantasHorasGlobal == 0)//no estoy en modo de horas
+                                        {
+                                            Box.AddText(ArialNormal, FontSize,
+                                           "Cliente: " + nombreReceptor + "\n" +
+                                           "RFC: " + rfcReceptor + "\n" +
+                                           "Emisor: " + razon + "\n" +
+                                           "RFC: " + rfc + "\n" +
+                                           "Domicilio Fiscal: " + calle + " " + noExterior + " " + colonia + " " + municipio + " " + estado + "\n" +
+                                           "Folio: " + folio + "\nFolio Fiscal: " + folio_fiscal + "\nTotal: $" + total + "\nFecha de Expedicion: " + fecha + conceptosString + impuestosString + "\nNo de Serie del Certificado del SAT: " + noCertificadoSAT + "\nSello digital del CFDI:\n" + selloCFD + "\n\nSello del SAT:\n" + selloSAT + "\n\n\nEste documento es una representación impresa de un CFDI");
+                                            Box.AddText(ArialNormal, FontSize, "\n");
+                                            Double PosY = Height;
+                                            Contents.DrawText(0.0, ref PosY, 0.0, 0, 0.015, 0.05, TextBoxJustify.FitToWidth, Box);
+                                            Contents.RestoreGraphicsState();
+                                            Contents.SaveGraphicsState();
+                                            String DataString = "?re=" + rfc + "&rr=" + rfcReceptor + "&tt=" + total + "&id=" + folio_fiscal;
+                                            PdfQRCode QRCode = new PdfQRCode(Document, DataString, ErrorCorrection.M);
+                                            Contents.DrawQRCode(QRCode, 6.0, 6.8, 1.2);
+                                            Contents.RestoreGraphicsState();
+                                            Document.CreateFile();
+                                        }
+                                        totalDeDescargados++;
+                                    }
+                                    else
+                                    {
+                                        this.cuantosYaExistian++;
+                                        totalDeYaExistian++;
+                                    }
+
+                                }
+                            }
+                            catch (Exception ex1)
+                            {
+                                ex1.ToString();
+                                this.cuantosNoSeInsertaron++;
+                                //   System.Windows.Forms.MessageBox.Show("Error Message", ex1.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            }
+                        }//else if estoyEnCancelados
+                    }//else de empty
+
+
+                   
                    
            
 
