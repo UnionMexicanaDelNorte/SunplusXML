@@ -39,6 +39,9 @@ namespace SunPlusXML
         public int descargado { get; set; }
         public int status { get; set; }
         public int primeraVez { get; set; }
+        public int cadaCuantasHorasGlobal { get; set; }
+        public int enQueHoraVoyGlobal { get; set; }
+       
         public String Enters { get; set; }
         public List<DownloadItem> Descargados { get; set; }
         public Timer tmr { get; set; }
@@ -47,6 +50,7 @@ namespace SunPlusXML
         public Timer tmrTercero { get; set; }
         public Timer tmrCuarto { get; set; }
         public Timer tmrQuinto { get; set; }
+        public Timer tmrQuintoPrimo { get; set; }
         public Timer tmrSexto { get; set; }
         public Timer tmrSeptimo { get; set; }
         public Timer tmrOctavo { get; set; }
@@ -96,25 +100,33 @@ namespace SunPlusXML
         public Form1(int modo)
         {
             modoGlobal = modo;
+            cadaCuantasHorasGlobal = 0;
             anoAnterior = 0;
             if(modo==3)//ultrapesado del ano anterior
-                {
-                    modoGlobal = 2;//trabaja como todo el ano
-                    anoAnterior = 1;//pero descarga la del año anterior!
-                }
+            {
+                modoGlobal = 2;//trabaja como todo el ano
+                anoAnterior = 1;//pero descarga la del año anterior!
+            }
             InitializeComponent();
              this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='"+Properties.Settings.Default.Password+"';connect timeout = 60";
 
            
            
             this.timer1 = new Timer();
-            this.timer1.Interval = 2000;
+            this.timer1.Interval = 3000;
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
 
         }
         public Form1(int modo, String rfcNuevo, String ciecNueva, String correoNuevo)
         {
             modoGlobal = modo;
+            cadaCuantasHorasGlobal = 0;
+            anoAnterior = 0;
+            if (modo == 3)//ultrapesado del ano anterior
+            {
+                modoGlobal = 2;//trabaja como todo el ano
+                anoAnterior = 1;//pero descarga la del año anterior!
+            }
             InitializeComponent();
             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
 
@@ -122,6 +134,31 @@ namespace SunPlusXML
             Properties.Settings.Default.pass = ciecNueva;
             Properties.Settings.Default.correoReceptor = correoNuevo;
            // Properties.Settings.Default.deboGuardar = "0";
+            Properties.Settings.Default.Save();
+
+            this.timer1 = new Timer();
+            this.timer1.Interval = 3000;
+            this.timer1.Tick += new EventHandler(this.timer1_Tick);
+
+        }
+        public Form1(int modo, String rfcNuevo, String ciecNueva, String correoNuevo, int cadaCuantasHoras)
+        {
+            cadaCuantasHorasGlobal = cadaCuantasHoras;
+            enQueHoraVoyGlobal = 0;
+            modoGlobal = modo;
+            anoAnterior = 0;
+            if (modo == 3)//ultrapesado del ano anterior
+            {
+                modoGlobal = 2;//trabaja como todo el ano
+                anoAnterior = 1;//pero descarga la del año anterior!
+            }
+            InitializeComponent();
+            this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
+
+            Properties.Settings.Default.RFC = rfcNuevo;
+            Properties.Settings.Default.pass = ciecNueva;
+            Properties.Settings.Default.correoReceptor = correoNuevo;
+            // Properties.Settings.Default.deboGuardar = "0";
             Properties.Settings.Default.Save();
 
             this.timer1 = new Timer();
@@ -1242,7 +1279,7 @@ namespace SunPlusXML
                     else
                     {
                         primeraVez = 1;
-                        tmrSexto.Stop();
+                        tmrSexto.Stop();  
                         tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 6 STOP SI ENCONTRE FACTURAS";
                         auxaux();
                     }
@@ -1250,6 +1287,60 @@ namespace SunPlusXML
             }
            
         }
+
+        private void timerHandlerQuintoPrimo(object sender, EventArgs e)
+        {
+            tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 5 PRIMO PROCESS";
+            String submit = Convert.ToString(this.webView3.EvalScript("document.getElementById('ctl00_MainContent_DdlEstadoComprobante');"));
+            if (submit.Equals("") || submit.Equals("null"))
+            {
+                primeraVez = 1;
+            }
+            else
+            {
+                if (primeraVez == 1)
+                {
+                    primeraVez = 0;
+                    tmrQuintoPrimo.Interval = Convert.ToInt32(Properties.Settings.Default.timeInterval);
+                }
+                else
+                {
+                    primeraVez = 1;
+                    tmrQuintoPrimo.Stop();
+                    tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 5 PRIMO STOP";
+                    DateTime now = DateTime.Now;
+                    this.webView3.EvalScript("window.alert = function() {};");
+                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_DdlEstadoComprobante').selectedIndex = 2;");
+                    int mes = now.Month - 1;
+  //                  enQueHoraVoyGlobal
+//                    cadaCuantasHorasGlobal
+                    int elQueSigue = enQueHoraVoyGlobal + cadaCuantasHorasGlobal-1;
+                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlHora').selectedIndex = " + enQueHoraVoyGlobal.ToString() + ";");
+                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlHoraFin').selectedIndex = " + elQueSigue.ToString() + ";");        
+                    if (modoGlobal == 2)//ultra pesado
+                    {
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mesActual.ToString() + ";");
+                        if (anoAnterior > 0)//ano anterior
+                        {
+                            int year = now.Year - 2012;
+                            this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
+                        }
+                    }
+                    else
+                    {
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlDia').selectedIndex = " + diaActual.ToString() + ";");
+                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
+                    }
+
+                    this.webView3.EvalScript("document.getElementById('ctl00_MainContent_BtnBusqueda').click();");
+                    cualCheco = false;
+                    tmrSexto.Start();
+                    tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 6 START";
+                }
+            }
+        }
+
         private void timerHandlerQuinto(object sender, EventArgs e)
         {
             tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 5 PROCESS";
@@ -1319,7 +1410,14 @@ namespace SunPlusXML
                     tmrCuarto.Stop();
                     tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 4 STOP";
                     this.webView3.EvalScript("document.getElementById('ctl00_MainContent_RdoFechas').click();");
-                    tmrQuinto.Start();
+                    if(cadaCuantasHorasGlobal==0)//nada de por horas
+                    {
+                        tmrQuinto.Start();
+                    }
+                    else
+                    {
+                        tmrQuintoPrimo.Start();
+                    }
                     tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 5 START";
                 }
             }
@@ -1602,6 +1700,10 @@ namespace SunPlusXML
             tmrQuinto.Interval = 1000;
             tmrQuinto.Tick += timerHandlerQuinto;
 
+            tmrQuintoPrimo = new Timer();
+            tmrQuintoPrimo.Interval = 1000;
+            tmrQuintoPrimo.Tick += timerHandlerQuintoPrimo;
+
             tmrSexto = new Timer();
             tmrSexto.Interval = 1000;
             tmrSexto.Tick += timerHandlerSexto;
@@ -1716,7 +1818,7 @@ namespace SunPlusXML
                     bool isRFCrfcReceptor = objx.Attributes["rfc"] != null;
                     if (isRFCrfcReceptor)
                     {
-                        rfcReceptor = objx.Attributes["rfc"].InnerText;
+                        rfcReceptor = objx.Attributes["rfc"].InnerText.Trim();
                     }
                     bool isRFCNombreReceptor = objx.Attributes["nombre"] != null;
                     if (isRFCNombreReceptor)
@@ -1735,9 +1837,16 @@ namespace SunPlusXML
                     bool isRFC = obj1.Attributes["rfc"] != null;
                     if (isRFC)
                     {
-                        rfc = obj1.Attributes["rfc"].InnerText;
+                        rfc = obj1.Attributes["rfc"].InnerText.Trim();
                     }
-                    
+                    //revisar que el RFC coincida , por lo menos uno de los 2
+                    if(!rfc.Equals(Properties.Settings.Default.RFC))
+                    {
+                        if (!rfcReceptor.Equals(Properties.Settings.Default.RFC))
+                        {
+                            return;//naranjas
+                        }
+                    }
 
                     String razon = "";
                     bool isRazon = obj1.Attributes["nombre"] != null;
@@ -2203,23 +2312,26 @@ namespace SunPlusXML
                                         }
                                         iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
                                     }
-                                    Box.AddText(ArialNormal, FontSize,
-                                        "Cliente: " + nombreReceptor + "\n" +
-                                        "RFC: " + rfcReceptor + "\n" +
-                                        "Emisor: " + razon + "\n" +
-                                        "RFC: " + rfc + "\n" +
-                                        "Domicilio Fiscal: "+ calle+" "+noExterior+" "+colonia+" "+municipio+" "+estado+"\n"+ 
-                                        "Folio: " + folio + "\nFolio Fiscal: " + folio_fiscal + "\nTotal: $" + total + "\nFecha de Expedicion: " + fecha + conceptosString + impuestosString + "\nNo de Serie del Certificado del SAT: " + noCertificadoSAT + "\nSello digital del CFDI:\n" + selloCFD + "\n\nSello del SAT:\n" + selloSAT + "\n\n\nEste documento es una representación impresa de un CFDI");
-                                    Box.AddText(ArialNormal, FontSize, "\n");
-                                    Double PosY = Height;
-                                    Contents.DrawText(0.0, ref PosY, 0.0, 0, 0.015, 0.05, TextBoxJustify.FitToWidth, Box);
-                                    Contents.RestoreGraphicsState();
-                                    Contents.SaveGraphicsState();
-                                    String DataString = "?re=" + rfc + "&rr=" + rfcReceptor + "&tt=" + total + "&id=" + folio_fiscal;
-                                    PdfQRCode QRCode = new PdfQRCode(Document, DataString, ErrorCorrection.M);
-                                    Contents.DrawQRCode(QRCode, 6.0, 6.8, 1.2);
-                                    Contents.RestoreGraphicsState();
-                                    Document.CreateFile();
+                                    if(cadaCuantasHorasGlobal==0)//no estoy en modo de horas
+                                    {
+                                        Box.AddText(ArialNormal, FontSize,
+                                       "Cliente: " + nombreReceptor + "\n" +
+                                       "RFC: " + rfcReceptor + "\n" +
+                                       "Emisor: " + razon + "\n" +
+                                       "RFC: " + rfc + "\n" +
+                                       "Domicilio Fiscal: " + calle + " " + noExterior + " " + colonia + " " + municipio + " " + estado + "\n" +
+                                       "Folio: " + folio + "\nFolio Fiscal: " + folio_fiscal + "\nTotal: $" + total + "\nFecha de Expedicion: " + fecha + conceptosString + impuestosString + "\nNo de Serie del Certificado del SAT: " + noCertificadoSAT + "\nSello digital del CFDI:\n" + selloCFD + "\n\nSello del SAT:\n" + selloSAT + "\n\n\nEste documento es una representación impresa de un CFDI");
+                                        Box.AddText(ArialNormal, FontSize, "\n");
+                                        Double PosY = Height;
+                                        Contents.DrawText(0.0, ref PosY, 0.0, 0, 0.015, 0.05, TextBoxJustify.FitToWidth, Box);
+                                        Contents.RestoreGraphicsState();
+                                        Contents.SaveGraphicsState();
+                                        String DataString = "?re=" + rfc + "&rr=" + rfcReceptor + "&tt=" + total + "&id=" + folio_fiscal;
+                                        PdfQRCode QRCode = new PdfQRCode(Document, DataString, ErrorCorrection.M);
+                                        Contents.DrawQRCode(QRCode, 6.0, 6.8, 1.2);
+                                        Contents.RestoreGraphicsState();
+                                        Document.CreateFile();
+                                    }
                                     totalDeDescargados++;
                                 }
                                 else
@@ -2262,173 +2374,189 @@ namespace SunPlusXML
                     }
                     else
                     {
-                        if(modoGlobal==2 && estoyEnEmitidos)
+
+
+
+                        //                  enQueHoraVoyGlobal
+                        //                    cadaCuantasHorasGlobal
+
+                        int horaQueSigue = enQueHoraVoyGlobal + cadaCuantasHorasGlobal;
+                        if(horaQueSigue<24 && cadaCuantasHorasGlobal!=0)//sigue con las horas
                         {
-                             DateTime now = DateTime.Now;
-                            int year = now.Year-anoAnterior;
-                            int month = now.Month;
-                            if(modoGlobal==2)//ultrapesado
+                            enQueHoraVoyGlobal = enQueHoraVoyGlobal + cadaCuantasHorasGlobal;
+                            tmrQuintoPrimo.Start();
+                        }
+                        else
+                        {//cambia el dia
+                            enQueHoraVoyGlobal = 0;
+                            //cambia un dia
+                            if (modoGlobal == 2 && estoyEnEmitidos)
                             {
-                                month = mesActual + 1;
-                            }
-                   
-                            int diaFinal = 28;
-                            if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-                            {
-                                diaFinal = 31;
-                            }
-                            else
-                            {
-                                if (month == 4 || month == 6 || month == 9 || month == 11)
+                                DateTime now = DateTime.Now;
+                                int year = now.Year - anoAnterior;
+                                int month = now.Month;
+                                if (modoGlobal == 2)//ultrapesado
                                 {
-                                    diaFinal = 30;
+                                    month = mesActual + 1;
+                                }
+
+                                int diaFinal = 28;
+                                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                                {
+                                    diaFinal = 31;
                                 }
                                 else
                                 {
-                                    if (year % 4 == 0)//ano bisiesto
+                                    if (month == 4 || month == 6 || month == 9 || month == 11)
                                     {
-                                        diaFinal = 29;
+                                        diaFinal = 30;
+                                    }
+                                    else
+                                    {
+                                        if (year % 4 == 0)//ano bisiesto
+                                        {
+                                            diaFinal = 29;
+                                        }
                                     }
                                 }
-                            }
 
-                            if (diaActual < diaFinal)
-                            {
-                                diaActual++;
-                                tmrDecimoCuarto.Start();
-                                return;
-                            }
-                            else
-                            {
-                                diaActual = 1;
-                                if(mesActual<11)
+                                if (diaActual < diaFinal)
                                 {
-                                    mesActual++;
+                                    diaActual++;
                                     tmrDecimoCuarto.Start();
                                     return;
                                 }
                                 else
                                 {
+                                    diaActual = 1;
+                                    if (mesActual < 11)
+                                    {
+                                        mesActual++;
+                                        tmrDecimoCuarto.Start();
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        tmrDecimoSexto.Start();
+                                        return;
+                                    }
+                                }
+
+
+                            }
+                            if (modoGlobal == 1)
+                            {
+                                if (estoyEnEmitidos)
+                                {
+                                    mandaCorreo();
+                                }
+                                else
+                                {
+                                    empiezaConLosEmitidos();
+                                }
+                            }
+                            else
+                            {
+                                this.proceso.Text = string.Format("Descargando {0} de {1}, Ya existian: {2}, Con errores: {3}", (object)this.posicion, (object)this.ligas.Count.ToString(), (object)this.cuantosYaExistian, (object)this.cuantosNoSeInsertaron);
+                                this.Descargados.Add(e.Item);
+                                this.Cursor = System.Windows.Forms.Cursors.Arrow;
+                                this.webControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
+                                this.proceso.Text = string.Format("Descarga Finalizada {0} de {1}, Ya existian: {2}, Con errores: {3}", (object)this.posicion, (object)this.ligas.Count.ToString(), (object)this.cuantosYaExistian, (object)this.cuantosNoSeInsertaron);
+                                if (estoyEnCancelados)
+                                {
+                                    //ya termine
+                                    mensajeParaElCorreo.Append(totalDeCancelados);
+                                    return;
+                                }
+                                if (!estoyEnCancelados && estoyEnEmitidos)
+                                {
+                                    //agregar para debuguear emitidos
+                                    mensajeParaElCorreo.Append(Enters + Enters + "Facturas Emitidas totales: " + (object)this.ligas.Count.ToString() + " Ya existian: " + (object)this.cuantosYaExistian);
                                     tmrDecimoSexto.Start();
                                     return;
                                 }
-                            }
-
-                            
-                        }
-                        if(modoGlobal==1)
-                        {
-                            if(estoyEnEmitidos)
-                            {
-                                mandaCorreo();
-                            }
-                            else
-                            {
-                                empiezaConLosEmitidos();
-                            }
-                        }
-                        else
-                        { 
-                            this.proceso.Text = string.Format("Descargando {0} de {1}, Ya existian: {2}, Con errores: {3}", (object)this.posicion, (object)this.ligas.Count.ToString() , (object)this.cuantosYaExistian, (object)this.cuantosNoSeInsertaron);
-                            this.Descargados.Add(e.Item);
-                            this.Cursor = System.Windows.Forms.Cursors.Arrow;
-                            this.webControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
-                            this.proceso.Text = string.Format("Descarga Finalizada {0} de {1}, Ya existian: {2}, Con errores: {3}", (object)this.posicion, (object)this.ligas.Count.ToString(), (object)this.cuantosYaExistian, (object)this.cuantosNoSeInsertaron);
-                            if(estoyEnCancelados)
-                            {
-                                //ya termine
-                                mensajeParaElCorreo.Append(totalDeCancelados);
-                                return;
-                            }
-                            if(!estoyEnCancelados && estoyEnEmitidos)
-                            {
-                                //agregar para debuguear emitidos
-                                mensajeParaElCorreo.Append(Enters + Enters + "Facturas Emitidas totales: " + (object)this.ligas.Count.ToString() + " Ya existian: " + (object)this.cuantosYaExistian);
-                                tmrDecimoSexto.Start();
-                                return;
-                            }
-                            DateTime now = DateTime.Now;
-                            int year = now.Year-anoAnterior;
-                            int month = now.Month;
-                            if(modoGlobal==2)//ultrapesado
-                            {
-                                month = mesActual + 1;
-                            }
-                   
-                            int diaFinal = 28;
-                            if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-                            {
-                                diaFinal = 31;
-                            }
-                            else
-                            {
-                                if (month == 4 || month == 6 || month == 9 || month == 11)
+                                DateTime now = DateTime.Now;
+                                int year = now.Year - anoAnterior;
+                                int month = now.Month;
+                                if (modoGlobal == 2)//ultrapesado
                                 {
-                                    diaFinal = 30;
+                                    month = mesActual + 1;
+                                }
+
+                                int diaFinal = 28;
+                                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                                {
+                                    diaFinal = 31;
                                 }
                                 else
                                 {
-                                    if (year % 4 == 0)//ano bisiesto
+                                    if (month == 4 || month == 6 || month == 9 || month == 11)
                                     {
-                                        diaFinal = 29;
+                                        diaFinal = 30;
+                                    }
+                                    else
+                                    {
+                                        if (year % 4 == 0)//ano bisiesto
+                                        {
+                                            diaFinal = 29;
+                                        }
                                     }
                                 }
-                            }
 
-                            if (diaActual < diaFinal)
-                            {
-                                diaActual++;
-                                if(estoyEnElMesAnterior)
+                                if (diaActual < diaFinal)
                                 {
-                                    tmrDecimo.Start();
-                                }
-                                else
-                                {
-                                    tmrQuinto.Start();
-                                }
-                            }
-                            else
-                            {
-                                if (estoyEnElMesAnterior)
-                                {
-                                    estoyEnElMesAnterior = false;
-                                    diaActual = 1;
-                                    empiezaConLosCancelados();
-                                }
-                                else
-                                {
-                                    if(modoGlobal==2)//ultrapesado
+                                    diaActual++;
+                                    if (estoyEnElMesAnterior)
                                     {
-                                        if(mesActual<11)
-                                        {
-                                            mesActual++;
-                                            diaActual = 1;
-                                            tmrDecimo.Start();
-                                        }
-                                        else
-                                        {
-                                            estoyEnElMesAnterior = false;
-                                            diaActual = 1;
-                                            mesActual = 0;
-                                            empiezaConLosCancelados();
-                                        }
+                                        tmrDecimo.Start();
                                     }
-                                    else//modo pesado
+                                    else
                                     {
-                                       /* diaActual++;
-                                        if (estoyEnElMesAnterior)
-                                        {
-                                            tmrDecimo.Start();
-                                        }
-                                        else
+                                        if(cadaCuantasHorasGlobal==0)//sin horas
                                         {
                                             tmrQuinto.Start();
-                                        }*/
-                                        empiezaConElMesAnterior();
+                                        }
+                                        else
+                                        {
+                                            tmrQuintoPrimo.Start();
+                                        }
+                                        
+                                    }
+                                }
+                                else
+                                {
+                                    if (estoyEnElMesAnterior)
+                                    {
+                                        estoyEnElMesAnterior = false;
+                                        diaActual = 1;
+                                        empiezaConLosCancelados();
+                                    }
+                                    else
+                                    {
+                                        if (modoGlobal == 2)//ultrapesado
+                                        {
+                                            if (mesActual < 11)
+                                            {
+                                                mesActual++;
+                                                diaActual = 1;
+                                                tmrDecimo.Start();
+                                            }
+                                            else
+                                            {
+                                                estoyEnElMesAnterior = false;
+                                                diaActual = 1;
+                                                mesActual = 0;
+                                                empiezaConLosCancelados();
+                                            }
+                                        }
+                                        else//modo pesado
+                                        {
+                                            empiezaConElMesAnterior();
+                                        }
                                     }
                                 }
                             }
-                        }
+                        }//if cambia un dia
                     }
                 }
             }
@@ -2470,6 +2598,119 @@ namespace SunPlusXML
             mensajeParaElCorreo = new StringBuilder(this.Enters+"Hoy el resultado fue:  Nuevas Facturas del Mes: "+totalDeDescargados+" Ya existian: "+totalDeYaExistian+" Facturas Canceladas: ");
             tmrSeptimo.Start();
         }
+        public void parteDeLaLogicaDeAuxAux()
+        {
+            if (modoGlobal == 2 && estoyEnEmitidos)//ultrapesado
+            {
+                DateTime now = DateTime.Now;
+                int year = now.Year - anoAnterior;
+                int month = now.Month;
+                int diaFinal = 28;
+                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                {
+                    diaFinal = 31;
+                }
+                else
+                {
+                    if (month == 4 || month == 6 || month == 9 || month == 11)
+                    {
+                        diaFinal = 30;
+                    }
+                    else
+                    {
+                        if (year % 4 == 0)//ano bisiesto
+                        {
+                            diaFinal = 29;
+                        }
+                    }
+                }
+
+                if (diaActual < diaFinal)
+                {
+                    diaActual++;
+                    tmrDecimoCuarto.Start();
+                }
+                else
+                {
+                    if (mesActual < 11)
+                    {
+                        mesActual++;
+                        diaActual = 1;
+                        tmrDecimoCuarto.Start();
+                    }
+                    else
+                    {
+                        estoyEnElMesAnterior = false;
+                        diaActual = 1;
+                        mesActual = 0;
+                        tmrDecimoSexto.Start();
+                    }
+                }
+                return;
+            }
+
+
+            if (estoyEnElMesAnterior)
+            {
+                estoyEnElMesAnterior = false;
+                diaActual = 1;
+                empiezaConLosCancelados();
+            }
+            else
+            {
+                if (modoGlobal == 2)//ultra pesado o pesado
+                {//saltate ese día
+                    DateTime now = DateTime.Now;
+                    int year = now.Year - anoAnterior;
+                    int month = now.Month;
+                    int diaFinal = 28;
+                    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                    {
+                        diaFinal = 31;
+                    }
+                    else
+                    {
+                        if (month == 4 || month == 6 || month == 9 || month == 11)
+                        {
+                            diaFinal = 30;
+                        }
+                        else
+                        {
+                            if (year % 4 == 0)//ano bisiesto
+                            {
+                                diaFinal = 29;
+                            }
+                        }
+                    }
+
+                    if (diaActual < diaFinal)
+                    {
+                        diaActual++;
+                        tmrQuinto.Start();
+                    }
+                    else
+                    {
+                        if (mesActual < 11)
+                        {
+                            mesActual++;
+                            diaActual = 1;
+                            tmrDecimo.Start();
+                        }
+                        else
+                        {
+                            estoyEnElMesAnterior = false;
+                            diaActual = 1;
+                            mesActual = 0;
+                            empiezaConLosCancelados();
+                        }
+                    }
+                }
+                else
+                {
+                    empiezaConElMesAnterior();
+                }
+            }
+        }
         public void auxaux()
         {
             String siEncontroResultados =(String) this.webView3.EvalScript("document.getElementById('ctl00_MainContent_PnlNoResultados').style.display");
@@ -2479,118 +2720,24 @@ namespace SunPlusXML
                 {
                     if (siEncontroResultados.Equals("inline"))
                     {
-                        if(modoGlobal==2 && estoyEnEmitidos)//ultrapesado
+                        if(cadaCuantasHorasGlobal!=0)//si es por horas
                         {
-                            DateTime now = DateTime.Now;
-                            int year = now.Year-anoAnterior;
-                            int month = now.Month;
-                            int diaFinal = 28;
-                            if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                            int horaQueSigue = enQueHoraVoyGlobal + cadaCuantasHorasGlobal;
+                            if (horaQueSigue < 24)//sigue con las horas
                             {
-                                diaFinal = 31;
+                                enQueHoraVoyGlobal = enQueHoraVoyGlobal + cadaCuantasHorasGlobal;
+                                tmrQuintoPrimo.Start();
                             }
                             else
                             {
-                                if (month == 4 || month == 6 || month == 9 || month == 11)
-                                {
-                                    diaFinal = 30;
-                                }
-                                else
-                                {
-                                    if (year % 4 == 0)//ano bisiesto
-                                    {
-                                        diaFinal = 29;
-                                    }
-                                }
+                                enQueHoraVoyGlobal = 0;
+                                parteDeLaLogicaDeAuxAux();
                             }
-
-                            if (diaActual < diaFinal)
-                            {
-                                diaActual++;
-                                tmrDecimoCuarto.Start();
-                            }
-                            else
-                            {
-                                if (mesActual < 11)
-                                {
-                                    mesActual++;
-                                    diaActual = 1;
-                                    tmrDecimoCuarto.Start();
-                                }
-                                else
-                                {
-                                    estoyEnElMesAnterior = false;
-                                    diaActual = 1;
-                                    mesActual = 0;
-                                    tmrDecimoSexto.Start();
-                                }
-                            }
-                            return;
-                        }
-
-
-                        if (estoyEnElMesAnterior)
-                        {
-                            estoyEnElMesAnterior = false;
-                            diaActual = 1;
-                            empiezaConLosCancelados();
                         }
                         else
                         {
-                            if(modoGlobal==2 )//ultra pesado o pesado
-                            {//saltate ese día
-                                 DateTime now = DateTime.Now;
-                                int year = now.Year-anoAnterior;
-                                int month = now.Month;
-                                int diaFinal = 28;
-                                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-                                {
-                                    diaFinal = 31;
-                                }
-                                else
-                                {
-                                    if (month == 4 || month == 6 || month == 9 || month == 11)
-                                    {
-                                        diaFinal = 30;
-                                    }
-                                    else
-                                    {
-                                        if (year % 4 == 0)//ano bisiesto
-                                        {
-                                            diaFinal = 29;
-                                        }
-                                    }
-                                }
-
-                                if (diaActual < diaFinal)
-                                {
-                                    diaActual++;
-                                    tmrQuinto.Start();
-                                }
-                                else
-                                {
-                                    if (mesActual < 11)
-                                    {
-                                        mesActual++;
-                                        diaActual = 1;
-                                        tmrDecimo.Start();
-                                    }
-                                    else
-                                    {
-                                        estoyEnElMesAnterior = false;
-                                        diaActual = 1;
-                                        mesActual = 0;
-                                        empiezaConLosCancelados();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                empiezaConElMesAnterior();
-                            }
-                            
+                            parteDeLaLogicaDeAuxAux();
                         }
-
                     }
                     else
                     {
