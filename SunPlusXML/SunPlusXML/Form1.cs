@@ -2092,19 +2092,24 @@ namespace SunPlusXML
                                     connection.Open();
                                     SqlCommand cmd = new SqlCommand(query, connection);
                                     cmd.ExecuteNonQuery();
-
-                                    String FileName = carpeta.Text + (object)Path.DirectorySeparatorChar +this.AnoSel+(object)Path.DirectorySeparatorChar+ this.MesSel + (object)Path.DirectorySeparatorChar + diaActual.ToString() + (object)Path.DirectorySeparatorChar + folio_fiscal + ".pdf";
-                                    Document = new PdfDocument(PaperType.Letter, false, UnitOfMeasure.Inch, FileName);
-                                    DefineFontResources();
-                                    DefineTilingPatternResource();
-                                    PdfPage Page = new PdfPage(Document);
-                                    PdfContents Contents = new PdfContents(Page);
-                                    Contents.SaveGraphicsState();
-                                    Contents.Translate(0.1, 0.1);
+                                    PdfContents Contents = null;
+                                    PdfPage Page = null;
                                     const Double Width = 5.15;
                                     const Double Height = 10.65;
                                     const Double FontSize = 9.0;
-                                    PdfFileWriter.TextBox Box = new PdfFileWriter.TextBox(Width, 0.25);
+                                    PdfFileWriter.TextBox Box = null;
+                                    if (cadaCuantasHorasGlobal == 0)//no estoy en modo de horas
+                                    {
+                                        String FileName = carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual.ToString() + (object)Path.DirectorySeparatorChar + folio_fiscal + ".pdf";
+                                        Document = new PdfDocument(PaperType.Letter, false, UnitOfMeasure.Inch, FileName);
+                                        DefineFontResources();
+                                        DefineTilingPatternResource();
+                                        Page = new PdfPage(Document);
+                                        Contents = new PdfContents(Page);
+                                        Contents.SaveGraphicsState();
+                                        Contents.Translate(0.1, 0.1);
+                                        Box = new PdfFileWriter.TextBox(Width, 0.25);
+                                    }
                                     XmlNodeList conceptos = doc.GetElementsByTagName("cfdi:Concepto");
                                     if (conceptos.Count == 0)
                                     {

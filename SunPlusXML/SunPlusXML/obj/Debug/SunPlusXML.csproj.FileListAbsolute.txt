@@ -37,7 +37,6 @@ C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\bin\Debug\EO.WebBrowser.dll
 C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\bin\Debug\EO.WebBrowser.Wpf.dll
 C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\bin\Debug\EO.WebBrowser.xml
 C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\bin\Debug\EO.WebBrowser.Wpf.xml
-C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.csprojResolveAssemblyReference.cache
 C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.csproj.ResolveComReference.cache
 C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.Form1.resources
 C:\SunplusXML\SunplusXML\SunPlusXML\SunPlusXML\obj\Debug\SunPlusXML.Properties.Resources.resources
