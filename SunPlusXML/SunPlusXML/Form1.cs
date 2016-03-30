@@ -68,6 +68,7 @@ namespace SunPlusXML
         public String month { get; set; }
         public String year { get; set; }
         public String day { get; set; }
+        public String aPartirDeDondeGlobal { get; set; }
 
         public StringBuilder mensajeParaElCorreo { get; set; }
       
@@ -101,6 +102,7 @@ namespace SunPlusXML
         public Form1(int modo)
         {
             modoGlobal = modo;
+            aPartirDeDondeGlobal = "";
             deboEmpezarConEmitidos = 0;
             cadaCuantasHorasGlobal = 0;
             anoAnterior = 0;
@@ -119,9 +121,10 @@ namespace SunPlusXML
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
 
         }
-        public Form1(int modo, int empezar)
+        public Form1(int modo, int empezar, String apartirdedonde)
         {
             modoGlobal = modo;
+            aPartirDeDondeGlobal = apartirdedonde;//ddMMAAAA
             deboEmpezarConEmitidos = empezar;//0 empieza con recibidos, 1 empieza con emitidos
             cadaCuantasHorasGlobal = 0;
             anoAnterior = 0;
@@ -132,17 +135,14 @@ namespace SunPlusXML
             }
             InitializeComponent();
             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
-
-
-
             this.timer1 = new Timer();
             this.timer1.Interval = 3000;
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
-
         }
         public Form1(int modo, String rfcNuevo, String ciecNueva, String correoNuevo)
         {
             modoGlobal = modo;
+            aPartirDeDondeGlobal = "";
             deboEmpezarConEmitidos = 0;
             cadaCuantasHorasGlobal = 0;
             anoAnterior = 0;
@@ -168,6 +168,7 @@ namespace SunPlusXML
         public Form1(int modo, String rfcNuevo, String ciecNueva, String correoNuevo, int cadaCuantasHoras)
         {
             cadaCuantasHorasGlobal = cadaCuantasHoras;
+            aPartirDeDondeGlobal = "";
             enQueHoraVoyGlobal = 0;
             deboEmpezarConEmitidos = 0;
             modoGlobal = modo;
@@ -1607,6 +1608,17 @@ namespace SunPlusXML
                     mesActual = 0;//enero
                 }
             }
+
+            if(aPartirDeDondeGlobal.Equals(""))
+            {
+                //do nothing, be happy uhhh uhhhh!
+            }
+            else
+            {
+                diaActual = Convert.ToInt16(aPartirDeDondeGlobal.Substring(0, 2));
+                mesActual = Convert.ToInt16(aPartirDeDondeGlobal.Substring(2, 2))-1;
+            }
+
             soloUnaVezNoveno = true;
             estoyEnEmitidos = false;
             estoyEnElMesAnterior = false;

@@ -102,14 +102,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SunPlusXML.exe" size="100800">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SunPlusXML.exe" size="101312">
       <assemblyIdentity name="SunPlusXML" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>TzAoibwe9KNtMEyzPXOm5uNQs+xQ/caNcDFptH1TG0U=</dsig:DigestValue>
+        <dsig:DigestValue>ATHr9oeiPpU56pUuqM95qHlfF5lzDBEfoV1sTBBCtjU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
