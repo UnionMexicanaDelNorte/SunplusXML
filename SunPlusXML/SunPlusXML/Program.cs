@@ -68,7 +68,7 @@ namespace SunPlusXML
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //Application.Run(new Form1(3, "IAS9306298H0", "Publico8", "f.pecina@unav.edu.mx", 4));
+            //Application.Run(new Form1(3, 1));
             //return;
 
             if (args.Length >0)
@@ -85,9 +85,15 @@ namespace SunPlusXML
                     }
                     else
                     {
-                        Application.Run(new Form1(Convert.ToInt32(args[0]), args[1], args[2], args[3]));
+                        if (args.Length == 2)
+                        {
+                            Application.Run(new Form1(Convert.ToInt32(args[0]), Convert.ToInt32(args[1])));
+                        }
+                        else
+                        {
+                            Application.Run(new Form1(Convert.ToInt32(args[0]), args[1], args[2], args[3]));
+                        }
                     }
-                    
                 }
                 
             }

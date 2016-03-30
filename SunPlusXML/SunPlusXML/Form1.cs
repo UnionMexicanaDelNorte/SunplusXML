@@ -41,6 +41,7 @@ namespace SunPlusXML
         public int primeraVez { get; set; }
         public int cadaCuantasHorasGlobal { get; set; }
         public int enQueHoraVoyGlobal { get; set; }
+        public int deboEmpezarConEmitidos { get; set; }
        
         public String Enters { get; set; }
         public List<DownloadItem> Descargados { get; set; }
@@ -100,6 +101,7 @@ namespace SunPlusXML
         public Form1(int modo)
         {
             modoGlobal = modo;
+            deboEmpezarConEmitidos = 0;
             cadaCuantasHorasGlobal = 0;
             anoAnterior = 0;
             if(modo==3)//ultrapesado del ano anterior
@@ -117,9 +119,31 @@ namespace SunPlusXML
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
 
         }
+        public Form1(int modo, int empezar)
+        {
+            modoGlobal = modo;
+            deboEmpezarConEmitidos = empezar;//0 empieza con recibidos, 1 empieza con emitidos
+            cadaCuantasHorasGlobal = 0;
+            anoAnterior = 0;
+            if (modo == 3)//ultrapesado del ano anterior
+            {
+                modoGlobal = 2;//trabaja como todo el ano
+                anoAnterior = 1;//pero descarga la del año anterior!
+            }
+            InitializeComponent();
+            this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
+
+
+
+            this.timer1 = new Timer();
+            this.timer1.Interval = 3000;
+            this.timer1.Tick += new EventHandler(this.timer1_Tick);
+
+        }
         public Form1(int modo, String rfcNuevo, String ciecNueva, String correoNuevo)
         {
             modoGlobal = modo;
+            deboEmpezarConEmitidos = 0;
             cadaCuantasHorasGlobal = 0;
             anoAnterior = 0;
             if (modo == 3)//ultrapesado del ano anterior
@@ -145,6 +169,7 @@ namespace SunPlusXML
         {
             cadaCuantasHorasGlobal = cadaCuantasHoras;
             enQueHoraVoyGlobal = 0;
+            deboEmpezarConEmitidos = 0;
             modoGlobal = modo;
             anoAnterior = 0;
             if (modo == 3)//ultrapesado del ano anterior
@@ -1492,8 +1517,18 @@ namespace SunPlusXML
                             this.webView3.EvalScript("document.getElementsByName('Ecom_User_ID')[0].value='" + Properties.Settings.Default.RFC + "';");
                             this.webView3.EvalScript("document.getElementsByName('Ecom_Password')[0].value='" + Properties.Settings.Default.pass + "';");
                             this.webView3.EvalScript("document.getElementById('submit').click();");
-                            tmrTercero.Start();
-                            tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 3 START";
+                            if(deboEmpezarConEmitidos==1)
+                            {
+                                tmrDecimoSegundo.Start();
+                                tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 12 START";
+                            }
+                            else
+                            {
+                                tmrTercero.Start();
+                                tiempoHastaTrigger.Text = "EN PROCESO AUTOMATICO 3 START";
+                            }
+                            
+
                         }
                     }
                 }
