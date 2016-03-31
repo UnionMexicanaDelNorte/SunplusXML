@@ -2808,7 +2808,14 @@ namespace SunPlusXML
                             if (horaQueSigue < 24)//sigue con las horas
                             {
                                 enQueHoraVoyGlobal = enQueHoraVoyGlobal + cadaCuantasHorasGlobal;
-                                tmrQuintoPrimo.Start();
+                                if(estoyEnEmitidos)
+                                {
+                                    tmrDecimoCuarto.Start();
+                                }
+                                else
+                                {
+                                    tmrQuintoPrimo.Start();
+                                }
                             }
                             else
                             {
