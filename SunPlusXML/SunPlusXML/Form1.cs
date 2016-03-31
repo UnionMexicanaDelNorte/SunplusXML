@@ -124,9 +124,11 @@ namespace SunPlusXML
         public Form1(int modo, int empezar, String apartirdedonde)
         {
             modoGlobal = modo;
-            aPartirDeDondeGlobal = apartirdedonde;//ddMMAAAA
+            aPartirDeDondeGlobal = apartirdedonde;//ddMMAAAAcadaCuantasHorasGlobal
             deboEmpezarConEmitidos = empezar;//0 empieza con recibidos, 1 empieza con emitidos
-            cadaCuantasHorasGlobal = 0;
+            
+            cadaCuantasHorasGlobal = Convert.ToInt16(aPartirDeDondeGlobal.Substring(8, 1));
+               
             anoAnterior = 0;
             if (modo == 3)//ultrapesado del ano anterior
             {
@@ -800,9 +802,20 @@ namespace SunPlusXML
                         }
                         entraUnaSolaVezAlAux = true;
                         String html = this.webView3.GetHtml();
-                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlHora').value='23';");
-                        this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlMinuto').value='59';");
-                    
+                        if(cadaCuantasHorasGlobal==0)//nada de por horas
+                        {
+                            this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlHora').value='23';");
+                            this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlMinuto').value='59';");
+                        }
+                        else
+                        {
+                            int elQueSigue = enQueHoraVoyGlobal + cadaCuantasHorasGlobal - 1;
+                            this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_DdlHora').selectedIndex = " + enQueHoraVoyGlobal.ToString() + ";");
+                            this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlHora').selectedIndex = " + elQueSigue.ToString() + ";");        
+                   
+                           
+                        }
+                       
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_Calendario_text').value='"+dd+"/"+mm+"/" + year + "';");
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_Calendario_text').value='"+dd+"/"+mm+"/" + year + "';");
                     }
