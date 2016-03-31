@@ -126,9 +126,7 @@ namespace SunPlusXML
             modoGlobal = modo;
             aPartirDeDondeGlobal = apartirdedonde;//ddMMAAAAcadaCuantasHorasGlobal
             deboEmpezarConEmitidos = empezar;//0 empieza con recibidos, 1 empieza con emitidos
-            
             cadaCuantasHorasGlobal = Convert.ToInt16(aPartirDeDondeGlobal.Substring(8, 1));
-               
             anoAnterior = 0;
             if (modo == 3)//ultrapesado del ano anterior
             {
@@ -810,6 +808,7 @@ namespace SunPlusXML
                         else
                         {
                             int elQueSigue = enQueHoraVoyGlobal + cadaCuantasHorasGlobal - 1;
+                            this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlMinuto').value='59';");
                             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaInicial2_DdlHora').selectedIndex = " + enQueHoraVoyGlobal.ToString() + ";");
                             this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFechaFinal2_DdlHora').selectedIndex = " + elQueSigue.ToString() + ";");        
                    
@@ -2460,7 +2459,14 @@ namespace SunPlusXML
                         if(horaQueSigue<24 && cadaCuantasHorasGlobal!=0)//sigue con las horas
                         {
                             enQueHoraVoyGlobal = enQueHoraVoyGlobal + cadaCuantasHorasGlobal;
-                            tmrQuintoPrimo.Start();
+                            if(estoyEnEmitidos)
+                            {
+                                tmrDecimoCuarto.Start();
+                            }
+                            else
+                            {
+                                tmrQuintoPrimo.Start();
+                            }
                         }
                         else
                         {//cambia el dia
