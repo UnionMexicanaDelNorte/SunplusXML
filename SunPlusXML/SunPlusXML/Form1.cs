@@ -23,6 +23,8 @@ using System.Diagnostics;
 using System.Data.Linq;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Net;
+using System.Collections.Specialized;
 using PdfFileWriter;
 namespace SunPlusXML
 {
@@ -121,6 +123,110 @@ namespace SunPlusXML
             this.timer1.Tick += new EventHandler(this.timer1_Tick);
 
         }
+        public void sincroniza(String fechaExpedicion, String rfc, String razonSocial, int STATUS, String total, String folio, String folioFiscal, String rfcRaiz, String fechaCancelacion)
+        {
+            string URL = "http://miscuentas.adventistasumn.org/miscuentas.php";
+            double nuevoTotal = Math.Round(Convert.ToDouble(total), 2);
+            total = Convert.ToString(nuevoTotal);                               
+            String query2 = "UPDATE [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] set sincronizazdo = 1 WHERE folioFiscal = '" + folioFiscal + "'";
+            String queryCheck2 = "SELECT sincronizado FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folioFiscal + "'";
+            try
+            {
+                using (SqlConnection connection2 = new SqlConnection(connString))
+                {
+                    connection2.Open();
+                    SqlCommand cmdCheck2 = new SqlCommand(queryCheck2, connection2);
+                    SqlDataReader reader2 = cmdCheck2.ExecuteReader();
+                    if (reader2.HasRows)
+                    {
+                        int sincronizado;
+                        if(reader2.Read())
+                        {
+                            sincronizado = reader2.GetInt16(0);
+                            if (sincronizado == 1) 
+                            {
+                                //be happy
+                            }
+                            else
+                            {
+                                WebClient webClient = new WebClient();
+                                NameValueCollection formData = new NameValueCollection();
+                                formData["servicio"] = "polizas";
+                                formData["accion"] = "guardaFactura";
+                                formData["fechaExpedicion"] = fechaExpedicion;
+                                formData["rfc"] = rfc;
+                                formData["razonSocial"] = razonSocial;
+                                formData["STATUS"] = Convert.ToString(STATUS);
+                                formData["total"] = total;
+                                formData["folio"] = folio;
+                                formData["folioFiscal"] = folioFiscal;
+                                formData["rfcRaiz"] = rfcRaiz;
+                                formData["fechaCancelacion"] = fechaCancelacion;
+                                formData["isMobile"] = "1";
+                                byte[] responseBytes = webClient.UploadValues(URL, "POST", formData);
+                                String responsefromserver = Encoding.UTF8.GetString(responseBytes);
+                                if(responsefromserver.Equals("{ \"success\" : 1 }"))
+                                {
+                                    reader2.Close();
+                                    connection2.Close();
+                                    connection2.Open();
+                                    SqlCommand cmd2 = new SqlCommand(query2, connection2);
+                                    cmd2.ExecuteNonQuery();
+                                }
+                                //Console.WriteLine(responsefromserver);
+                                webClient.Dispose();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        WebClient webClient = new WebClient();
+                        NameValueCollection formData = new NameValueCollection();
+                        formData["servicio"] = "polizas";
+                        formData["accion"] = "guardaFactura";
+                        formData["fechaExpedicion"] = fechaExpedicion;
+                        formData["rfc"] = rfc;
+                        formData["razonSocial"] = razonSocial;
+                        formData["STATUS"] = Convert.ToString(STATUS);
+                        formData["total"] = total;
+                        formData["folio"] = folio;
+                        formData["folioFiscal"] = folioFiscal;
+                        formData["rfcRaiz"] = rfcRaiz;
+                        formData["fechaCancelacion"] = fechaCancelacion;
+                        formData["isMobile"] = "1";
+                        byte[] responseBytes = webClient.UploadValues(URL, "POST", formData);
+                        String responsefromserver = Encoding.UTF8.GetString(responseBytes);
+                     /*   if (responsefromserver.Equals("{ \"success\" : 1 }"))
+                        {
+                            reader2.Close();
+                            connection2.Close();
+                            connection2.Open();
+                            SqlCommand cmd2 = new SqlCommand(query2, connection2);
+                            cmd2.ExecuteNonQuery();
+                        }*/
+                        //Console.WriteLine(responsefromserver);
+                        webClient.Dispose();
+                    }
+                }
+            }
+            catch (Exception ex1)
+            {
+                ex1.ToString();
+            }
+        }
+        /*
+         *   string URL = "http://unionnorte.org/push/push.php";
+                                WebClient webClient = new WebClient();
+
+                                NameValueCollection formData = new NameValueCollection();
+                                formData["token"] = token;
+                                formData["mensaje"] = mensaje;
+
+                                byte[] responseBytes = webClient.UploadValues(URL, "POST", formData);
+                                string responsefromserver = Encoding.UTF8.GetString(responseBytes);
+                                Console.WriteLine(responsefromserver);
+                                webClient.Dispose()
+         */
         public Form1(int modo, int empezar, String apartirdedonde)
         {
             modoGlobal = modo;
@@ -605,6 +711,8 @@ namespace SunPlusXML
                                         catch (Exception ex1)
                                         {
                                             ex1.ToString();
+                                           System.Windows.Forms.Clipboard.SetText(ex1.ToString());
+                                            //System.Windows.Clipboard.SetText(ex1.ToString());
                                             this.cuantosNoSeInsertaron++;
                                             //  System.Windows.Forms.MessageBox.Show("Error Message", ex1.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                         }
@@ -1187,6 +1295,8 @@ namespace SunPlusXML
                                         catch (Exception ex1)
                                         {
                                             ex1.ToString();
+                                            System.Windows.Forms.Clipboard.SetText(ex1.ToString());
+                                          
                                             this.cuantosNoSeInsertaron++;
                                             //  System.Windows.Forms.MessageBox.Show("Error Message", ex1.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                         }
@@ -1831,6 +1941,8 @@ namespace SunPlusXML
                     if (new FileInfo(full).Length == 0)
                     {
                         // empty
+                        System.Windows.Forms.Clipboard.SetText("archivo vacio");
+                                          
                         this.cuantosNoSeInsertaron++;
                         
                     }
@@ -2115,33 +2227,38 @@ namespace SunPlusXML
 
 
                             String query = "";
+                            int STATUS = -1;
                             if (this.AnoSel.IndexOf("Emitidos") != -1)
                             {
                                 if (tipoDeComprobante.Equals("INGRESO"))
                                 {
+                                    STATUS = 2;
                                     query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
                                 }
                                 else
                                 {
+                                    STATUS = 1;
                                     query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfcReceptor + "', '" + nombreReceptor + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
                                 }
                                 insertaProveedor(rfcReceptor, nombreReceptor);
+                                sincroniza(fecha, rfcReceptor, nombreReceptor, STATUS, total, folio, folio_fiscal, Properties.Settings.Default.RFC, "");
                             }
                             else
                             {
                                 if (tipoDeComprobante.Equals("INGRESO"))
                                 {
+                                    STATUS = 1;
                                     query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0,'" + Properties.Settings.Default.RFC + "')";
-
                                 }
                                 else
                                 {
+                                    STATUS = 2;
                                     query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar,rfcRaiz) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','2',0,'" + Properties.Settings.Default.RFC + "')";
                                 }
                                 //query = "INSERT INTO [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] (folioFiscal,nombreArchivoXML,ruta,rfc,razonSocial,total,folio,fechaExpedicion,nombreArchivoPDF,STATUS,ocultaEnLigar) VALUES ('" + folio_fiscal + "', '" + nombreDelArchivo + "', '" + carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual + "', '" + rfc + "', '" + razon + "', " + total + ", '" + folio + "' , '" + fecha + "', '" + folio_fiscal + ".pdf','1',0)";
                                 insertaProveedor(rfc, razon);
+                                sincroniza(fecha, rfc,  razon,  STATUS,  total,  folio,  folio_fiscal, Properties.Settings.Default.RFC, "");                            
                             }
-
                             String queryCheck = "SELECT * FROM [" + Properties.Settings.Default.Database + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folio_fiscal + "'";
 
                             try
@@ -2416,6 +2533,8 @@ namespace SunPlusXML
                             catch (Exception ex1)
                             {
                                 ex1.ToString();
+                                System.Windows.Forms.Clipboard.SetText(query);
+                                          
                                 this.cuantosNoSeInsertaron++;
                                 //   System.Windows.Forms.MessageBox.Show("Error Message", ex1.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
