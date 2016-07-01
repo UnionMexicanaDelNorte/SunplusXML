@@ -111,7 +111,8 @@ namespace SunPlusXML
             if(modo==3)//ultrapesado del ano anterior
             {
                 modoGlobal = 2;//trabaja como todo el ano
-                anoAnterior = 2;//pero descarga la del año anterior!
+                //anoAnterior = 2;//pero descarga la del año anterior! para hace 2 años
+                anoAnterior = 1;
             }
             InitializeComponent();
              this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='"+Properties.Settings.Default.Password+"';connect timeout = 60";
@@ -237,7 +238,8 @@ namespace SunPlusXML
             if (modo == 3)//ultrapesado del ano anterior
             {
                 modoGlobal = 2;//trabaja como todo el ano
-                anoAnterior = 2;//pero descarga la del año anterior!
+                //anoAnterior = 2;//pero descarga la del año anterior! para hace 2 años
+                anoAnterior = 1;
             }
             InitializeComponent();
             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
@@ -255,7 +257,8 @@ namespace SunPlusXML
             if (modo == 3)//ultrapesado del ano anterior
             {
                 modoGlobal = 2;//trabaja como todo el ano
-                anoAnterior = 2;//pero descarga la del año anterior!
+                //anoAnterior = 2;//pero descarga la del año anterior! para hace 2años
+                anoAnterior = 1;
             }
             InitializeComponent();
             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
@@ -282,7 +285,8 @@ namespace SunPlusXML
             if (modo == 3)//ultrapesado del ano anterior
             {
                 modoGlobal = 2;//trabaja como todo el ano
-                anoAnterior = 2;//pero descarga la del año anterior!
+               // anoAnterior = 2;//pero descarga la del año anterior! para hace 2 años
+                anoAnterior = 1;
             }
             InitializeComponent();
             this.connString = "Database=" + Properties.Settings.Default.Database + ";Data Source=" + Properties.Settings.Default.Datasource + ";Integrated Security=False;User ID='" + Properties.Settings.Default.User + "';Password='" + Properties.Settings.Default.Password + "';connect timeout = 60";
@@ -1059,7 +1063,8 @@ namespace SunPlusXML
             if(mes==-1)
             {
                 mes = 11;
-                int year = now.Year-2011-anoAnterior;
+                //int year = now.Year-2011-anoAnterior; para hace 2  años
+                int year = now.Year-2012;
                 this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");                
             }
             this.webView3.EvalScript("window.alert = function() {};");
@@ -1365,7 +1370,8 @@ namespace SunPlusXML
                     if (mes == -1)
                     {
                         mes = 11;
-                        int year = now.Year - 2011-anoAnterior;
+                        //int year = now.Year - 2011-anoAnterior; para hace 2 años
+                        int year = now.Year - 2012;
                         this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
                     }
                     this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mes.ToString() + ";");
@@ -1471,7 +1477,8 @@ namespace SunPlusXML
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = " + mesActual.ToString() + ";");
                         if (anoAnterior > 0)//ano anterior
                         {
-                            int year = now.Year - 2011-anoAnterior;
+                            //int year = now.Year - 2011-anoAnterior; para hace 2 años
+                            int year = now.Year - 2012;
                             this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
                         }
                     }
@@ -1519,7 +1526,8 @@ namespace SunPlusXML
                         this.webView3.EvalScript("document.getElementById('ctl00_MainContent_CldFecha_DdlMes').selectedIndex = "+mesActual.ToString()+";");
                         if(anoAnterior>0)//ano anterior
                         {
-                            int year = now.Year - 2011 - anoAnterior;
+                            //int year = now.Year - 2011 - anoAnterior; para hace 2 años
+                            int year = now.Year - 2012;
                             this.webView3.EvalScript("document.getElementById('DdlAnio').selectedIndex = " + year + ";");
                         }
                     }
