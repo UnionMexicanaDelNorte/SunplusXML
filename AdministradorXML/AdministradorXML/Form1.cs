@@ -230,10 +230,10 @@ namespace AdministradorXML
 
             gastosSunplusList.Location = new Point((width / 2) + (posX / 2), posY + (height / 2) - (posY * 2) + posY);
             gastosSunplusList.Size = new Size((width / 2) - (posX * 2), (height / 2) - (posY * 2));
-            //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
+            //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
           
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL' order by SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) asc";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL' order by SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) asc";
            
             try
             {
@@ -287,7 +287,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos SAT
-                    String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '2' GROUP BY rfc,razonSocial order by rfc asc";
+                    String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '2' GROUP BY rfc,razonSocial order by rfc asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -392,7 +392,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos SAT
-                    String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '1' GROUP BY rfc,razonSocial order by rfc asc";
+                    String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '1' GROUP BY rfc,razonSocial order by rfc asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -503,7 +503,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '1'";
+                    String queryXML = "SELECT ACNT_CODE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '1'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         bool first = true;
@@ -539,7 +539,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '2'";
+                    String queryXML = "SELECT ACNT_CODE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '2'";
 
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
@@ -577,7 +577,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos sunplus
-                    String queryXML = "SELECT ACNT_CODE FROM [SU_FISCAL].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '3'";
+                    String queryXML = "SELECT ACNT_CODE FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[permisos_cuentas] WHERE unidadDeNegocio = '" + Login.unidadDeNegocioGlobal + "' AND tipoDeContabilidad = '3'";
 
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {

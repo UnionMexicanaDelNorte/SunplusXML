@@ -65,7 +65,7 @@ namespace AdministradorXML
                     {
                         connection.Open();
                         //canceladas SAT
-                        String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '"+tipo+"' GROUP BY rfc,razonSocial order by rfc asc";
+                        String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '"+tipo+"' GROUP BY rfc,razonSocial order by rfc asc";
                         using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                         {
                             SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -175,7 +175,7 @@ namespace AdministradorXML
             tipoCombo.Items.Add(new Item("Ingreso", 3));
             tipoCombo.SelectedIndex = 0;       
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [SU_FISCAL].[dbo].[facturacion_XML]";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML]";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))

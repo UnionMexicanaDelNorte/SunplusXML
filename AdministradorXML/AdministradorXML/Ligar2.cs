@@ -59,17 +59,17 @@ namespace AdministradorXML
                     String queryXML = "";
                     if (tipoDeContabilidad == 1)
                     {
-                        queryXML = "SELECT TOP 1 rfc FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS = '1' AND razonSocial = '" + razonSocial + "'";
+                        queryXML = "SELECT TOP 1 rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS = '1' AND razonSocial = '" + razonSocial + "'";
                     }
                     else
                     {
                         if (tipoDeContabilidad == 2)
                         {
-                            queryXML = "SELECT TOP 1 rfc FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS = '2' AND razonSocial = '" + razonSocial + "'";
+                            queryXML = "SELECT TOP 1 rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS = '2' AND razonSocial = '" + razonSocial + "'";
                         }
                         else
                         {
-                            queryXML = "SELECT TOP 1 rfc FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS in ('1','2') AND razonSocial = '" + razonSocial + "'";
+                            queryXML = "SELECT TOP 1 rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS in ('1','2') AND razonSocial = '" + razonSocial + "'";
                         }
                     }
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
@@ -104,17 +104,17 @@ namespace AdministradorXML
                     String queryXML = "";
                     if (tipoDeContabilidad == 1)
                     {
-                        queryXML = "SELECT TOP 1 razonSocial FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS = '1' AND rfc = '" + RFC + "'";
+                        queryXML = "SELECT TOP 1 razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS = '1' AND rfc = '" + RFC + "'";
                     }
                     else
                     {
                         if (tipoDeContabilidad == 2)
                         {
-                            queryXML = "SELECT TOP 1 razonSocial FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS = '2' AND rfc = '" + RFC + "'";
+                            queryXML = "SELECT TOP 1 razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS = '2' AND rfc = '" + RFC + "'";
                         }
                         else
                         {
-                            queryXML = "SELECT TOP 1 razonSocial FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS in('1', '2') AND rfc = '" + RFC + "'";
+                            queryXML = "SELECT TOP 1 razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS in('1', '2') AND rfc = '" + RFC + "'";
                         }
                     }
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
@@ -298,17 +298,17 @@ namespace AdministradorXML
                     String queryXML = "";
                     if (tipoDeContabilidad == 1)
                     {
-                        queryXML = "SELECT rfc,SUM(total) as total,razonSocial, count(*) as cuantos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS = '1' GROUP BY rfc,razonSocial order by rfc asc";
+                        queryXML = "SELECT rfc,SUM(total) as total,razonSocial, count(*) as cuantos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS = '1' GROUP BY rfc,razonSocial order by rfc asc";
                     }
                     else
                     {
                         if (tipoDeContabilidad == 2)
                         {
-                            queryXML = "SELECT rfc,SUM(total) as total,razonSocial, count(*) as cuantos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS = '2' GROUP BY rfc,razonSocial order by rfc asc";
+                            queryXML = "SELECT rfc,SUM(total) as total,razonSocial, count(*) as cuantos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS = '2' GROUP BY rfc,razonSocial order by rfc asc";
                         }
                         else
                         {
-                            queryXML = "SELECT rfc,SUM(total) as total,razonSocial, count(*) as cuantos FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE STATUS in('1', '2') GROUP BY rfc,razonSocial order by rfc asc";
+                            queryXML = "SELECT rfc,SUM(total) as total,razonSocial, count(*) as cuantos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE STATUS in('1', '2') GROUP BY rfc,razonSocial order by rfc asc";
                         }
                     }
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))

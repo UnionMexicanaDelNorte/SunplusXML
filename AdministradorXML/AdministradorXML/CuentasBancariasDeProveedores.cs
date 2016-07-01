@@ -166,7 +166,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT TOP 1 rfc FROM [SU_FISCAL].[dbo].[proveedor] WHERE razonSocial = '" + razonSocial + "'";
+                    String queryXML = "SELECT TOP 1 rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[proveedor] WHERE razonSocial = '" + razonSocial + "'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -196,7 +196,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT TOP 1 razonSocial FROM [SU_FISCAL].[dbo].[proveedor] WHERE rfc = '" + RFC + "'";
+                    String queryXML = "SELECT TOP 1 razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[proveedor] WHERE rfc = '" + RFC + "'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();

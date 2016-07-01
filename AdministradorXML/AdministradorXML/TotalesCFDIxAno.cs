@@ -35,7 +35,7 @@ namespace AdministradorXML
                     connection.Open();
                     //ingresos SAT
                     //GROUP BY rfc,razonSocial order by rfc asc
-                    String queryXML = "SELECT SUM(total) as total FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '1'";
+                    String queryXML = "SELECT SUM(total) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '1'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -62,7 +62,7 @@ namespace AdministradorXML
                     connection.Open();
                     //egresos SAT
                     //GROUP BY rfc,razonSocial order by rfc asc
-                    String queryXML = "SELECT SUM(total) as total FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '2'";
+                    String queryXML = "SELECT SUM(total) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '2'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -89,7 +89,7 @@ namespace AdministradorXML
                     connection.Open();
                     //canceladas egresos SAT
                     //GROUP BY rfc,razonSocial order by rfc asc
-                    String queryXML = "SELECT SUM(total) as total FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '0'";
+                    String queryXML = "SELECT SUM(total) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '0'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -116,7 +116,7 @@ namespace AdministradorXML
                     connection.Open();
                     //canceladas ingresos SAT
                     //GROUP BY rfc,razonSocial order by rfc asc
-                    String queryXML = "SELECT SUM(total) as total FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '3'";
+                    String queryXML = "SELECT SUM(total) as total FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,4) = '" + anio + "' AND STATUS = '3'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();

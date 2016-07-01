@@ -2,6 +2,7 @@
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.exe
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.pdb
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\PdfFileWriter.dll
+\\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.csprojResolveAssemblyReference.cache
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.csproj.ResolveComReference.cache
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarComceptosaWHO.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarFNCTaWHO.resources

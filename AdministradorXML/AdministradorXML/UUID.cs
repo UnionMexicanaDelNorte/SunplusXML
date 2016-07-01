@@ -33,7 +33,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT total, STATUS, fechaExpedicion FROM [SU_FISCAL].[dbo].[facturacion_XML] WHERE folioFiscal = '" + UUID + "'";
+                    String queryXML = "SELECT total, STATUS, fechaExpedicion FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + UUID + "'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -77,7 +77,7 @@ namespace AdministradorXML
                 using (SqlConnection connection = new SqlConnection(connString))
                 {
                     connection.Open();
-                    String queryXML = "SELECT JRNAL_NO, JRNAL_LINE, BUNIT FROM [SU_FISCAL].[dbo].[FISCAL_xml] WHERE FOLIO_FISCAL = '" + UUID + "'";
+                    String queryXML = "SELECT JRNAL_NO, JRNAL_LINE, BUNIT FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE FOLIO_FISCAL = '" + UUID + "'";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();

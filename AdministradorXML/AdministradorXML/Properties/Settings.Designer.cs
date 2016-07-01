@@ -37,7 +37,7 @@ namespace AdministradorXML.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SUNPLUSNORESTE")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string datasource {
             get {
                 return ((string)(this["datasource"]));
