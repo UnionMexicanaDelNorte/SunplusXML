@@ -68,7 +68,8 @@ namespace SunPlusXML
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-          
+           // Application.Run(new Form1(3));//modo pesado
+           // return;
 
             if (args.Length >0)
             {

@@ -58,8 +58,8 @@ namespace AdministradorXML
         public Form1()
         {
             InitializeComponent();
-          //  AdministradorXML.Login.sourceGlobal = "AOK";//borrar
-           // AdministradorXML.Login.unidadDeNegocioGlobal = "FOP";
+            AdministradorXML.Login.sourceGlobal = "AOK";//borrar
+            AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
         }
 
         public Form1(String s, String bunit)
@@ -142,7 +142,7 @@ namespace AdministradorXML
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
             if(AdministradorXML.Login.sourceGlobal.Equals("ERROR"))
             {
                 System.Windows.Forms.MessageBox.Show("Sunplusito® se abre desde el formulario de Sunplus. No se detecto el operador.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -200,6 +200,7 @@ namespace AdministradorXML
             }*/
 
             arreglaAlgunosProblemillas();
+            arreglarErrorCanceladosSinRazon();
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
             int posX = 50;
@@ -1135,6 +1136,43 @@ namespace AdministradorXML
             estado.ShowDialog();
         }
 
+        private void arreglarErrorCanceladosSinRazon()
+        {
+            String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();
+                    String query = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '1' WHERE fechaCancelacion = '1900-01-01' AND STATUS = '0'";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+
+                    String query1 = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '1' WHERE fechaCancelacion = '0001-01-01' AND STATUS = '0'";
+                    SqlCommand cmd1 = new SqlCommand(query1, connection);
+                    cmd1.ExecuteNonQuery();
+
+                    String query3 = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '2' WHERE fechaCancelacion = '0001-01-01' AND STATUS = '3'";
+                    SqlCommand cmd3 = new SqlCommand(query3, connection);
+                    cmd3.ExecuteNonQuery();
+
+                    String query4 = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '2' WHERE fechaCancelacion = '1900-01-01' AND STATUS = '3'";
+                    SqlCommand cmd4 = new SqlCommand(query4, connection);
+                    cmd4.ExecuteNonQuery();
+
+                    String query5 = "UPDATE [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] set STATUS = '2' WHERE fechaCancelacion IS NULL AND STATUS = '3'";
+                    SqlCommand cmd5 = new SqlCommand(query5, connection);
+                    cmd5.ExecuteNonQuery();
+                  
+                  //  System.Windows.Forms.MessageBox.Show("Facturas arregladas... disculpe las molestias, estamos trabajando para usted.", "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
         private void arreglarError30OctToolStripMenuItem_Click(object sender, EventArgs e)
         {
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
@@ -1177,6 +1215,30 @@ namespace AdministradorXML
         {
             HistorialPreligues form = new HistorialPreligues();
             form.Show();
+        }
+
+        private void totalesCFDIXAñoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TotalesCFDIxAno estado = new TotalesCFDIxAno();
+            estado.ShowDialog();
+        }
+
+        private void buscarXUUIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UUID estado = new UUID();
+            estado.ShowDialog();
+        }
+
+        private void tengoRevisiónDelSATToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnCasoDeEmergencia estado = new EnCasoDeEmergencia();
+            estado.ShowDialog();
+        }
+
+        private void buToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BuscarXCantidad estado = new BuscarXCantidad();
+            estado.ShowDialog();
         }
     }
 }

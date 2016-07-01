@@ -22,6 +22,7 @@ namespace AdministradorXML
         private void cerrarButton_Click(object sender, EventArgs e)
         {
             this.Close();
+           
         }
 
         private void config_Load(object sender, EventArgs e)

@@ -448,7 +448,11 @@ namespace AdministradorXML
                             while (reader.Read())
                             {
                                 String razonSocial = reader.GetString(0);
-                                razonSocialText.Text = razonSocial;
+                                if(!razonSocial.Equals(""))
+                                {
+
+                                    razonSocialText.Text = razonSocial;
+                                }
                             }
                             rellena();
                         }
@@ -507,7 +511,7 @@ namespace AdministradorXML
 
         private void razonSocialText_TextChanged(object sender, EventArgs e)
         {
-            llenaRFC();
+      //      llenaRFC();
         }
 
         private void facturasPosiblesList_SelectedIndexChanged(object sender, EventArgs e)

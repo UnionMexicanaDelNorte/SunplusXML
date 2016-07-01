@@ -2,10 +2,12 @@
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.exe
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\AdministradorXML.pdb
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\bin\Debug\PdfFileWriter.dll
+\\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.csproj.ResolveComReference.cache
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarComceptosaWHO.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarFNCTaWHO.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.asignarPROJaWHO.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.Asociar_TipoDiario_CuentaSunplus_CuentaBancaria.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.BuscarXCantidad.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.CambiaLinea.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.Canceladas.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.codigoAgrupador.resources
@@ -18,6 +20,7 @@
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.Detalle2.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.EjecutarPreligue.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.eligeBanco.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.EnCasoDeEmergencia.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.EstadoDeCuenta.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.FacturasNoEnlazadas.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.Form1.resources
@@ -37,6 +40,8 @@
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.PreligueResponsable.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.presupuestoDeDepartamentales.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.Properties.Resources.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.TotalesCFDIxAno.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.UUID.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.VerImpuestos.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.VerPolizas.resources
 \\psf\Home\Documents\Visual Studio 2013\Projects\AdministradorXML\AdministradorXML\obj\Debug\AdministradorXML.VerRelacionRFCCuenta.resources

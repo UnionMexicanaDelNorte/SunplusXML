@@ -354,7 +354,7 @@ namespace AdministradorXML
 
         private void razonSocialText_TextChanged(object sender, EventArgs e)
         {
-            llenaRFC();
+            //llenaRFC();
         }
 
         private void rfcText_TextChanged(object sender, EventArgs e)
