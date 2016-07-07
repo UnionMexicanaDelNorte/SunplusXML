@@ -215,19 +215,7 @@ namespace SunPlusXML
                 ex1.ToString();
             }
         }
-        /*
-         *   string URL = "http://unionnorte.org/push/push.php";
-                                WebClient webClient = new WebClient();
-
-                                NameValueCollection formData = new NameValueCollection();
-                                formData["token"] = token;
-                                formData["mensaje"] = mensaje;
-
-                                byte[] responseBytes = webClient.UploadValues(URL, "POST", formData);
-                                string responsefromserver = Encoding.UTF8.GetString(responseBytes);
-                                Console.WriteLine(responsefromserver);
-                                webClient.Dispose()
-         */
+       
         public Form1(int modo, int empezar, String apartirdedonde)
         {
             modoGlobal = modo;
@@ -1813,9 +1801,62 @@ namespace SunPlusXML
             mensajeParaElCorreo.Append(" NO ESTUVO BIEN, REPITO, NO ESTUVO BIEN, FAVOR DE CONTACTAR AL ADMINISTRADOR!");
             mandaCorreo();
         }
+        public void nubeBanco(String fecha, String referencia, String importe, String tipo, String saldo, String leyenda1, String leyenda2, String leyenda3, String cuentaOrigen, String cuentaDestino)
+        {
+            string URL = "http://juntas.adventistasumn.org/ban.php";
+           
+            WebClient webClient = new WebClient();
+            NameValueCollection formData = new NameValueCollection();
+            formData["servicio"] = "app";
+            formData["accion"] = "subirMovimiento";
+            formData["fecha"] = fecha;
+            formData["referencia"] = referencia;
+            formData["tipo"] = tipo;
+            formData["saldo"] = Convert.ToString(saldo);
+            formData["leyenda2"] = leyenda2;
+            formData["leyenda1"] = leyenda1;
+            formData["leyenda3"] = leyenda3;
+            formData["cuentaOrigen"] = cuentaOrigen;
+            formData["cuentaDestino"] = cuentaDestino;
+            formData["importe"] = importe;
+            byte[] responseBytes = webClient.UploadValues(URL, "POST", formData);
+            String responsefromserver = Encoding.UTF8.GetString(responseBytes);
+            if (responsefromserver.Equals("{ \"success\" : 1 }"))
+            {
+                int hola = 1;                 
+            }
+            //Console.WriteLine(responsefromserver);
+            webClient.Dispose();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //leer api txt del banco
+            int counter = 0;
+            string line;
+            System.IO.StreamReader fileX = new System.IO.StreamReader("estadoDeCuenta.txt");
+            while ((line = fileX.ReadLine()) != null)
+            {
+                //Console.WriteLine(line);
+                String []arrayS = line.Split(',');
+                String fecha = arrayS[4].Replace("\"", "");
+                String referencia = arrayS[5];
+                String importe = arrayS[6];
+                String tipo = arrayS[7].Replace("\"", "");
+                String saldo = arrayS[8];
+                String leyenda1 = arrayS[9].Replace("\"", "");
+                String leyenda2 = arrayS[10].Replace("\"", "");
+                String leyenda3 = arrayS[11].Replace("\"", "");
+                String cuentaOrigen = arrayS[12];
+                String cuentaDestino = arrayS[13];
+                nubeBanco(fecha, referencia, importe, tipo, saldo, leyenda1, leyenda2, leyenda3, cuentaOrigen, cuentaDestino);
+            }
+                //nubeBanco();
+                counter++;
+            
+
+            fileX.Close();
+
             Timer tmrSegundosDeVida = new Timer();
             if(modoGlobal==1)
             {
