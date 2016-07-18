@@ -286,12 +286,33 @@ namespace AdministradorXML
                                 double total = Math.Round(Convert.ToDouble(Math.Abs(reader.GetDecimal(0))), 2);
                                 String folioFiscal = reader.GetString(1);
                                 String rfc = reader.GetString(2);
-                                String nombreArchivoPDF = reader.GetString(4);
-                                String nombreArchivoXML = reader.GetString(7);
-                                String razonSocial = reader.GetString(3);
+                                String nombreArchivoPDF = "";
+                                if (!reader.IsDBNull(4))
+                                {
+                                    nombreArchivoPDF = reader.GetString(4);
+                                }
+                                String nombreArchivoXML = "";
+                                if (!reader.IsDBNull(7))
+                                {
+                                    nombreArchivoXML = reader.GetString(7);
+                                }
+                                String razonSocial = "";
+                                if (!reader.IsDBNull(3))
+                                {
+                                    razonSocial = reader.GetString(3);
+                                }
                                 String fechaExpedicion = Convert.ToString(reader.GetDateTime(5));
-                                String ruta = reader.GetString(6);
-                                String folio = reader.GetString(8);
+                                String ruta = "";
+                                if (!reader.IsDBNull(6))
+                                {
+                                    ruta = reader.GetString(6);
+                                
+                                }
+                                String folio = "no pudimos leer el folio, perdón";
+                                if (!reader.IsDBNull(8))
+                                {
+                                    folio = reader.GetString(8);
+                                }
 
                                 //cuanto esta enlazado de esa factura
                                 String queryFISCAL = "SELECT FOLIO_FISCAL,BUNIT,JRNAL_NO,JRNAL_LINE,AMOUNT,consecutivo FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] WHERE FOLIO_FISCAL = '" + folioFiscal + "'";
@@ -445,16 +466,19 @@ namespace AdministradorXML
                         SqlDataReader reader = cmdCheck.ExecuteReader();
                         if (reader.HasRows)
                         {
-                            while (reader.Read())
+                            if (reader.Read())
                             {
-                                String razonSocial = reader.GetString(0);
-                                if(!razonSocial.Equals(""))
+                                if (!reader.IsDBNull(0))
                                 {
-
-                                    razonSocialText.Text = razonSocial;
+                                    String razonSocial = reader.GetString(0);
+                                    if (!razonSocial.Equals(""))
+                                    {
+                                        razonSocialText.Text = razonSocial;
+                                    }
                                 }
+                                rellena();
                             }
-                            rellena();
+                            
                         }
                     }
                 }

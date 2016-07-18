@@ -155,6 +155,12 @@
     <Compile Include="Detalle2.Designer.cs">
       <DependentUpon>Detalle2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Detalle3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Detalle3.Designer.cs">
+      <DependentUpon>Detalle3.cs</DependentUpon>
+    </Compile>
     <Compile Include="EjecutarPreligue.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +190,12 @@
     </Compile>
     <Compile Include="FacturasNoEnlazadas.Designer.cs">
       <DependentUpon>FacturasNoEnlazadas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FacturaXRFC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FacturaXRFC.Designer.cs">
+      <DependentUpon>FacturaXRFC.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -383,6 +395,9 @@
     <EmbeddedResource Include="Detalle2.resx">
       <DependentUpon>Detalle2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Detalle3.resx">
+      <DependentUpon>Detalle3.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EjecutarPreligue.resx">
       <DependentUpon>EjecutarPreligue.cs</DependentUpon>
     </EmbeddedResource>
@@ -397,6 +412,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FacturasNoEnlazadas.resx">
       <DependentUpon>FacturasNoEnlazadas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FacturaXRFC.resx">
+      <DependentUpon>FacturaXRFC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

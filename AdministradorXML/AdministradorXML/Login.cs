@@ -10,5 +10,6 @@ namespace AdministradorXML
     {
         public static String sourceGlobal { get; set; }
         public static String unidadDeNegocioGlobal { get; set; }
+        public static String rfcGlobal { get; set; }
     }
 }

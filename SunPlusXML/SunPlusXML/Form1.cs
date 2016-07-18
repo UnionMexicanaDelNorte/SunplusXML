@@ -1832,7 +1832,7 @@ namespace SunPlusXML
         private void Form1_Load(object sender, EventArgs e)
         {
             //leer api txt del banco
-            int counter = 0;
+          /*  int counter = 0;
             string line;
             System.IO.StreamReader fileX = new System.IO.StreamReader("estadoDeCuenta.txt");
             while ((line = fileX.ReadLine()) != null)
@@ -1856,7 +1856,7 @@ namespace SunPlusXML
             
 
             fileX.Close();
-
+            */
             Timer tmrSegundosDeVida = new Timer();
             if(modoGlobal==1)
             {
@@ -2330,7 +2330,7 @@ namespace SunPlusXML
                                         const Double Height = 10.65;
                                         const Double FontSize = 9.0;
                                         PdfFileWriter.TextBox Box = null;
-                                        if (cadaCuantasHorasGlobal == 0)//no estoy en modo de horas
+                                        if (cadaCuantasHorasGlobal == 0 || 1 == 1)//no estoy en modo de horas
                                         {
                                             String FileName = carpeta.Text + (object)Path.DirectorySeparatorChar + this.AnoSel + (object)Path.DirectorySeparatorChar + this.MesSel + (object)Path.DirectorySeparatorChar + diaActual.ToString() + (object)Path.DirectorySeparatorChar + folio_fiscal + ".pdf";
                                             Document = new PdfDocument(PaperType.Letter, false, UnitOfMeasure.Inch, FileName);
@@ -2549,7 +2549,7 @@ namespace SunPlusXML
                                             }
                                             iva = Convert.ToString(float.Parse(iva) + float.Parse(cantidad));
                                         }
-                                        if (cadaCuantasHorasGlobal == 0)//no estoy en modo de horas
+                                        if (cadaCuantasHorasGlobal == 0 || 1 == 1)//no estoy en modo de horas
                                         {
                                             Box.AddText(ArialNormal, FontSize,
                                            "Cliente: " + nombreReceptor + "\n" +

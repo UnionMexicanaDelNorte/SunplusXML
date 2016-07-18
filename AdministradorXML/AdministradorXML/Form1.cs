@@ -60,13 +60,15 @@ namespace AdministradorXML
             InitializeComponent();
             AdministradorXML.Login.sourceGlobal = "AOK";//borrar
             AdministradorXML.Login.unidadDeNegocioGlobal = "CEA";
+            AdministradorXML.Login.rfcGlobal = "IAS9306298H0";
         }
 
-        public Form1(String s, String bunit)
+        public Form1(String s, String bunit, String rfcLocal)
         {
             InitializeComponent();
             AdministradorXML.Login.sourceGlobal = s;
             AdministradorXML.Login.unidadDeNegocioGlobal = bunit;
+            AdministradorXML.Login.rfcGlobal = rfcLocal;
         }
 
         private void variablesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -233,7 +235,7 @@ namespace AdministradorXML
             //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
           
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
-            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL' order by SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) asc";
+            String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL' AND rfcRaiz = '"+Login.rfcGlobal+"' order by SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) asc";
            
             try
             {
@@ -262,7 +264,7 @@ namespace AdministradorXML
             {
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            periodosCombo.SelectedIndex = periodosCombo.Items.Count - 1;
+           // periodosCombo.SelectedIndex = periodosCombo.Items.Count - 1;
         }
         
         private void actualiza()
@@ -287,7 +289,7 @@ namespace AdministradorXML
                 {
                     connection.Open();
                     //ingresos SAT
-                    String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND STATUS = '2' GROUP BY rfc,razonSocial order by rfc asc";
+                    String queryXML = "SELECT rfc,SUM(total) as total,razonSocial FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) = '" + periodo + "' AND rfcRaiz = '" + Login.rfcGlobal + "' AND STATUS = '2' GROUP BY rfc,razonSocial order by rfc asc";
                     using (SqlCommand cmdCheck = new SqlCommand(queryXML, connection))
                     {
                         SqlDataReader reader = cmdCheck.ExecuteReader();
@@ -298,52 +300,30 @@ namespace AdministradorXML
                                 double total = Convert.ToDouble(Math.Abs(reader.GetDecimal(1)));
                                 String rfc = reader.GetString(0);
                                 String razonSocial = reader.GetString(2);
+                                double enlazado = 0;
+                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as amount FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on f.FOLIO_FISCAL = ff.folioFiscal WHERE ff.rfc = '" + rfc + "' AND ff.rfcRaiz = '" + Login.rfcGlobal + "' AND SUBSTRING( CAST(ff.fechaExpedicion AS NVARCHAR(11)),1,7)  = '" + periodo + "' AND ff.STATUS = '2'";
+                                using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
+                                {
+                                    SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
+                                    if (readerFISCAL.HasRows)
+                                    {
+                                        if (readerFISCAL.Read())
+                                        {
+                                            enlazado = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(0)));
+                                        }
+                                    }
+                                }
 
 
                                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
                                 dictionary.Add("maximo", total);
                                 dictionary.Add("rfc", rfc);
-                                dictionary.Add("enlazado", 0);
+                                dictionary.Add("enlazado", enlazado);
                                 dictionary.Add("razonSocial", razonSocial);
 
                                 listaFinal.Add(dictionary);
                             }
-                            double amount = 0;
-                            String folioFiscal = "";
-                            String queryFISCAL = "SELECT FOLIO_FISCAL,AMOUNT FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml]";
-                            using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
-                            {
-                                SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
-                                if (readerFISCAL.HasRows)
-                                {
-                                    while (readerFISCAL.Read())
-                                    {
-                                        amount = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(1)));
-                                        folioFiscal = readerFISCAL.GetString(0);
-                                        //ingresos
-                                        String queryFISCAL2 = "SELECT rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folioFiscal + "' AND SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7)  = '" + periodo + "' AND STATUS = '2'";
-                                        using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
-                                        {
-                                            SqlDataReader readerFISCAL2 = cmdCheckFISCAL2.ExecuteReader();
-                                            if (readerFISCAL2.HasRows)
-                                            {
-                                                while (readerFISCAL2.Read())
-                                                {
-                                                    String rfcAux = Convert.ToString(readerFISCAL2.GetString(0));
-                                                    foreach (Dictionary<string, object> dic in listaFinal)
-                                                    {
-                                                        if (dic["rfc"].Equals(rfcAux))
-                                                        {
-                                                            dic["enlazado"] = Convert.ToString(Convert.ToDouble(dic["enlazado"]) + amount);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
+                           
 
 
                             ingresosSATList.View = View.Details;
@@ -404,49 +384,28 @@ namespace AdministradorXML
                                 String rfc = reader.GetString(0);
                                 String razonSocial = reader.GetString(2);
 
+                                double enlazado = 0;
+                                String queryFISCAL = "SELECT ISNULL( SUM(f.AMOUNT),0) as amount FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml] f INNER JOIN [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] ff on f.FOLIO_FISCAL = ff.folioFiscal WHERE ff.rfc = '" + rfc + "' AND ff.rfcRaiz = '" + Login.rfcGlobal + "' AND SUBSTRING( CAST(ff.fechaExpedicion AS NVARCHAR(11)),1,7)  = '" + periodo + "' AND ff.STATUS = '1'";
+                                using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
+                                {
+                                    SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
+                                    if (readerFISCAL.HasRows)
+                                    {
+                                        if (readerFISCAL.Read())
+                                        {
+                                            enlazado = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(0)));
+                                        }
+                                    }
+                                }
+
 
                                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
                                 dictionary.Add("maximo", total);
                                 dictionary.Add("rfc", rfc);
-                                dictionary.Add("enlazado", 0);
+                                dictionary.Add("enlazado", enlazado);
                                 dictionary.Add("razonSocial", razonSocial);
 
                                 listaFinalEgresosSAT.Add(dictionary);
-                            }
-                            double amount = 0;
-                            String folioFiscal = "";
-                            String queryFISCAL = "SELECT FOLIO_FISCAL,AMOUNT FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[FISCAL_xml]";
-                            using (SqlCommand cmdCheckFISCAL = new SqlCommand(queryFISCAL, connection))
-                            {
-                                SqlDataReader readerFISCAL = cmdCheckFISCAL.ExecuteReader();
-                                if (readerFISCAL.HasRows)
-                                {
-                                    while (readerFISCAL.Read())
-                                    {
-                                        amount = Convert.ToDouble(Math.Abs(readerFISCAL.GetDecimal(1)));
-                                        folioFiscal = readerFISCAL.GetString(0);
-                                        //gastos
-                                        String queryFISCAL2 = "SELECT rfc FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE folioFiscal = '" + folioFiscal + "' AND SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7)  = '" + periodo + "' AND STATUS = '1'";
-                                        using (SqlCommand cmdCheckFISCAL2 = new SqlCommand(queryFISCAL2, connection))
-                                        {
-                                            SqlDataReader readerFISCAL2 = cmdCheckFISCAL2.ExecuteReader();
-                                            if (readerFISCAL2.HasRows)
-                                            {
-                                                while (readerFISCAL2.Read())
-                                                {
-                                                    String rfcAux = Convert.ToString(readerFISCAL2.GetString(0));
-                                                    foreach (Dictionary<string, object> dic in listaFinalEgresosSAT)
-                                                    {
-                                                        if (dic["rfc"].Equals(rfcAux))
-                                                        {
-                                                            dic["enlazado"] = Convert.ToString(Convert.ToDouble(dic["enlazado"]) + amount);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                             }
                             gastosSATList.View = View.Details;
                             gastosSATList.GridLines = true;
@@ -1121,7 +1080,8 @@ namespace AdministradorXML
 
         private void facturasPorProveedorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            FacturaXRFC form = new FacturaXRFC();
+            form.ShowDialog();
         }
 
         private void xMLDeFacturasToolStripMenuItem_Click(object sender, EventArgs e)

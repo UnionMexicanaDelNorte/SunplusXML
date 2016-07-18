@@ -16,9 +16,9 @@ namespace AdministradorXML
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if(args.Length==2)
+            if(args.Length==3)
             {
-                Application.Run(new Form1(args[0],args[1]));
+                Application.Run(new Form1(args[0], args[1], args[2]));
             }
             else
             {

@@ -48,10 +48,11 @@ namespace AdministradorXML
 
         private void EnCasoDeEmergencia_Load(object sender, EventArgs e)
         {
+            int empiezo = 1;
+                 
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
+            
             String queryPeriodos = "SELECT DISTINCT PERIOD FROM ["+Properties.Settings.Default.sunDatabase+"].[dbo].["+Login.unidadDeNegocioGlobal+"_"+Properties.Settings.Default.sunLibro+"_SALFLDG] order by PERIOD asc";
-            //String queryPeriodos = "SELECT DISTINCT SUBSTRING( CAST(fechaExpedicion AS NVARCHAR(11)),1,7) as periodos FROM [" + Properties.Settings.Default.databaseFiscal + "].[dbo].[facturacion_XML] WHERE CAST(fechaExpedicion AS NVARCHAR(11)) != 'NULL'";
-
             try
             {
                 using (SqlConnection connection = new SqlConnection(connString))
@@ -59,14 +60,12 @@ namespace AdministradorXML
                     connection.Open();
                     SqlCommand cmdCheck = new SqlCommand(queryPeriodos, connection);
                     SqlDataReader reader = cmdCheck.ExecuteReader();
-                    int empiezo = 1;
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
                             String periodo = Convert.ToString( reader.GetInt32(0));
                             periodosDel.Items.Add(new Item(periodo, empiezo));
-                           // periodosAl.Items.Add(new Item(periodo, empiezo));
                             empiezo++;
                         }
                     }
@@ -80,91 +79,48 @@ namespace AdministradorXML
             {
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            //periodosAl.SelectedIndex = periodosAl.Items.Count - 1;
+            String queryPeriodos1 = "SELECT DISTINCT SUBSTRING( CAST(PERIOD AS NVARCHAR(8)),1,4) as PERIOD FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] order by PERIOD asc";
+            try
+            {
+                using (SqlConnection connection1 = new SqlConnection(connString))
+                {
+                    connection1.Open();
+                    SqlCommand cmdCheck1 = new SqlCommand(queryPeriodos1, connection1);
+                    SqlDataReader reader1 = cmdCheck1.ExecuteReader();
+                    if (reader1.HasRows)
+                    {
+                        while (reader1.Read())
+                        {
+                            String periodo1 = reader1.GetString(0);
+                            periodosDel.Items.Add(new Item(periodo1, empiezo));
+                            empiezo++;
+                        }
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("No existen Periodos, primero descarga xml del buzon tributario.", "SunPlusXML", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            
+            
             periodosDel.SelectedIndex = periodosDel.Items.Count - 1;
         }
 
         private void generar_Click(object sender, EventArgs e)
         {
+            Item itm = (Item)periodosDel.SelectedItem;
+            String periodo = itm.Name;
+           
             String connString = "Database=" + Properties.Settings.Default.databaseFiscal + ";Data Source=" + Properties.Settings.Default.datasource + ";Integrated Security=False;MultipleActiveResultSets=true;User ID='" + Properties.Settings.Default.user + "';Password='" + Properties.Settings.Default.password + "';connect timeout = 60";
             String mesLetra="",anoLetra="";
-            Item itm = (Item)periodosDel.SelectedItem;
-            String mesS="",anoS="";
-            String periodo = itm.Name;
-            anoLetra = periodo.Substring(0, 4);
+           String mesS="",anoS="";
+             anoLetra = periodo.Substring(0, 4);
             anoS = anoLetra.Substring(2);
-            String mesI = "", mesString=periodo.Substring(5,2);
-            int mes = Convert.ToInt16(periodo.Substring(5,2));
-            String debeDeSer = anoLetra + "-" + periodo.Substring(5,2);
-            switch(mes)
-            {
-                case 1:
-                    mesLetra = "ENERO";
-                    mesS = "ENE";
-                    mesI = "Jan";
-                break;
-                case 2:
-                    mesLetra = "FEBRERO";
-                    mesS = "FEB";
-                    mesI = "Feb";
-                break;
-                case 3:
-                    mesLetra = "MARZO";
-                    mesS = "MAR";
-                    mesI = "Mar";
-                break;
-                case 4:
-                    mesLetra = "ABRIL";
-                    mesS = "ABR";
-                    mesI = "Apr";
-                break;
-                case 5:
-                    mesLetra = "MAYO";
-                    mesS = "MAYO";
-                    mesI = "May";
-                break;
-                case 6:
-                    mesLetra = "JUNIO";
-                    mesS = "JUN";
-                    mesI = "Jun";
-                break;
-                case 7:
-                    mesLetra = "JULIO";
-                    mesS = "JUL";
-                    mesI = "Jul";
-                break;
-                case 8:
-                    mesLetra = "AGOSTO";
-                    mesS = "AGO";
-                    mesI = "Aug";
-                break;
-                case 9:
-                    mesLetra = "SEPTIEMBRE";
-                    mesS = "SEP";
-                    mesI = "Sep";
-                break;
-                case 10:
-                    mesLetra = "OCTUBRE";
-                    mesS = "OCT";
-                    mesI = "Oct";
-                break;
-                case 11:
-                    mesLetra = "NOVIEMBRE";
-                    mesS = "NOV";
-                    mesI = "Nov";
-                break;
-                case 12:
-                    mesLetra = "DICIEMBRE";
-                    mesS = "DIC";
-                    mesI = "Dec";
-                break;
-            }
-            String posibles1 = mesLetra + " " + anoLetra;
-            String posibles2 = mesLetra + " " + anoS;
-            String posibles3 = mesS + " " + anoLetra;
-            String posibles4 = mesS + " " + anoS;
-
-
             Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
 
             if (xlApp == null)
@@ -213,7 +169,7 @@ namespace AdministradorXML
             args7[0] = "Diario";
             aRange7.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRange7, args7);
 
-            
+
             /*args[2] = "DEBITO";
             args[3] = "CREDITO";
             args[4] = "BANCO";
@@ -227,7 +183,322 @@ namespace AdministradorXML
             }
             int empiezo = 6;
             double debito = 0, credito = 0;
-                               
+           
+            if(periodo.Length==4)
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connString))
+                    {
+                        connection.Open();
+                        String queryGastos = "SELECT a.DUE_DATETIME, a.JRNAL_NO, a.D_C,a.AMOUNT,a.PERIOD,a.TRANS_DATETIME, a.DESCRIPTN, a.ACCNT_CODE, c.DESCR, a.TREFERENCE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] a INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] c on c.ACNT_CODE = a.ACCNT_CODE WHERE SUBSTRING( CAST(ACCNT_CODE AS NVARCHAR(11)),1,3)  = '102' AND a.ALLOCATION != 'C' AND SUBSTRING( CAST(PERIOD AS NVARCHAR(11)),1,4) = "+periodo+" order by DUE_DATETIME asc ";
+                        SqlCommand cmdCheck1 = new SqlCommand(queryGastos, connection);
+                        SqlDataReader reader1 = cmdCheck1.ExecuteReader();
+                        if (reader1.HasRows)
+                        {
+                            int diario = -1;
+                            String DescripcionBuena = "";
+                            String fechaDue = "", fechaDueOriginal = "", Cuenta1 = "", D_C = "", TREFERENCE1 = "";
+                            while (reader1.Read())
+                            {
+                                if (!reader1.IsDBNull(0))
+                                {
+                                    fechaDueOriginal = Convert.ToString(reader1.GetDateTime(0)).Substring(0, 10);
+                                    String anio = fechaDueOriginal.Substring(6);
+                                    String dia = fechaDueOriginal.Substring(0, 2);
+                                    String mesX = fechaDueOriginal.Substring(3, 2);
+                                    fechaDue = anio + "-" + mesX;
+                                }
+
+                                TREFERENCE1 = reader1.GetString(9);
+                                D_C = reader1.GetString(2);
+                                String letra = "D";
+                                diario = reader1.GetInt32(1);
+                                String cuentaPrima = "qqqq";
+                                   
+                                if(D_C.Equals("D"))
+                                {
+                                    letra = "C";
+                                      // debito = cantidad;
+                                        DescripcionBuena = "DIEZMOS Y OFRENDAS";
+                                    
+                                }
+                                else
+                                {
+                                   
+                                    //credito = cantidad;
+                                    /*if (TREFERENCE1.Contains("COMISIONES"))
+                                    {
+                                        DescripcionBuena = "COMISIONES BANCARIAS";
+                                    }
+                                    else
+                                    {
+                                        if (TREFERENCE1.Contains("INTERESES"))
+                                        {
+                                            DescripcionBuena = "INTERESES BANCARIOS";
+                                        }
+                                        else
+                                        {
+                                            if (TREFERENCE1.Contains("IMPUESTOS"))
+                                            {
+                                                DescripcionBuena = "IMPUESTOS BANCARIOS";
+                                            }
+                                            else
+                                            {
+                                                if (TREFERENCE1.Contains("RENDCOMSCOTIA"))
+                                                {
+                                                    DescripcionBuena = "COMISIONES BANCARIAS";
+                                                }
+                                                else
+                                                {
+                                                    // Descripcion = "NO SE QUE PONER AQUI";
+                                                }
+                                            }
+                                        }
+                                    }*/
+                                }//else
+
+
+                                String verDESCR = "SELECT TREFERENCE, DESCRIPTN, ACCNT_CODE FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] WHERE JRNAL_NO = " + diario + " AND TREFERENCE = '" + TREFERENCE1 + "' AND D_C='" + letra + "'";
+                                SqlCommand cmdCheck2 = new SqlCommand(verDESCR, connection);
+                                SqlDataReader reader2 = cmdCheck2.ExecuteReader();
+                                if (reader2.HasRows)
+                                {
+                                    if (reader2.Read())
+                                    {
+                                        DescripcionBuena = reader2.GetString(1).Trim();
+                                        cuentaPrima = reader2.GetString(2).Trim();
+                                    }
+                                }
+
+
+
+
+
+                                if (!cuentaPrima.Substring(0, 3).Equals("102"))
+                                {
+                                    // DescripcionBuena = reader1.GetString(6).ToUpper();
+
+                                   
+                                    Cuenta1 = reader1.GetString(8).ToUpper();
+
+                                   
+                                    if(D_C.Equals("C"))
+                                    {
+                                        if (DescripcionBuena.Contains("GASOLINA"))
+                                        {
+                                            DescripcionBuena = "COMBUSTIBLES";
+                                        }
+                                        else
+                                        {
+                                            if (DescripcionBuena.Contains("COMISIONES"))
+                                            {
+                                                DescripcionBuena = "COMISIONES BANCARIAS";
+                                            }
+                                            else
+                                            {
+                                                if (DescripcionBuena.Contains("DIEZMOS"))
+                                                {
+                                                    DescripcionBuena = "ENVIO DE REMESAS";
+                                                }
+                                                else
+                                                {
+                                                    if (DescripcionBuena.Contains("JUBILACION"))
+                                                    {
+                                                        DescripcionBuena = "ENVIO DE REMESAS";
+                                                    }
+                                                    else
+                                                    {
+                                                        if (DescripcionBuena.Contains("OFRENDA"))
+                                                        {
+                                                            DescripcionBuena = "OFRENDA ESPECIAL";
+                                                        }
+                                                        else
+                                                        {
+                                                            if (DescripcionBuena.Contains("CANCELACION"))
+                                                            {
+                                                                DescripcionBuena = "ENVIO DE REMESAS";
+                                                            }
+                                                            else
+                                                            {
+                                                                if (DescripcionBuena.Contains("CAJA CHICA"))
+                                                                {
+                                                                    DescripcionBuena = "CAJA CHICA";
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (DescripcionBuena.Contains("EDUCATIVO"))
+                                                                    {
+                                                                        DescripcionBuena = "MINISTERIO EDUCACION";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (DescripcionBuena.Contains("CASA DE GOBIERNO") || DescripcionBuena.Contains("CASA GOBIERNO"))
+                                                                        {
+                                                                            DescripcionBuena = "MANTENIMIENTO CASA DE GOBIERNO";
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (DescripcionBuena.Contains("CAMBIO") && (DescripcionBuena.Contains("DLS") || DescripcionBuena.Contains("DLLS")))
+                                                                            {
+                                                                                DescripcionBuena = "CAMBIO DE DOLARES";
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }//if D_C is C
+                                    else
+                                    {
+                                        DescripcionBuena = "DIEZMOS Y OFRENDAS";
+                                    }
+
+                                    double cantidad = Math.Abs(Convert.ToDouble(reader1.GetDecimal(3)));
+                                    debito = 0; credito = 0;
+                                    if (D_C.Equals("D"))
+                                    {
+                                        debito = cantidad;
+                                    }
+                                    else
+                                    {
+                                        credito = cantidad;
+                                    }
+                                    Range aRange1X = ws.get_Range("A" + empiezo, "A" + empiezo);
+                                    Object[] args1X = new Object[1];
+                                    args1X[0] = fechaDueOriginal;
+                                    aRange1X.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRange1X, args1X);
+
+
+                                    Range aRangeB = ws.get_Range("B" + empiezo, "B" + empiezo);
+                                    Object[] argsB = new Object[1];
+                                    argsB[0] = DescripcionBuena;
+                                    aRangeB.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeB, argsB);
+
+
+                                    Range aRangeC = ws.get_Range("C" + empiezo, "C" + empiezo);
+                                    Object[] argsC = new Object[1];
+                                    argsC[0] = debito;
+                                    aRangeC.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeC, argsC);
+
+                                    Range aRangeD = ws.get_Range("D" + empiezo, "D" + empiezo);
+                                    Object[] argsD = new Object[1];
+                                    argsD[0] = credito;
+                                    aRangeD.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeD, argsD);
+
+                                    Range aRangeE = ws.get_Range("E" + empiezo, "E" + empiezo);
+                                    Object[] argsE = new Object[1];
+                                    argsE[0] = Cuenta1;
+                                    aRangeE.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeE, argsE);
+
+                                    Range aRangeFF = ws.get_Range("F" + empiezo, "F" + empiezo);
+                                    Object[] argsFF = new Object[1];
+                                    argsFF[0] = TREFERENCE1;
+                                    aRangeFF.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeFF, argsFF);
+
+                                    Range aRangeGG = ws.get_Range("G" + empiezo, "G" + empiezo);
+                                    Object[] argsGG = new Object[1];
+                                    argsGG[0] = diario;
+                                    aRangeGG.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeGG, argsGG);
+                                    // System.Threading.Thread.Sleep(100);
+                                    /*    Range aRangeH = ws.get_Range("H" + empiezo, "H" + empiezo);
+                                        Object[] argsH = new Object[1];
+                                        argsH[0] = fechaDueOriginal;
+                                        aRangeH.GetType().InvokeMember("Value", BindingFlags.SetProperty, null, aRangeH, argsH);
+                                        */
+                                    empiezo++;
+
+
+
+
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.ToString(), "Sunplusito", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                //anio!
+
+            }
+            else
+            {
+
+            
+
+            String mesString=periodo.Substring(5,2);
+            int mes = Convert.ToInt16(periodo.Substring(5,2));
+            String debeDeSer = anoLetra + "-" + periodo.Substring(5,2);
+            switch(mes)
+            {
+                case 1:
+                    mesLetra = "ENERO";
+                    mesS = "ENE";
+                break;
+                case 2:
+                    mesLetra = "FEBRERO";
+                    mesS = "FEB";
+                break;
+                case 3:
+                    mesLetra = "MARZO";
+                    mesS = "MAR";
+                break;
+                case 4:
+                    mesLetra = "ABRIL";
+                    mesS = "ABR";
+                break;
+                case 5:
+                    mesLetra = "MAYO";
+                    mesS = "MAYO";
+                break;
+                case 6:
+                    mesLetra = "JUNIO";
+                    mesS = "JUN";
+                break;
+                case 7:
+                    mesLetra = "JULIO";
+                    mesS = "JUL";
+                break;
+                case 8:
+                    mesLetra = "AGOSTO";
+                    mesS = "AGO";
+                break;
+                case 9:
+                    mesLetra = "SEPTIEMBRE";
+                    mesS = "SEP";
+                break;
+                case 10:
+                    mesLetra = "OCTUBRE";
+                    mesS = "OCT";
+                break;
+                case 11:
+                    mesLetra = "NOVIEMBRE";
+                    mesS = "NOV";
+                break;
+                case 12:
+                    mesLetra = "DICIEMBRE";
+                    mesS = "DIC";
+                break;
+            }
+            String posibles1 = mesLetra + " " + anoLetra;
+            String posibles2 = mesLetra + " " + anoS;
+            String posibles3 = mesS + " " + anoLetra;
+            String posibles4 = mesS + " " + anoS;
+
+
+                             
            // String queryPeriodos = "SELECT c.DESCR, a.D_C, a.AMOUNT, a.PERIOD, a.TRANS_DATETIME, a.DESCRIPTN FROM ["+Properties.Settings.Default.sunDatabase+"].[dbo].["+Login.unidadDeNegocioGlobal+"_"+Properties.Settings.Default.sunLibro+"_SALFLDG] a INNER JOIN ["+Properties.Settings.Default.sunDatabase+"].[dbo].["+Login.unidadDeNegocioGlobal+"_ACNT] c on c.ACNT_CODE = a.ACCNT_CODE WHERE SUBSTRING( CAST(ACCNT_CODE AS NVARCHAR(11)),1,3)  = '102' AND DESCRIPTN like '%"+mesLetra+"%' AND DESCRIPTN like '%"+anoLetra+"%' order by DESCRIPTN asc";          
             String queryPeriodos = "SELECT c.DESCR, a.D_C, a.AMOUNT, a.PERIOD, a.TRANS_DATETIME, a.DESCRIPTN, a.DUE_DATETIME, a.TREFERENCE, a.JRNAL_NO FROM [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_" + Properties.Settings.Default.sunLibro + "_SALFLDG] a INNER JOIN [" + Properties.Settings.Default.sunDatabase + "].[dbo].[" + Login.unidadDeNegocioGlobal + "_ACNT] c on c.ACNT_CODE = a.ACCNT_CODE WHERE SUBSTRING( CAST(ACCNT_CODE AS NVARCHAR(11)),1,3)  = '102' order by DUE_DATETIME asc, DESCRIPTN asc";          
             try
@@ -390,7 +661,7 @@ namespace AdministradorXML
                     {
                         int diario = -1;
                         String DescripcionBuena = "";
-                        String fechaDue = "", fechaDueOriginal = "", Cuenta1 = "", D_C = "",TREFERENCE1="",Descripcion1="";
+                        String fechaDue = "", fechaDueOriginal = "", Cuenta1 = "", D_C = "",TREFERENCE1="";
                         while (reader1.Read())
                         {
                             if (!reader1.IsDBNull(0))
@@ -577,6 +848,7 @@ namespace AdministradorXML
 
             // Change the cells in the C1 to C7 range of the worksheet to the number 8.
            // aRange.Value2 = 8;
-        }
+            }//else
+        }//private void
     }
 }
