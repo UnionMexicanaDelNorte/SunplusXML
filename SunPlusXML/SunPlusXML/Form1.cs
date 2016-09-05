@@ -2080,6 +2080,7 @@ namespace SunPlusXML
                         if (isRazon)
                         {
                             razon = obj1.Attributes["nombre"].InnerText;
+                            razon = razon.Replace('\'', ' ');
                         }
 
                         XmlNodeList titles2 = doc.GetElementsByTagName("cfdi:Comprobante");
