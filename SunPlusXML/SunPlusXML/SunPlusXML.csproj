@@ -70,13 +70,13 @@
       <HintPath>..\..\..\..\..\Downloads\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\..\..\Downloads\HtmlAgilityPack.1.4.6\Net45\HtmlAgilityPack.dll</HintPath>
+      <HintPath>\\psf\Home\Desktop\HtmlAgilityPack.1.4.6\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="PdfFileWriter">
-      <HintPath>..\..\..\..\..\Downloads\PdfFileWriter.dll</HintPath>
+      <HintPath>..\..\_PROGRAMAS_FISCAL\PdfFileWriter.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
